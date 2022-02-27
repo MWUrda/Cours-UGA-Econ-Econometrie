@@ -1,0 +1,14 @@
+\begin{thebibliography}{1}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+
+\bibitem[{White(1980)}]{white1980}
+White, Halbert. 1980.
+\newblock \enquote{A heteroskedasticity-consistent covariance matrix estimator
+  and a direct test for heteroskedasticity.}
+\newblock \emph{Econometrica: Journal of the Econometric Society}
+  :817--838\urlprefix\url{http://www.jstor.org/stable/1912934}.
+
+\end{thebibliography}
