@@ -83,12 +83,12 @@ Le modèle considéré est le modèle à équations simultanées suivant:
 
 \begin{align*}
 	y_{(in,i)} &= a_0 + b_0 y_{(op, i)} + d_0 q_i + u_{(in,i)}\\
-	y_{(op,i)} &= \alpha_0 + \beta_0 y_{(inf, i)} + \delta_0 q_i  + q_{(op, i)}+ u_{(op,i)}
+	y_{(op,i)} &= \alpha_0 + \beta_0 y_{(inf, i)} + \delta_0 q_i  + \gamma_0q_{(op, i)}+ u_{(op,i)}
 \end{align*}
 où pour un pays $i$: $y_{(in,i)}$ est le taux d'inflation("$inf$" dans le données), 
 $y_{(op,i)}$ est une mesure de son degré d'ouverture("$open$" dans les données) , 
 $q_i$ est son revenu par habitant("$pinc$" dans les données), et $q_{(op, i)}$ 
-est la superficie("$land$" dans les données). Le revenu par habitant, et la superficie sont supposées exogènes.
+est la superficie en log("$lland$" dans les données). Le revenu par habitant, et la superficie sont supposées exogènes.
 
 \begin{enumerate}
 \item Expliquez pourquoi une estimation par MCO de $b_0$ dans la première équation ne permet pas de mesurer 
@@ -97,6 +97,9 @@ l'effet de du degré d'ouverture sur l'inflation?
 \item Estimez la forme réduite du degré d'ouverture sur les variables exogènes, et commentez l'effet de la superficie.
 \item Sur la base du résultat précédent proposez une stratégie d'estimation de la première équation par 2MC.
  Comparez le résultat de cette estimation à ceux obtenus par MC0.  
+ \item On ajoute à la première équation le terme $c_0 y_{(op, i)}^2$. Expliquez 
+ pourquoi on a besoin d'une VI supplémentaire. Proposez en une.
+ \item Estimez le modèle indiqué à la question précédente.
 \end{enumerate}
 
 \section{Équations simultanées et MMG}
