@@ -4,44 +4,44 @@ The top-level auxiliary file: Chapt_4_application.aux
 The style file: jpe.bst
 Database file #1: ../../Biblio.bib
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
-You've used 2 entries,
+You've used 3 entries,
             3072 wiz_defined-function locations,
-            622 strings with 4689 characters,
-and the built_in function-call counts, 967 in all, are:
-= -- 76
-> -- 26
+            631 strings with 5003 characters,
+and the built_in function-call counts, 1700 in all, are:
+= -- 137
+> -- 68
 < -- 0
-+ -- 10
-- -- 8
-* -- 53
-:= -- 176
-add.period$ -- 9
-call.type$ -- 2
-change.case$ -- 10
-chr.to.int$ -- 2
-cite$ -- 2
-duplicate$ -- 71
-empty$ -- 87
-format.name$ -- 8
-if$ -- 189
++ -- 25
+- -- 20
+* -- 111
+:= -- 291
+add.period$ -- 14
+call.type$ -- 3
+change.case$ -- 17
+chr.to.int$ -- 3
+cite$ -- 3
+duplicate$ -- 120
+empty$ -- 136
+format.name$ -- 23
+if$ -- 334
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 15
-newline$ -- 17
-num.names$ -- 8
-pop$ -- 28
+missing$ -- 25
+newline$ -- 22
+num.names$ -- 12
+pop$ -- 49
 preamble$ -- 1
-purify$ -- 10
+purify$ -- 17
 quote$ -- 0
-skip$ -- 28
+skip$ -- 44
 stack$ -- 0
-substring$ -- 43
-swap$ -- 31
+substring$ -- 81
+swap$ -- 59
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 15
+type$ -- 24
 warning$ -- 0
-while$ -- 9
+while$ -- 15
 width$ -- 0
-write$ -- 31
+write$ -- 44

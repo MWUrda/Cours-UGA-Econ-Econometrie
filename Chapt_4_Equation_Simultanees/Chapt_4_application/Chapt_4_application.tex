@@ -67,20 +67,67 @@
 
 \newpage
 
-\section{\cite{Romer1993QJE}}
+\section{Équations simultanées et 2MC }
 
 Les questions suivantes sont issues de \cite{Wooldridge2010}(Problème 9.13, chapitre 9). 
-Il s'agit d'une application sur des données qui peuvent être obtenues ici: 
+Il s'agit d'une application sur des données et concernant une problématique développé par \cite{Romer1993QJE}. Les données peuvent être obtenues ici: 
 
 \medskip
 
 \url{http://qcpages.qc.cuny.edu/~rvesselinov/statadata/OPENNESS.DTA}
 
+\medskip
 
+L'objectif est d'étudier est d'étudier l'effet causal de l'ouverture d'une économie sur l'inflation. 
+Le modèle considéré est le modèle à équations simultanées suivant:
 
+\begin{align*}
+	y_{(in,i)} &= a_0 + b_0 y_{(op, i)} + d_0 q_i + u_{(in,i)}\\
+	y_{(op,i)} &= \alpha_0 + \beta_0 y_{(inf, i)} + \delta_0 q_i  + q_{(op, i)}+ u_{(op,i)}
+\end{align*}
+où pour un pays $i$: $y_{(in,i)}$ est le taux d'inflation("$inf$" dans le données), 
+$y_{(op,i)}$ est une mesure de son degré d'ouverture("$open$" dans les données) , 
+$q_i$ est son revenu par habitant("$pinc$" dans les données), et $q_{(op, i)}$ 
+est la superficie("$land$" dans les données). Le revenu par habitant, et la superficie sont supposées exogènes.
 
+\begin{enumerate}
+\item Expliquez pourquoi une estimation par MCO de $b_0$ dans la première équation ne permet pas de mesurer 
+l'effet de du degré d'ouverture sur l'inflation?
+\item À quelle condition la première équation est identifiée?
+\item Estimez la forme réduite du degré d'ouverture sur les variables exogènes, et commentez l'effet de la superficie.
+\item Sur la base du résultat précédent proposez une stratégie d'estimation de la première équation par 2MC.
+ Comparez le résultat de cette estimation à ceux obtenus par MC0.  
+\end{enumerate}
 
+\section{Équations simultanées et MMG}
 
+On considère un modèle d'offre et demande s'inspirant du travail de \cite{AGI_RES_2000}. 
+On utilise les mêmes données qui peuvent être obtenues ici:
+
+\medskip
+
+\url{https://people.brandeis.edu/~kgraddy/datasets/fishdata.dta}
+
+\medskip
+
+Le but est d'étudier la demande de poisson merlan sur le "Fulton Fish Market". 
+Le modèle étudiée est le suivant:
+
+\begin{align*}
+	y_{d, i} & = a_0 p_i + \boldb_0^\prime z_{d, i} +  \boldd_0^\prime w_i + u_{d, i}\\
+	y_{o, i} & = \alpha_0 p_i + \boldbeta_0^\prime z_{o, i} + \boldgamma_0^\prime w_i + u_{o, i},
+\end{align*}
+
+où la première équation est une équation de demande et la deuxième une équation d'offre avec $y_{d, i}$ la quantité demandé
+et $y_{o, i}$ la quantité offerte, $p_i$ le prix $z_{d, i}$ et $z_{o, i}$, des 
+vecteurs de régresseurs propres à chaque équation et $w_i$ des régresseurs communs aux deux équations.
+On observe les quantités à l'équilibre telles que $y_{d, i} = y_{o, i} = y_i$ de sorte que le modèle
+s'écrit:
+
+\begin{align*}
+	y_i & = a_0 p_i + \boldb_0^\prime z_{d, i} +  \boldd_0^\prime w_i + u_{d, i}\\
+	y_i & = \alpha_0 p_i + \boldbeta_0^\prime z_{o, i} + \boldgamma_0^\prime w_i + u_{o, i},
+\end{align*}
 
 
 
