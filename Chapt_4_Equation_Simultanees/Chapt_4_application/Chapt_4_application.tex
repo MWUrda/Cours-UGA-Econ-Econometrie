@@ -82,8 +82,8 @@ L'objectif est d'étudier est d'étudier l'effet causal de l'ouverture d'une éc
 Le modèle considéré est le modèle à équations simultanées suivant:
 
 \begin{align*}
-	y_{(in,i)} &= a_0 + b_0 y_{(op, i)} + d_0 q_i + u_{(in,i)}\\
-	y_{(op,i)} &= \alpha_0 + \beta_0 y_{(inf, i)} + \delta_0 q_i  + \gamma_0q_{(op, i)}+ u_{(op,i)}
+	y_{(in,i)} &= a_0 + b_0 y_{(op, i)} + c_0 y_{(op, i)}^2 + d_0 q_i + u_{(in,i)}\\
+	y_{(op,i)} &= \alpha_0 + \beta_0 y_{(inf, i)} + \delta_0 q_i  + \gamma_0q_{(op, i)}+ u_{(op,i)}+ \theta_0q_{(op, i)}^2+ u_{(op,i)}
 \end{align*}
 où pour un pays $i$: $y_{(in,i)}$ est le taux d'inflation("$inf$" dans le données), 
 $y_{(op,i)}$ est une mesure de son degré d'ouverture("$open$" dans les données) , 
@@ -129,8 +129,26 @@ s'écrit:
 
 \begin{align*}
 	y_i & = a_0 p_i + \boldb_0^\prime z_{d, i} +  \boldd_0^\prime w_i + u_{d, i}\\
-	y_i & = \alpha_0 p_i + \boldbeta_0^\prime z_{o, i} + \boldgamma_0^\prime w_i + u_{o, i},
+	y_i & = \alpha_0 p_i + \boldbeta_0^\prime z_{o, i} + \boldgamma_0^\prime w_i + u_{o, i}.
 \end{align*}
+
+Le but est donc d'estimer les élasticités prix de la demande et de l'offre, respectivement $a_0$ et $alpha_0$ avec des
+ données sur la quantité(en log), et le prix(en log)(respectivement "$qty$" et "$price$" dans les données).
+Le vecteur $z_{o, i}$ contient deux indicateurs des conditions météorologiques/océaniques("$stormy$", et "$mixed$" 
+dans les données), le vecteur $z_{d, i}$ contient deux indicateurs des conditions météorologiques 
+sur la côte("$rainy$", et "$cold$" dans les données) et des indicateurs des jours de marché($day1$, "$day2$", 
+"$day3$", "$day4$"), les régresseurs communs aux deux équations $w_i$ sont seulement une constante.
+
+\begin{enumerate}
+\item Estimez par MCO les deux équations du système. 
+\item Estimez le système dans une logique "équation par équation" par 2MC, 
+expliquez la démarche(appuyez vous sur le cours).
+\item Estimez le modèle par 3MC. 
+\item Estimez le modèle par la MMG.
+\end{enumerate}
+
+
+
 
 
 
