@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.10)  21 MAR 2022 10:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.10)  22 MAR 2022 14:58
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -2121,7 +2121,43 @@ Package Fancyhdr Warning: \headheight is too small (8.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[2] (/Volumes/GoogleDrive/Mon Drive/Syllabus/Cours-UGA-Econ-Econometrie/Chapt_4_Equation_Simultanees/Chapt_4_application/Chapt_4_devoir.bbl
+[2]
+
+Package Fancyhdr Warning: \headheight is too small (8.0pt): 
+ Make it at least 12.80502pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[3]
+Overfull \hbox (3.89221pt too wide) in paragraph at lines 232--237
+ \T1/lmr/m/n/10.95 (-20) 2.2.\T1/lmr/bx/n/10.95 Modèles non ré-cur-sifs.[][] \T1/lmr/m/n/10.95 (-20) Les vec-teurs de va-riables aléa-toires $\OT1/lmr/m/n/10.95 (-20) (\OML/lmm/m/it/10.95 y[]; y[]; z[]; z[]; z[]\OT1/lmr/m/n/10.95 (-20) )$
+ []
+
+
+Overfull \hbox (16.7225pt too wide) detected at line 246
+[]
+ []
+
+
+Package Fancyhdr Warning: \headheight is too small (8.0pt): 
+ Make it at least 12.80502pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[4]
+
+Package Fancyhdr Warning: \headheight is too small (8.0pt): 
+ Make it at least 12.80502pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[5]
+Package hyperref Info: bookmark level for unknown remarque defaults to 0 on input line 419.
+
+
+Package amsfonts Warning: Obsolete command \bold; \mathbf should be used instead on input line 429.
+
+(/Volumes/GoogleDrive/Mon Drive/Syllabus/Cours-UGA-Econ-Econometrie/Chapt_4_Equation_Simultanees/Chapt_4_application/Chapt_4_devoir.bbl
 
 Package natbib Warning: Empty `thebibliography' environment on input line 7.
 
@@ -2132,29 +2168,29 @@ Package Fancyhdr Warning: \headheight is too small (8.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[3]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 202.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 202.
+[6]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 435.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 435.
  (/Volumes/GoogleDrive/Mon Drive/Syllabus/Cours-UGA-Econ-Econometrie/Chapt_4_Equation_Simultanees/Chapt_4_application/Chapt_4_devoir.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 202.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 202.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 435.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 435.
 Package rerunfilecheck Info: File `Chapt_4_devoir.out' has not changed.
-(rerunfilecheck)             Checksum: 4AC62B9CA9181BAA78A690252B99A785;224.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 202.
+(rerunfilecheck)             Checksum: C488B84F5E28A2A821B6D235E072318A;305.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 435.
  ) 
 Here is how much of TeX's memory you used:
- 44202 strings out of 492649
- 842218 string characters out of 6129621
- 1139743 words of memory out of 5000000
- 47031 multiletter control sequences out of 15000+600000
- 607297 words of font info for 105 fonts, out of 8000000 for 9000
+ 44276 strings out of 492649
+ 842897 string characters out of 6129621
+ 1141929 words of memory out of 5000000
+ 47045 multiletter control sequences out of 15000+600000
+ 612484 words of font info for 116 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
- 57i,16n,92p,10561b,540s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfxc1440.pfb>
-Output written on "/Volumes/GoogleDrive/Mon Drive/Syllabus/Cours-UGA-Econ-Econometrie/Chapt_4_Equation_Simultanees/Chapt_4_application/Chapt_4_devoir.pdf" (4 pages, 183617 bytes).
+ 57i,18n,92p,10561b,670s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfxc1440.pfb>
+Output written on "/Volumes/GoogleDrive/Mon Drive/Syllabus/Cours-UGA-Econ-Econometrie/Chapt_4_Equation_Simultanees/Chapt_4_application/Chapt_4_devoir.pdf" (7 pages, 219860 bytes).
 PDF statistics:
- 128 PDF objects out of 1000 (max. 8388607)
- 105 compressed objects within 2 object streams
- 22 named destinations out of 1000 (max. 500000)
- 30753 words of extra memory for PDF output out of 35830 (max. 10000000)
+ 210 PDF objects out of 1000 (max. 8388607)
+ 182 compressed objects within 2 object streams
+ 61 named destinations out of 1000 (max. 500000)
+ 32809 words of extra memory for PDF output out of 35830 (max. 10000000)
 
