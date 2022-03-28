@@ -196,7 +196,7 @@ tant que les observations manquantes dans ce derniers le sont de façon aléatoi
          inobservées du travail, \ldots). 
         \end{enumerate}
          \item Ces facteurs inobservées peuvent être corrélés avec les facteurs observées:
-         \[\Cov(u_i; l_i) \neq 0, \ \Cov(u_i, k_i)\]
+         \[\Cov[u_i; l_i] \neq 0, \ \Cov[u_i; k_i] \neq 0\]
          Par exemple $\Cov(u_i; l_i)> 0$ si $u_i$ représente une qualité du travail associée 
          à une plus grande productivité.
          \item On sait que dans ce cas(voir cours passés), l'estimateur des MCO des paramètres $a_{0, 0},,a_{1, 0}, a_{2, 0}$, 
@@ -216,7 +216,7 @@ tant que les observations manquantes dans ce derniers le sont de façon aléatoi
         \end{enumerate}
         \item Les différences premières entre $t$ et $t-1$ associées à l'équation de $y_{it}$ dans \eqref{eq2} sont:
         \begin{align}
-            \Delta y_{it} &= a_{1, 0}\Delta_{it} + a_{2, 0}\Delta k_{it} + \Delta \gamma_t +\Delta \varepsilon_{it}.
+            \Delta y_{it} &= a_{1, 0}\Delta l_{it} + a_{2, 0}\Delta k_{it} + \Delta \gamma_t +\Delta \varepsilon_{it}.
             \label{eq3}
         \end{align}
         \item Pour $N\rightarrow +\infty$ et $T$ fixe l'estimateur des MCO des paramètres 
@@ -329,7 +329,7 @@ tant que les observations manquantes dans ce derniers le sont de façon aléatoi
     \end{enumerate}
 \end{itemize}
 \end{frame}
-\begin{frame}[allowframebreaks]{dditivité/non-additivité des erreurs}
+\begin{frame}[allowframebreaks]{additivité/non-additivité des erreurs}
         \begin{itemize}
             \item Par exemple:
             \begin{align*}
@@ -344,7 +344,7 @@ tant que les observations manquantes dans ce derniers le sont de façon aléatoi
         \end{itemize}
     \end{frame}
 
-        \begin{frame}[allowframebreaks]{Mondèles statiques/non-statiques}
+        \begin{frame}[allowframebreaks]{Modèles statiques/non-statiques}
             \begin{itemize}
             \item Cette distinction dépends de la relation entre les variables $\{\bold\boldx_{it}\}$ et 
             les composantes $\{\varepsilon_{it}\}$ du modèle. 
@@ -432,7 +432,7 @@ est grand relativement à $N$ et $T\rightarrow +\infty$.
 
 \framebreak 
 
-\item Le  modèle peut être présenté comme un sytème de f $T$ equations(une equation pour  $t=1, 2, \ldots, T$) 
+\item Le  modèle peut être présenté comme un système de $T$ equations(une equation pour  $t=1, 2, \ldots, T$) 
 avec $n$ observations pour chacune des équations du système.
 \begin{align*}
 y_{i1} &= \boldx_{i1}^\prime\beta + \alpha_i + \varepsilon_{it}\\
@@ -511,7 +511,7 @@ w_{iT}
     \item Dans le cadre de la décomposition de l'erreur du modèle dans \eqref{eq6} cela concerne 
     le problème posé par:
     \begin{align*}
-        \Exp[\boldx_{it}\epsilon_{it}]&\neq 0.
+        \Exp[\boldx_{it}\alpha_i]&\neq 0.
     \end{align*}
     \item Deux approches alternatives sont en général adoptées:
     \begin{enumerate}
@@ -523,8 +523,8 @@ w_{iT}
 
 \begin{frame}[allowframebreaks]{Effets fixes}
  \begin{itemize}
-\item Dans cette approche aucune condition contraignant la relation entre $\epsilon_{it}$ et $\{\boldx_{it}\}_{t=1}^T$
- n'est posée. Par exemple, on ne supposera pas que $ \Exp[\boldx_{it}\epsilon_{it}] = 0 $.
+\item Dans cette approche aucune condition contraignant la relation entre $\alpha_i$ et $\{\boldx_{it}\}_{t=1}^T$
+ n'est posée. Par exemple, on ne supposera pas que $ \Exp[\boldx_{it}\alpha_i] = 0 $.
  \item Dans la mesure où la loi conditionnelle de $\alpha_i$ sachant $\{\boldx_{it}\}_{t=1}^T$ 
  n'est pas contrainte, un \textbf{modèle à effets fixes} peut être vu comme non-paramétrique par rapport 
  à cette loi.

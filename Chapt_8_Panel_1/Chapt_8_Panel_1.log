@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.10)  28 MAR 2022 11:04
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.11.10)  28 MAR 2022 14:18
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1873,15 +1873,15 @@ Package rerunfilecheck Info: File `Chapt_8_Panel_1.out' has not changed.
 (rerunfilecheck)             Checksum: 5B5D0A3F1CBA3CE942496592C45013B3;392.
  ) 
 Here is how much of TeX's memory you used:
- 37838 strings out of 492649
- 732599 string characters out of 6129621
- 864475 words of memory out of 5000000
+ 37840 strings out of 492649
+ 732621 string characters out of 6129621
+ 864473 words of memory out of 5000000
  40874 multiletter control sequences out of 15000+600000
- 564323 words of font info for 119 fonts, out of 8000000 for 9000
+ 564408 words of font info for 120 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  65i,20n,71p,10535b,736s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex8.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmss9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfsi0800.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfsi0900.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfso1000.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfss0500.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfss0600.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfss0800.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfss0900.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfsx0600.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfsx0800.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfsx0900.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfsx1000.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfsx1095.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb>
-Output written on "/Volumes/GoogleDrive/Mon Drive/Syllabus/Cours-UGA-Econ-Econometrie/Chapt_8_Panel_1/Chapt_8_Panel_1.pdf" (36 pages, 416382 bytes).
+Output written on "/Volumes/GoogleDrive/Mon Drive/Syllabus/Cours-UGA-Econ-Econometrie/Chapt_8_Panel_1/Chapt_8_Panel_1.pdf" (36 pages, 416369 bytes).
 PDF statistics:
  406 PDF objects out of 1000 (max. 8388607)
  326 compressed objects within 4 object streams
