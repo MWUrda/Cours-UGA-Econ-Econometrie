@@ -708,7 +708,79 @@ w_{iT}
     \end{itemize}
 \end{frame}
 
+\begin{frame}[allowframebreaks]{Modèle en différences premières}
+    \begin{itemize}
+        \item Comme cela a été indiqué plus haut les méthodes dites à effets fixes(c.à.d., 
+        n'imposant pas de contrainte sur la relation entre $\alpha_i$ et $\{\boldx_{it}\}_{i=1}^N$) 
+        s'appuient sur une transformation du modèle qui supprime $\alpha_i$. 
+        \item Un premier estimateur fondé sur cette approche est l'estimateur du modèle en différences 
+        premières contenu dans les exemples introductifs.
+        \item  Le modèle transformé considéré est:
+        \begin{align*}
+        \Delta y_{it} &= \Delta \boldx_{it}^\prime \bolda_0 + \Delta \varepsilon_{it}
+        \end{align*}
+        où par $\Delta w_{it}$ on représente ici
+        la différence première dans la dimension temporelle d'une variable $w_{it}$,
+        
+        c.à.d., $\Delta w_{it} = w_{it}-w_{i, t-1}$. Pour des vecteurs $\boldw_{it}$, $\Delta\boldw_{it}$ 
+        est simplement l'opérateur de $\Delta$ appliqué à chaque élément du vecteur.
 
+        \item L'exogénéité stricte de $\boldx_{it}$ implique que $ \Exp\left[ \Delta \boldx_{it}  \Delta \varepsilon_{it}\right] = 0$:
+        \begin{align*}
+        \Exp\left[\Delta \boldx_{it}  \Delta \varepsilon_{it}\right] =&=\underbrace{\Exp[\boldx_{it} \varepsilon_{it}]}_{=0} 
+        + \underbrace{\Exp[\boldx_{it} \varepsilon_{i, t-1}]}_{=0} + \underbrace{\Exp[\boldx_{i, t-1} V_{it}]}_{=0}  +  
+        \underbrace{\Exp[\boldx_{i, t-1} \varepsilon_{i, t-1}]}_{=0}=0,
+        \end{align*}
+        et par conséquent l'estimateur des MCO du modèle en differences premières est convergent.
+        \begin{align*}
+        \hat{\bolda}^{FD}_N = 
+        \left[\sumiN \underset{t=2}{\overset{T}{\sum}}\Delta \boldx_{it} \Delta \boldx_{it}^\prime\right]^{-1}
+        \left[\sumiN \underset{t=2}{\overset{T}{\sum}}\Delta \boldx_{it} \Delta y_{it}\right] &\underset{N\to +\infty}{\limp}
+        \end{align*}
+        \item Cet estimateur n'est pas cependant efficace (sauf quand $\varepsilon_{it}$ est une marche aléatoire), 
+        et on peut définir une estimateur des MCQG du modèle en différences premières.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Estimateur du modèle en "within"}
+\begin{itemize}
+    \item L'estimateur en "within" du modèle est un estimateur à effets fixes sur la transformation suivante du modèle:
+    \begin{align*}
+        y_{it} - \bar{y}_i &= \left(\boldx_{it} - \bar{\boldx}_i\right)^\prime\bolda_0 + (\varepsilon_{it}-\bar{\varepsilon}_i)
+        \end{align*}
+        où $\bar{y}_i := T^{-1}\sumtT y_{t}$, $\bar{\boldx}_i := T^{-1}\sumtT \boldx_{it}$, $\bar{\varepsilon}_i := T^{-1}\sumtT \varepsilon_{it}$.
+        \item L'estimateur en within est simplement l'estimateur des MCO de ce modèle 
+        en différence par rapport aux moyennes dans la dimension temporelle.
+        \begin{align*}
+        \hat{\bolda}^{WG}_N&=\left(\sumiN\sumtT \left(\boldx_{it} - \bar{\boldx}_i\right) \left(\boldx_{it} - \bar{\boldx}_i\right)^\prime\right)^{-1}
+        \sumiN\sumtT \left(\boldx_{it} - \bar{\boldx}_i\right)\left(y_{it} - \bar{y}_i\right)
+        \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Convergence de l'estimateur en "within"}
+\begin{itemize}
+    \item Cet estimateur est convergent dès lors qu'il n'y a pas de colinéarité  de que $\left(\boldx_{it} - \bar{\boldx}_i\right) $ et
+    $\Exp\left((\boldx_{it} - \bar{\boldx}_i) (\varepsilon_{it} - \bar{\varepsilon}_i)\right) = 0$.
+    
+    \item Notons que:
+    \begin{align*}
+    \Exp\left[(\boldx_{it} - \bar{\boldx}_i) (\varepsilon_{it} - \bar{\varepsilon}_i)\right]  &=\underbrace{\Exp[\boldx_{it}\varepsilon_{it}]}_{=0} +
+    \underbrace{\Exp[\boldx_{it}\bar{\varepsilon}_i]}_{=0} + \underbrace{\Exp[\bar{\boldx}_i\varepsilon_{it}]}_{=0} + 
+    \underbrace{\Exp[\bar{\boldx}_i\bar{\varepsilon}_i]}_{=0}\\
+    &=0
+    \end{align*}
+    
+    \item L'exogénéité stricte des régresseurs implique que toutes ces espérances sont zéro et 
+    que par conséquent l'estimateur en within 
+    est convergent.
+    \item Cependant, l'estimateur de $\alpha_i$ ne l'est pas pour $T$ fixe. En effet:
+    \begin{align*}
+    \underset{N\to + \infty}{\plim} \hat{\alpha}_i &= T^{-1}\sumtT\left(y_{it} - \boldx_{it}^\prime\left(\underset{\plim}{N\to +\infty} \hat{\bolda}_N^{WG}\right)\right) = T^{-1}\sumtT\left(y_{it}- \boldx_{it}^\prime\beta\right)\\
+    &=\alpha_i + \bar{\varepsilon}_i\neq \alpha_i
+    \end{align*}
+\end{itemize}
+\end{frame}
 \begin{frame}[allowframebreaks]{Références}
  \bibliographystyle{jpe}
   \bibliography{../Biblio}

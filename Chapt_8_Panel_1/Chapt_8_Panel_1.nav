@@ -80,13 +80,21 @@
 \headcommand {\beamer@framepages {34}{34}}
 \headcommand {\slideentry {4}{0}{2}{35/35}{}{0}}
 \headcommand {\beamer@framepages {35}{35}}
-\headcommand {\beamer@sectionpages {34}{35}}
-\headcommand {\beamer@subsectionpages {34}{35}}
-\headcommand {\sectionentry {5}{R\'ef\'erences}{36}{R\'ef\'erences}{0}}
-\headcommand {\slideentry {5}{0}{0}{36/36}{}{0}}
+\headcommand {\slideentry {4}{0}{3}{36/36}{}{0}}
 \headcommand {\beamer@framepages {36}{36}}
-\headcommand {\beamer@partpages {1}{36}}
-\headcommand {\beamer@subsectionpages {34}{36}}
-\headcommand {\beamer@sectionpages {34}{36}}
-\headcommand {\beamer@documentpages {36}}
-\headcommand {\gdef \inserttotalframenumber {36}}
+\headcommand {\slideentry {4}{0}{3}{36/37}{}{0}}
+\headcommand {\beamer@framepages {36}{37}}
+\headcommand {\slideentry {4}{0}{4}{38/38}{}{0}}
+\headcommand {\beamer@framepages {38}{38}}
+\headcommand {\slideentry {4}{0}{5}{39/39}{}{0}}
+\headcommand {\beamer@framepages {39}{39}}
+\headcommand {\beamer@sectionpages {34}{39}}
+\headcommand {\beamer@subsectionpages {34}{39}}
+\headcommand {\sectionentry {5}{R\'ef\'erences}{40}{R\'ef\'erences}{0}}
+\headcommand {\slideentry {5}{0}{0}{40/40}{}{0}}
+\headcommand {\beamer@framepages {40}{40}}
+\headcommand {\beamer@partpages {1}{40}}
+\headcommand {\beamer@subsectionpages {34}{40}}
+\headcommand {\beamer@sectionpages {34}{40}}
+\headcommand {\beamer@documentpages {40}}
+\headcommand {\gdef \inserttotalframenumber {40}}
