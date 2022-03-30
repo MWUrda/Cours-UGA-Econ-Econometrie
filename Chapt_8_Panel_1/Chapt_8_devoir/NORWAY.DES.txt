@@ -1,0 +1,22 @@
+Contains data from norway.dta
+  obs:           106                          
+ vars:            12                          31 Oct 1996 16:28
+ size:         3,286 (99.5% of memory free)
+-------------------------------------------------------------------------------
+              storage  display     value
+variable name   type   format      label      variable label
+-------------------------------------------------------------------------------
+district        byte   %9.0g                  district number
+year            byte   %9.0g                  72 or 78
+crime           float  %9.0g                  crimes per 1000 people
+clrprc1         byte   %9.0g                  clear-up perc, prior year
+clrprc2         byte   %9.0g                  clear-up perc, two-years prior
+d78             byte   %9.0g                  =1 if year = 78
+avgclr          float  %9.0g                  (clrprc1 + clrprc2)/2
+lcrime          float  %9.0g                  log(crime)
+clcrime         float  %9.0g                  change in lcrime
+cavgclr         float  %9.0g                  change in avgclr
+cclrprc1        byte   %9.0g                  change in clrprc1
+cclrprc2        byte   %9.0g                  change in clrprc2
+-------------------------------------------------------------------------------
+Sorted by:  
