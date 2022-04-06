@@ -578,7 +578,7 @@ w_{iT}
     \end{align*}
     \item Dans ce cas, un estimateur convergent est simplement l'estimateur des MCO:
     \begin{align*}
-    \hat{\bolda}_0^{MCO} &= \left[\sumiN\sumtT \boldx_{it}\boldx_{it}^\prime\right]^{-1}\sumiN\sumtT \boldx_{it}y_{it}\\
+    \hat{\bolda}^{MCO} &= \left[\sumiN\sumtTT \boldx_{it}\boldx_{it}^\prime\right]^{-1}\sumiN\sumtTT \boldx_{it}y_{it}\\
                &= \left[\sumiN \boldX_i^\prime \boldX_i\right]^{-1}\sumiN \boldX_i^\prime \boldy_i.
     \end{align*}
     \item Cet estimateur est souvent appelé \textbf{estimateur des MCO empilé} car nous empilons/traitons
@@ -693,6 +693,7 @@ w_{iT}
 \frame{\sectionpage}
 \begin{frame}[allowframebreaks]{Non-convergence des MCO}
     \begin{itemize}
+        \item On n'impose pas que $\Exp[\boldx_{it}\alpha_i] = 0$.
         \item L'estimateur des MCO(ou sa version efficace avec les MCG) précédent n'est plus convergent 
         car:
         \begin{align*}
@@ -728,14 +729,14 @@ w_{iT}
         \item L'exogénéité stricte de $\boldx_{it}$ implique que $ \Exp\left[ \Delta \boldx_{it}  \Delta \varepsilon_{it}\right] = 0$:
         \begin{align*}
         \Exp\left[\Delta \boldx_{it}  \Delta \varepsilon_{it}\right] =&=\underbrace{\Exp[\boldx_{it} \varepsilon_{it}]}_{=0} 
-        + \underbrace{\Exp[\boldx_{it} \varepsilon_{i, t-1}]}_{=0} + \underbrace{\Exp[\boldx_{i, t-1} V_{it}]}_{=0}  +  
+        + \underbrace{\Exp[\boldx_{it} \varepsilon_{i, t-1}]}_{=0} + \underbrace{\Exp[\boldx_{i, t-1} \varepsilon_{it}]}_{=0}  +  
         \underbrace{\Exp[\boldx_{i, t-1} \varepsilon_{i, t-1}]}_{=0}=0,
         \end{align*}
         et par conséquent l'estimateur des MCO du modèle en differences premières est convergent.
         \begin{align*}
         \hat{\bolda}^{FD}_N = 
         \left[\sumiN \underset{t=2}{\overset{T}{\sum}}\Delta \boldx_{it} \Delta \boldx_{it}^\prime\right]^{-1}
-        \left[\sumiN \underset{t=2}{\overset{T}{\sum}}\Delta \boldx_{it} \Delta y_{it}\right] &\underset{N\to +\infty}{\limp}
+        \left[\sumiN \underset{t=2}{\overset{T}{\sum}}\Delta \boldx_{it} \Delta y_{it}\right] &\underset{N\to +\infty}{\limp} \bolda_0
         \end{align*}
         \item Cet estimateur n'est pas cependant efficace (sauf quand $\varepsilon_{it}$ est une marche aléatoire), 
         et on peut définir une estimateur des MCQG du modèle en différences premières.
@@ -748,12 +749,12 @@ w_{iT}
     \begin{align*}
         y_{it} - \bar{y}_i &= \left(\boldx_{it} - \bar{\boldx}_i\right)^\prime\bolda_0 + (\varepsilon_{it}-\bar{\varepsilon}_i)
         \end{align*}
-        où $\bar{y}_i := T^{-1}\sumtT y_{t}$, $\bar{\boldx}_i := T^{-1}\sumtT \boldx_{it}$, $\bar{\varepsilon}_i := T^{-1}\sumtT \varepsilon_{it}$.
+        où $\bar{y}_i := T^{-1}\sumtTT y_{t}$, $\bar{\boldx}_i := T^{-1}\sumtTT \boldx_{it}$, $\bar{\varepsilon}_i := T^{-1}\sumtTT \varepsilon_{it}$.
         \item L'estimateur en within est simplement l'estimateur des MCO de ce modèle 
         en différence par rapport aux moyennes dans la dimension temporelle.
         \begin{align*}
-        \hat{\bolda}^{WG}_N&=\left(\sumiN\sumtT \left(\boldx_{it} - \bar{\boldx}_i\right) \left(\boldx_{it} - \bar{\boldx}_i\right)^\prime\right)^{-1}
-        \sumiN\sumtT \left(\boldx_{it} - \bar{\boldx}_i\right)\left(y_{it} - \bar{y}_i\right)
+        \hat{\bolda}^{WG}_N&=\left(\sumiN\sumtTT \left(\boldx_{it} - \bar{\boldx}_i\right) \left(\boldx_{it} - \bar{\boldx}_i\right)^\prime\right)^{-1}
+        \sumiN\sumtTT \left(\boldx_{it} - \bar{\boldx}_i\right)\left(y_{it} - \bar{y}_i\right)
         \end{align*}
 \end{itemize}
 \end{frame}
@@ -767,7 +768,8 @@ w_{iT}
     \begin{align*}
     \Exp\left[(\boldx_{it} - \bar{\boldx}_i) (\varepsilon_{it} - \bar{\varepsilon}_i)\right]  &=\underbrace{\Exp[\boldx_{it}\varepsilon_{it}]}_{=0} +
     \underbrace{\Exp[\boldx_{it}\bar{\varepsilon}_i]}_{=0} + \underbrace{\Exp[\bar{\boldx}_i\varepsilon_{it}]}_{=0} + 
-    \underbrace{\Exp[\bar{\boldx}_i\bar{\varepsilon}_i]}_{=0}=0
+    \underbrace{\Exp[\bar{\boldx}_i\bar{\varepsilon}_i]}_{=0}\\
+    &=0
     \end{align*}
     
     \item L'exogénéité stricte des régresseurs implique que toutes ces espérances sont zéro et 
@@ -775,95 +777,95 @@ w_{iT}
     est convergent.
     \item Cependant, l'estimateur de $\alpha_i$ ne l'est pas pour $T$ fixe. En effet:
     \begin{align*}
-    \underset{N\to + \infty}{\plim} \hat{\alpha}_i &= T^{-1}\sumtT\left(y_{it} - \boldx_{it}^\prime\left(\underset{N\to +\infty}{\plim} \hat{\bolda}_N^{WG}\right)\right) = T^{-1}\sumtT\left(y_{it}- \boldx_{it}^\prime\beta\right)\\
+    \underset{N\to + \infty}{\plim} \hat{\alpha}_i &= T^{-1}\sumtTT\left(y_{it} - 
+    \boldx_{it}^\prime\left(\underset{\plim}{N\to +\infty} \hat{\bolda}_N^{WG}\right)\right) 
+    = T^{-1}\sumtTT\left(y_{it}- \boldx_{it}^\prime\beta\right)\\
     &=\alpha_i + \bar{\varepsilon}_i\neq \alpha_i
     \end{align*}
 \end{itemize}
 \end{frame}
 
 \begin{frame}[allowframebreaks]{MCO avec dummies individuelle(LSDV)}
-    \begin{itemize}
-    \item On traite maintenant les $\{\alpha_i\}_{i=1}^N$ comme des paramètres à estimator $\bolda_0$ .
-    
-    \item Pour cela écrivons le modèle comme suit:
-    
-    \begin{align*}
-        \boldy &= \boldX\bolda_0 + \boldD \boldalpha  + \boldvepsilon =  
-        \begin{bmatrix}
-        \boldX&:&  \boldQ
-        \end{bmatrix}
-        \begin{bmatrix}
-        \bolda_0\\
-        \boldalpha
-        \end{bmatrix} + \boldvepsilon
-        \end{align*}
+\begin{itemize}
+\item On traite maintenant les $\{\alpha_i\}_{i=1}^N$ comme des paramètres à estimator $\bolda_0$ .
 
-        \begin{enumerate}[$\star$]
-            \item $\boldQ$ est une matrice $N T\times N$ de dummies, une pour chaque individu,
-            \item la ième colonne $\boldd$ contient les observations de la dummie pour l'individu $i$, 
-            i.e., $1$ si l'observation appartient à $i$ et $0$ sinon
-            \item  $\boldalpha$ est le vecteur associé aux 
-            $\{\alpha_i\}_{i=1}^N$, i.e., $\boldalpha:=\left[\alpha_1, \ldots, \alpha_N\right]^\prime$.
-        \end{enumerate}
-
-        \item On appelle estimateur  LSDV( abbreviation pour "least squares dummie variables")
-        l'estimateur des MCO de
-         $\begin{bmatrix}
-           \bolda_0\\
-            \boldalpha
-          \end{bmatrix}$, soit:
-
-          \begin{align*}
-            \begin{bmatrix}
-            \hat{\bolda}^{LSDV}_N\\
-            \hat{\boldalpha}^{LSDV}_N
-            \end{bmatrix}
-            &=\left[
-            \begin{bmatrix}
-            \boldX&:&  \boldD
-            \end{bmatrix}^\prime
-            \begin{bmatrix}
-            \boldX&:& \boldQ
-            \end{bmatrix}\right]^{-1}
-            \begin{bmatrix}
-            \boldX&:& \boldQ
-            \end{bmatrix}^\prime\boldy\\
-            &=
-            \begin{bmatrix}
-            \boldX^\top \bold X & \boldX^\top\boldQ\\
-            \boldQ^\top\boldX&\boldQ^\top\boldQ
-            \end{bmatrix}^{-1}
-            \begin{bmatrix}
-            \boldX^\top\boldy\\
-            \boldQ^\top\boldy
-            \end{bmatrix}
-            \end{align*}
-
-            \item Cet estimateur peut sembler exigeant du point 
-de vue calculatoire dans la mesure il repose sur
- l'inversion d'une matrice $(N +K)\times (N+ K)$ avec $N$ 
- pouvant devenir très grand sur des panels typiques.
-    
- \item Cet estimateur peut être obtenu sans besoin d'inverser  "directement" cette matrice. 
- 
- \item On peut pour cela utiliser les propriétés des matrices par
- blocs/partitionnées $\boldQ^\prime\boldQ$ et $\boldQ^\prime\boldX$. 
-
-\item Appuyons nous sur le théorème  de Frish-Waugh-Lovell,  
-qui permet d'écrire l'estimateur des MCO comme suit:
+\item Pour cela écrivons le modèle comme suit:
 
 \begin{align*}
-    \hat{\bolda}^{LSDV}_N
-    &=
-    \left[
-    \boldX^\prime\boldM_\boldQ\boldX
-    \right)^{-1}
-    \left(
-    \boldX^\prime\boldM_\boldQ\boldy
-    \right]
-    \end{align*}
+\boldy &= \boldX\bolda_0 + \boldD \boldalpha  + \boldvepsilon =  
+\begin{bmatrix}
+\boldX&:&  \boldQ
+\end{bmatrix}
+\begin{bmatrix}
+\bolda_0\\
+\boldalpha
+\end{bmatrix} + \boldvepsilon
+\end{align*}
+\begin{enumerate}[$\star$]
+    \item $\boldQ$ est une matrice $N T\times N$ de dummies, une pour chaque individu,
+    \item la ième colonne $\boldd$ contient les observations de la dummie pour l'individu $i$, 
+    i.e., $1$ si l'observation appartient à $i$ et $0$ sinon
+    \item  $\boldalpha$ est le vecteur associé aux 
+    $\{\alpha_i\}_{i=1}^N$, i.e., $\boldalpha:=\left[\alpha_1, \ldots, \alpha_N\right]^\prime$.
+\end{enumerate}
+\item On appelle estimateur  LSDV( abbreviation pour "least squares dummie variables")
+ l'estimateur des MCO de
+$\begin{bmatrix}
+\bolda_0\\
+\boldalpha
+\end{bmatrix}$, soit:
 
-    où  $\boldM_\boldQ$ est une matrice idempotente:
+\begin{align*}
+    \begin{bmatrix}
+    \hat{\bolda}^{LSDV}_N\\
+    \hat{\boldalpha}^{LSDV}_N
+    \end{bmatrix}
+    &=\left[
+    \begin{bmatrix}
+    \boldX&:&  \boldD
+    \end{bmatrix}^\prime
+    \begin{bmatrix}
+    \boldX&:& \boldQ
+    \end{bmatrix}\right]^{-1}
+    \begin{bmatrix}
+    \boldX&:& \boldQ
+    \end{bmatrix}^\prime\boldy\\
+    &=
+    \begin{bmatrix}
+    \boldX^\top \bold X & \boldX^\top\boldQ\\
+    \boldQ^\top\boldX&\boldQ^\top\boldQ
+    \end{bmatrix}^{-1}
+    \begin{bmatrix}
+    \boldX^\top\boldy\\
+    \boldD^\top\boldy
+    \end{bmatrix}
+    \end{align*}
+    
+    \item Cet estimateur peut sembler exigeant du point 
+    de vue calculatoire dans la mesure il repose sur
+     l'inversion d'une matrice $(N +K)\times (N+ K)$ avec $N$ 
+     pouvant devenir très grand sur des panels typiques.
+    
+     \item Cet estimateur peut être obtenu sans besoin d'inverser  "directement" cette matrice. 
+
+\item On peut pour cela utiliser les propriétés des matrices with the particular structure of the matrices par
+ blocs/partitionnées $\boldQ^\prime\boldQ$ et $\boldQ^\prime\boldX$. 
+
+
+\item Appuyons nous sur le théorème  de Frish-Waugh-Lovell,  qui permet d'écrire l'estimateur des MCO comme suit:
+
+\begin{align*}
+\hat{\bolda}^{LSDV}_N
+&=
+\left[
+\boldX^\prime\boldM_\boldQ\boldX
+\right)^{-1}
+\left(
+\boldX^\prime\boldM_\boldQ\boldy
+\right]
+\end{align*}
+
+où  $\boldM_\boldQ$ est une matrice idempotente:
 \begin{align*}
 \boldM_\boldQ &=\Id_{NT} - \boldQ\left[\boldQ^\prime\boldQ\right]^{-1}\boldQ^\prime\\
 &= \left(\Id_n\otimes \Id_T\right) - \frac{1}{T}\left[\Id_n \otimes\boldone_T 
@@ -871,73 +873,56 @@ qui permet d'écrire l'estimateur des MCO comme suit:
 &= \Id_n\otimes\left[\Id_T -  \frac{1}{T} \boldone_T \boldone_T^\prime\right]
 \end{align*}
 
-\item Pré-multiplier $\boldy$ et $\boldX$ par $\boldM_\boldQ$, 
-le transforme en écart par rapport à leurs moyennes individuelles respectives:
-\begin{enumerate}[$\star$]
-\item pour $\boldM_\boldQ \boldy =: \boldy^{\star}$, et
-\item $\boldM_\boldQ \boldX =: \boldX^{\star}$, 
-\end{enumerate}
-\item L'élément $(i, t)$ étant donné par:
-\begin{align*}
-    y^{\star}_{it} = y_{it}-\bar{y}_i, &\quad  \boldx^{\star}_{it} = \boldx_{it}-\bar{\boldx}_i
- \end{align*}
-    
-    où $\bar{y}_i:= T^{-1}\sumtT y_{it}$, $\bar{\boldx}_i:= T^{-1}\sumtT \boldx_{it}$. 
 
-\item Comme $\boldM_\boldQ$ est idempotente, on peut écrire:
+
+\item When we pre-multiply $\boldy$ and $\boldX$ by $\boldM_\boldQ$, t
+hese variables are transformed in deviations with respect to individual means: 
+for $\boldM_\boldQ \boldy =: \boldy^{\star}$ and 
+$\boldM_\boldQ \boldX =: \boldX^{\star}$, the $(i, t)$ element is given by:
+
+
+
+
+
+When we pre-multiply $\boldy$ and $\boldX$ by $\boldM_\boldQ$, 
+these variables are transformed in deviations with respect to individual 
+means: for $\boldM_\boldQ \boldy =: \boldy^{\star}$ and $\boldM_\boldQ \boldX =: \boldX^{\star}$, 
+the $(i, t)$ element is given by:
 \begin{align*}
-\hat{\bolda}^{LSDV}_N  &=\left[ {\boldX^{\star}}^\prime\boldX^{\star}\right]^{-1}\left[{\boldX^{\star}}^\prime\boldy^{\star}\right]
+y^{\star}_{it} = y_{it}-\bar{y}_i, &\quad  x^{\star}_{it} = x_{it}-\bar{X}_i
 \end{align*}
 
-\item Par conséquent l'estimateur LSDV de $\bolda_0$ est numériquement équivalent à l'estimateur du modèle transformé suivant:
+where $\bar{y}_i:= T^{-1}\sumt y_{it}$, $\bar{y}_i:= T^{-1}\sumt x_{it}$. 
+
+\medskip
+
+Since $\boldM_\boldQ$ is an idempotent matrix, we can write:
 \begin{align*}
-y_{it}- \bar{y}_i &= (x_{it}- \bar{x}_i)^\prime\bolda_0+ \varepsilon_{it}^{\star},
+\betahat_{LSDV}  &=\left[ {\boldX^{\star}}^\prime\boldX^{\star}\right]^{-1}\left[{\boldX^{\star}}^\prime\boldy^{\star}\right]
 \end{align*}
-c.à.d., à l'estimateur en "within" lequel apparaît comme une procédure plus "économe" de calcul de l'estimateur LSDV.
+Therefore the LSDV estimator of $\bolda_0$ is equivalent to the OLS estimator of the transformed model:
+\begin{align*}
+y_{it}- \bar{y}_i &= (x_{it}- \bar{x}_i)^\prime\\bolda_0+ \varepsilon_{it}^{\star}
+\end{align*}
 
-\item Il est alors clair d'après ce qui a été dit sur l'estimateur en "within" que les les estimateur des effets fixes individuels 
-suivants:
+The LSDV and the WG estimators are numerically equivalent (i.e., they are the same estimator). The WG approach is the 
+efficient algorithm, from a computational point of view, of obtaining the LSDV.
+
+\medskip
+
+It is simple to show that the estimator of $\alpha_i$ is:
 
 \begin{align*}
-    \hat{\alpha}_i^{LSDV} &= T^{-1}\sumtT(y_{it} - x_{it}^\prime\hat{\bolda}^{LSDV}_N), \ i=1, \ldots, N,
+\hat\alpha}_{i, N}^{LSDV} &= T^{-1}\sumt(y_{it} - x_{it}^\prime\betahat)
 \end{align*}
 
-ne seront pas convergents, et ce qui pose alors la question de la convergence de  $\hat{\alpha}_{i, N}^{LSDV}$.
-
-    \end{itemize}
-    \end{frame}
-
-    \begin{frame}[allowframebreaks]{Paramètre incident et convergence de l'estimateur LSDV}
-        \begin{itemize}
-            \item En \textbf{règle générale}(c.à.d., en dehors du seul cadre d'un modèle linéaire statique), l'estimateur LSDV d'un modèle 
-            de panel n'est pas convergent dans un raisonnement asymptotique avec $N\to + \infty$ et $T$ fixe.
-            
-            \item La raison en est le problème du paramètre incident: le nombre de paramètres dans $\bolda$ augmente à la même vitesse que 
-            $N$, et nous n'avons que $T$ observations pour chaque $\alpha_i$, et ainsi $\hat{\alpha}^{LSDV}_i$ n'est pas convergent. 
-
-            \item Est-ce que cela affecte la convergence de $\hat{\bolda}_N^{LSDV}$? 
-            \item Comme indiqué plus haut, oui en \textbf{règle générale} mais non le cas(particulier) d'un modèle linéaire statique.
-            \item Autrement dit, la convergence de $\hat{\bolda}_N^{LSDV}$ malgré la non convergence des estimateurs des effets fixes individuels, 
-            n'étend pas à des modèles dynamique et/ou non-linéaires.
-        \end{itemize}
-        \framebreak
-
-        \begin{remark_fr}[Intuitions sur la convergence de l'estimateur LSDV]
-            \begin{enumerate}[$\star$]
-                \item Malgré le fait que l'estimation LSDV des effets fixes individuels ne donne pas des estimateurs convergents 
-                pour $T$ fixe, l'erreur d'estimation $\alpha_i - \hat{\alpha}_i^{LSDV}$ n'est pas corrélée avec les régresseurs 
-                quand ceux-ci sont supposés strictement exogènes.  
-                \item Notons qu'asymptotiquement $\hat{\alpha}_i^{LSDV}$ est égal à $\alpha_i + \bar{\varepsilon}_i$ ce qui 
-                fait que l'erreur d'estimation $\alpha_i - \hat{\alpha}_i^{LSDV}$ est égal à $\bar{\varepsilon}_i$. 
-                \item Quand le régresseurs sont strictement exogènes cet erreur d'estimation n'est 
-                pas corrélée avec les régresseurs $\boldx_{it}$.
-                \item De plus, quand les chocs transitoires $\varepsilon_{it}$ sont i.i.d., l'estimateur "within" 
-                est aussi asymptotiquement efficace.
-            \end{enumerate}
-        \end{remark_fr}
-    \end{frame}
 
 
+
+
+
+\end{itemize}
+\end{frame}
 \begin{frame}[allowframebreaks]{Références}
  \bibliographystyle{jpe}
   \bibliography{../Biblio}
