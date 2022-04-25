@@ -1,0 +1,6 @@
+\select@language {french}
+\beamer@sectionintoc {1}{Variables explicatives endog\IeC {\`e}nes et biais d'endog\IeC {\'e}n\IeC {\'e}it\IeC {\'e}}{3}{0}{1}
+\beamer@sectionintoc {2}{Sources de l'endog\IeC {\'e}n\IeC {\'e}it\IeC {\'e}}{7}{0}{2}
+\beamer@sectionintoc {3}{Introduction \IeC {\`a} la notion de variable instrumentale}{16}{0}{3}
+\beamer@sectionintoc {4}{L'estimateur de VIs}{23}{0}{4}
+\beamer@sectionintoc {5}{L\IeC {\textquoteright }estimateur des 2MC}{40}{0}{5}
