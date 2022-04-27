@@ -1582,6 +1582,33 @@ que  $\hat{\bolda}_N^{MCO}$ en utilisant ces notations:
  \end{enumerate}
 \end{itemize}
 \end{frame}
+\begin{frame}[allowframebreaks]{Convergence de l'estimateur des 2MC}
+\begin{propriete}[Convergence de l'estimateur des 2MC dans un modèle à VIs]
+    Soit $\{(y_i, \boldx_i \boldz_i); i=1, \ldots N.\}$ un échantillon de variables
+    aléatoires  telles que:
+    \begin{align*}
+y_i = \boldx_i^\prime\bolda_0 + u_i, \ \text{avec} \ \Exp[u_i| \boldz_i] =\Exp[u_i] \equiv 0.
+    \end{align*}
+    L'estimateur des 2MC de $\bolda_0$ (c.f., définition \ref{def5}):
+    \begin{align*}
+        \hat{\bolda}_N^{2MC} \equiv 
+        \left[
+            N^{-1}\sumiN\hat{\boldGamma}_N\boldz_i\boldx_i^\prime
+        \right]^{-1} 
+        N^{-1}\sumiN\hat{\boldGamma}_N\boldz_iy_i, \ \text{avec} \
+            \hat{\boldGamma}_N\equiv  
+            \left[N^{-1}\sumiN\boldx_i\boldz_i^\prime\right]
+            \left[N^{-1}\sumiN\boldz_i\boldz_i^\prime\right]^{-1}
+        \end{align*}
+        \begin{enumerate}[(i)]
+            \item existe avec une probabilité approchant 1,
+            \item est convergent pour $\bolda_0$:
+            \begin{align*}
+                \hat{\bolda}_N^{2MC} &\underset{N\to +\infty}{\limp} \bolda_0.
+            \end{align*}
+        \end{enumerate}
+\end{propriete}
+\end{frame}
 \begin{frame}[allowframebreaks]{Références}
 \bibliographystyle{jpe}
  \bibliography{../Biblio}
