@@ -1,0 +1,5 @@
+\babel@toc {french}{}
+\contentsline {section}{\tocsection {}{1}{R\IeC {\'e}gression lin\IeC {\'e}aire simple}}{2}{section.1}
+\contentsline {section}{\tocsection {}{2}{Application: \cite {card1993}}}{2}{section.2}
+\contentsline {section}{\tocsection {}{3}{Application: \cite {KielMcCain1995}}}{3}{section.3}
+\contentsline {section}{\tocsection {}{}{R\'ef\'erences}}{3}{section*.2}
