@@ -1,0 +1,11 @@
+\babel@toc {french}{}
+\contentsline {section}{\tocsection {}{1}{Objectifs}}{2}{section.1}
+\contentsline {subsection}{\tocsubsection {}{1.1}{Mod\IeC {\`e}les lin\IeC {\'e}aires pour donn\IeC {\'e}es en coupe}}{2}{subsection.1.1}
+\contentsline {subsection}{\tocsubsection {}{1.2}{Mod\IeC {\`e}les lin\IeC {\'e}aires pour donn\IeC {\'e}es de panel}}{2}{subsection.1.2}
+\contentsline {section}{\tocsection {}{2}{Plan}}{2}{section.2}
+\contentsline {subsection}{\tocsubsection {}{2.1}{Mod\IeC {\`e}les lin\IeC {\'e}aires pour donn\IeC {\'e}es en coupe}}{2}{subsection.2.1}
+\contentsline {subsection}{\tocsubsection {}{2.2}{Mod\IeC {\`e}les lin\IeC {\'e}aires pour donn\IeC {\'e}es de panel}}{2}{subsection.2.2}
+\contentsline {section}{\tocsection {}{3}{Bibliographie}}{3}{section.3}
+\contentsline {section}{\tocsection {}{4}{Travail individuel}}{3}{section.4}
+\contentsline {section}{\tocsection {}{5}{Mat\IeC {\'e}riel du cours}}{3}{section.5}
+\contentsline {section}{\tocsection {}{}{R\'ef\'erences}}{3}{section*.2}

@@ -1,0 +1,174 @@
+\documentclass[10pt, reqno]{amsart}
+\input{../Preambule}
+\newcommand{\bxi}{ \boldx_i }
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{txfonts}
+\usepackage{mathrsfs}
+\usepackage{fancyhdr}
+
+
+
+\usepackage{fancyhdr}
+\usetikzlibrary{calc,decorations.pathmorphing,patterns}
+\usepackage{listofitems}
+\tikzstyle{mynode}=[thick,draw=blue,fill=blue!20,circle,minimum size=22]
+\usepackage{amsaddr}
+\usepackage{mathrsfs}
+
+\makeatletter
+
+\pgfdeclaredecoration{penciline}{initial}{
+    \state{initial}[width=+\pgfdecoratedinputsegmentremainingdistance,auto corner on length=1mm,]{
+        \pgfpathcurveto%
+        {% From
+            \pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}
+                            {\pgfdecorationsegmentamplitude}
+        }
+        {%  Control 1
+        \pgfmathrand
+        \pgfpointadd{\pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}{0pt}}
+                        {\pgfqpoint{-\pgfdecorationsegmentaspect\pgfdecoratedinputsegmentremainingdistance}%
+                                        {\pgfmathresult\pgfdecorationsegmentamplitude}
+                        }
+        }
+        {%TO 
+        \pgfpointadd{\pgfpointdecoratedinputsegmentlast}{\pgfpoint{1pt}{1pt}}
+        }
+    }
+    \state{final}{}
+}
+\makeatother
+
+\pagestyle{fancy}
+%\renewcommand{\subsection{mark}[1]{\markright{#1}{}}
+\fancyhead{}
+\fancyfoot{} 
+%\fancyhead[LE,LO]{\tiny{\thepage}}
+\fancyhead[C]{\small\textsc{Inférence Statistique}}
+%fancyhead[CE,CO]{\tiny{\rightmark}}
+\fancyhead[L]{\small\textsc{Université de Grenoble Alpes}}
+\fancyfoot[C]{\small{\thepage}}
+%\fancyfoot[R]{\small \textcopyright \ \  \small\textsc
+\fancyhead[R]{ \small\textsc{M. W. Urdanivia}}
+%\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+%\pagenumbering{roman}
+
+
+\begin{document} 
+\usetikzlibrary{positioning}
+\usetikzlibrary{snakes}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{shapes}
+%\tikzset{block/.style={draw, rectangle, fill=gray!20, 
+%\tikzset{empty/.style={draw, rectangle, fill=none, tex
+%\tikzset{line/.style={draw, -latex'}}
+%\onehalfspace
+
+%\includepdf{trame}
+
+\begin{titlepage}
+\centering
+	%\includegraphics[width=0.15\textwidth]{logoUGA2020}
+	{\scshape\Large \textsc{Université de Grenoble Alpes\\(M1 BDA-EETT, S1)}\par}
+	\vspace{0.5cm}
+	{\Large\bfseries \scshape\Large \textsc{INFÉRENCE STATISTIQUE}\par}
+	%{\scshape\large \textsc{Extremum Estimators(1)}\par}
+	%\vspace{1cm}
+	\vspace{0.5cm}
+	{\Large\bfseries \textsc{NOTES SUR LA THÉORIE DE LA DÉCISION ET APPLICATION À LA THÉORIE DES TESTS} \par}
+    \vspace{0.5cm}   
+    %{\Large\bfseries \textsc{EXAMEN(L3 MIASH, S2)} \par}
+	%\vspace{1cm}
+	{(\textsc{Cette version: \today})\par}
+	\vspace{1cm}
+	{\large \textsc{Michal W. Urdanivia}
+	\footnote{Contact:  
+	\href{mailto:michal.wong-urdanivia@univ-grenoble-alpes.fr}{michal.wong-urdanivia@univ-grenoble-alpes.fr}, 
+	 Université de Grenoble Alpes,  Faculté d'\'Economie, GAEL.}\par}
+	 %\includegraphics[width=0.15\textwidth]{logoUGA}
+	%\vfill
+	%supervised by\par
+	%Dr.~Mark \textsc{Brown}
+%\vfill
+% Bottom of the page
+	
+\end{titlepage}
+
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction} 
+On considère un modèle statistique de la forme lm ETC,
+
+
+\begin{tikzpicture}[decoration=penciline]
+	\draw[decorate,style=help lines] (-2,-2) grid[step=1cm] (4,4);
+	\draw[decorate,thick] (0,0) -- (0,3) -- (3,3);
+	\draw[decorate,ultra thick,blue] (3,3)  arc (0:-90:2cm); %% This is supposed to be an arc!!
+	\draw[decorate,thick,pattern=north east lines] (-0.4cm,-0.8cm) rectangle (1.2,-2);
+	\node[decorate,draw,inner sep=0.5cm,fill=yellow,circle] (a) at (2,0) {}; %% That's not even an ellipse !!
+	\node[decorate,draw,inner sep=0.3cm,fill=red] (b) at (2,-2) {};
+	\draw[decorate] (b) to[in=-45,out=45] (a); %% This was supposed to be an edge!!
+	\node[decorate,draw,minimum height=2cm,minimum width=1cm] (c) at (-1.5,0) {};
+	\draw[decorate,->,dashed] (-0.5cm,-0.5cm) -- (-0.5cm,3.5cm)  -| (c.north);
+	\end{tikzpicture}
+	
+	\newpage
+	
+	\begin{tikzpicture}[x=2.2cm,y=1.4cm]
+	  \readlist\Nnod{4,5,5,5,3} % number of nodes per layer
+	  % \Nnodlen = length of \Nnod (i.e. total number of layers)
+	  % \Nnod[1] = element (number of nodes) at index 1
+	  \foreachitem \N \in \Nnod{ % loop over layers
+		% \N     = current element in this iteration (i.e. number of nodes for this layer)
+		% \Ncnt  = index of current layer in this iteration
+		\foreach \i [evaluate={\x=\Ncnt; \y=\N/2-\i+0.5; \prev=int(\Ncnt-1);}] in {1,...,\N}{ % loop over nodes
+		  \node[mynode] (N\Ncnt-\i) at (\x,\y) {};
+		  \ifnum\Ncnt>1 % connect to previous layer
+			\foreach \j in {1,...,\Nnod[\prev]}{ % loop over nodes in previous layer
+			  \draw[thick] (N\prev-\j) -- (N\Ncnt-\i); % connect arrows directly
+			}
+		  \fi % else: nothing to connect first layer
+		}
+	  }
+	\end{tikzpicture}
+	
+	
+	\begin{align*}
+	  x+y&\coloneqq y+z+v+k+f+\boldL\boldM++\boldZ+K+\varepsilon+\gamma+\boldw+\boldv+\boldy+\boldX\cdot\boldz\cdot\boldz\cdot\boldz,\\
+	  &\coloneqq g+\varepsilon+ \eta+\mu + \gamma+\eta + \theta + \xi + \phi,\\
+	  &=\boldX^\top\boldY\cdot \boldZ\cdot + \boldX+\boldY +  \boldL\boldM +  \boldL\boldM +  \boldL\boldM +  \boldL\boldM + \beta\\
+	  &= \boldL\boldM\boldL\boldM,\\
+	  &= \boldL\boldM \boldL\boldM,\\
+	  &=\boldalpha+\boldbeta+\boldmu+\boldOmega+\beta+\alpha+\gamma+\varepsilon+\gamma+\varepsilon\\
+	  & = \varepsilon+\varkappa+\varepsilon+\varepsilon,\\
+	  & = \varepsilon+\varkappa+\varepsilon+\varepsilon,\\
+	  & = \varepsilon+\varkappa + \varepsilon+\varkappa,\\
+	  & = \varepsilon+\varkappa + \varepsilon+\varkappa,\\
+	  & = \varepsilon+\varkappa+\varkappa + \boldxi + \boldxi  + \boldxi + \boldxi,\\
+	  &\equiv \boldL\boldM +\boldL\boldM,\\
+	  &= \boldL\boldM +\boldL\boldM,\\
+	  &= \boldL\boldM +\boldL\boldM,\\
+      &= \boldL\boldM +\boldL\boldM.\\
+	\end{align*}
+
+%\section{Application: salaires et offre de travail}
+
+%On considère le système suivant:
+
+%\begin{align*}
+%y_{1i} &= a_{0, 0} + a_{1, 0} y_{2i} +  a_{2, 0}z_{1, i} + a_{3, 0}z_{2, i}
+%\end{align*}
+%\bibliographystyle{jpe}
+%\bibliography{../../Biblio.bib}
+ \end{document}
