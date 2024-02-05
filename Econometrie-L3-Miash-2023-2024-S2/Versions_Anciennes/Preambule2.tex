@@ -1,0 +1,574 @@
+%\documentclass[10pt, reqno]{amsart}
+%\numberwithin{equation}{section}
+\usepackage[svgnames]{xcolor}
+\usepackage{setspace} 
+\usepackage{etex}
+\usepackage{tikz}
+\usepackage{mathrsfs}
+\usepackage{todonotes}                         %I use this to include comments on the PDF document. 
+                                                                     %Requires todonotes.sty
+\usepackage[labelfont=bf, margin=1cm]{caption}
+
+\usepackage{pst-func}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{thmtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+%\usepackage{tikz}
+\usepackage{mdframed}
+\usepackage{showexpl}
+%\usepackage{geometry}
+%\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1.5cm,rmargin=1.5cm}
+%\usepackage[left=1in,right=1in,top=0.9in,bottom=0.9in]{geometry}
+%\usepackage[vmargin={1.5in, 1.5in},hmargin={1.5in, 1.5in}]{geometry} 
+\usepackage[vmargin={1.5in, 1.5in},hmargin={1.5in, 1.5in}]{geometry} 
+%\usepackage[vmargin={1.5in, 1.5in},hmargin={1.2in, 1.2in}]{geometry} 
+%\usepackage{geometry}
+%\geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=3cm,rmargin=3cm}
+\usepackage{setspace}
+%\usepackage[latin9]{luainputenc}
+\setlength{\parskip}{\medskipamount}
+%\setlength{\parindent}{0pt}
+%\documentclass[12pt, reqno]{amsart}
+%\usepackage[svgnames]{xcolor}
+%\usepackage{setspace} 
+%\usepackage{etex}
+%\usepackage{tikz}
+%\usepackage{todonotes}                         %I use this to include comments on the PDF document. 
+                                                                     %Requires todonotes.sty
+%\usepackage[labelfont=bf, margin=1cm]{caption}
+
+%\usepackage{pst-func}
+%\usepackage[normalem]{ulem}
+%\usepackage{amsmath}
+%\usepackage{amsthm}
+%\usepackage{amsfonts}
+%\usepackage{amssymb}
+%\usepackage{graphicx}
+%\usepackage{hyperref}
+%\usepackage[left=1in,right=1in,top=0.9in,bottom=0.9in]{geometry}
+%\usepackage[vmargin={1.5in, 1.5in},hmargin={1in, 1in}]{geometry} 
+\usepackage{multirow}
+\usepackage{verbatim}
+\usepackage[greek,frenchb]{babel}
+\usepackage[babel=true,kerning=true]{microtype}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern} \normalfont %to load T1lmr.fd 
+\DeclareFontShape{T1}{lmr}{bx}{sc} { <-> ssub * cmr/bx/sc }{}
+\usepackage{pdfpages}
+%\usepackage{enumitem}
+\usepackage{enumerate}    
+\usepackage{natbib}
+\usepackage{ctable}
+\usepackage{lscape}
+\usepackage{array}
+\usepackage{bbm}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{epsf}
+%\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{verbatim}
+%\usepackage{courier}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{fncylab}
+\usepackage{authblk}
+\usepackage{textcomp}
+%\usepackage{tmmath} %_   (TM-Math/Times)
+%\usepackage{cmbright}
+%\usepackage{ccfonts} \usepackage[T1]{fontenc}
+%\usepackage[garamond]{mathdesign}
+\usepackage{xcolor}
+\usepackage[normalem]{ulem}
+    
+
+%\usepackage{newpxmath}
+%\usepackage{newpxtext}
+%\usepackage{sectsty}
+\usepackage{lipsum}
+\definecolor{ugablue}{cmyk}{1.00,.62,.0,.52}
+%\definecolor{ugablue}{rgb}{0.1,0.2,0.65}
+\definecolor{ugagrey}{cmyk}{.42,.08,.0,.40}
+%\hypersetup{
+  %colorlinks   = true, %Colours links instead of ugly boxes
+  %urlcolor     = ugablue, %Colour for external hyperlinks
+  %linkcolor    = DarkBlue, %Colour of internal links
+ % citecolor   = DarkBlue %Colour of citations
+%}
+\hypersetup{
+  colorlinks   = true, %Colours links instead of ugly boxes
+  urlcolor     = ugablue, %Colour for external hyperlinks
+  linkcolor    = MidnightBlue, %Colour of internal links
+  citecolor   = MidnightBlue %Colour of citations
+}
+\newtheorem{theoreme}{Théorème}[section]
+\newtheorem*{theoreme*}{Théorème}
+%\newtheorem{conjecture}{Conjecture}[section]
+%\newtheorem{corollary}{Corollary}[section]
+\newtheorem{lemme}{Lemme}[section]
+\newtheorem{proposition}{Proposition}[section]
+%\newtheorem{propriete}{Propri\'et\'e}
+%\newtheorem{assumption}{Assumption}
+%\renewcommand{\theassumption}{A\arabic{assumption}}
+%\newtheorem{hypothese}{Hypothèse}
+%\renewcommand{\thehypothese}{H\arabic{hypothese}}
+%\newtheorem{condition}{Condition}
+%\renewcommand{\thecondition}{C\arabic{condition}}
+%\newtheorem{propriete}{Propriété}
+%\renewcommand{\thepropriete}{P\arabic{propriete}}
+%\newtheorem{remarque}{Remarque}
+%\theoremstyle{definition}
+%\newtheorem{definition}{Définition}
+%\labelformat{definition}{D\arabic{definition}}
+%\newtheorem{exemple}{Exemple}
+%\renewcommand{\thedefinition}{Définition D\arabic{definition}}
+\newcommand{\argmax}{\operatornamewithlimits{arg\,max\,}}
+\newcommand{\argmin}{\operatornamewithlimits{arg\,min\,}}
+\providecommand{\plim}{\underset{n \rightarrow \infty}{\operatornamewithlimits{plim}}}
+\def\inprobLOW{\rightarrow_p}
+\def\inprobHIGH{\,{\buildrel p \over \rightarrow}\,} 
+\def\inprob{\,{\inprobHIGH}\,} 
+\def\indist{\,{\buildrel d \over \rightarrow}\,} 
+\def\F{\mathbb{F}}
+\def\R{\mathbb{R}}
+\def\N{\mathbb{N}}
+\newcommand{\gmatrix}[1]{\begin{pmatrix} {#1}_{11} & \cdots &
+    {#1}_{1n} \\ \vdots & \ddots & \vdots \\ {#1}_{m1} & \cdots &
+    {#1}_{mn} \end{pmatrix}}
+\newcommand{\iprod}[2]{\left\langle {#1} , {#2} \right\rangle}
+\newcommand{\norm}[1]{\left\Vert {#1} \right\Vert}
+\newcommand{\abs}[1]{\left\vert {#1} \right\vert}
+\renewcommand{\det}{\mathrm{det}}
+%\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\spn}{\mathrm{span}}
+\newcommand{\row}{\mathrm{Row}}
+\newcommand{\col}{\mathrm{Col}}
+\renewcommand{\dim}{\mathrm{dim}}
+\newcommand{\prefeq}{\succeq}
+\newcommand{\pref}{\succ}
+\newcommand{\seq}[1]{\{{#1}_n \}_{n=1}^\infty }
+%\providecommand{\limp}{\underset{n \rightarrow \infty}{\overset{p}{\longrightarrow}}}
+%\providecommand{\limp}{\underset{n \rightarrow +\infty}{\overset{p.}{\longrightarrow}}}
+%\providecommand{\limp}{\overset{p.}{\longrightarrow}}
+\renewcommand{\to}{\rightarrow}
+\providecommand{\limp}{\overset{p}{\rightarrow}}
+%\providecommand{\limp}{\overset{p}{\to}}
+\providecommand{\limps}{\overset{p.s.}{\rightarrow}}
+%\providecommand{\limps}{\overset{p.s.}{\to}}
+\providecommand{\limd}{\overset{d}{\rightarrow}}
+\providecommand{\liml}{\overset{L}{\rightarrow}}
+\providecommand{\limlp}{\overset{L^p}{\rightarrow}}
+%\providecommand{\limd}{\overset{d}{\to}}
+%\providecommand{\limps}{\underset{n \rightarrow +\infty}{\overset{p. s.}{\longrightarrow}}}
+%\providecommand{\limp}{\overset{p}{\longrightarrow}}
+%\providecommand{\limd}{\underset{n \rightarrow +\infty}{\overset{d.}{\longrightarrow}}}
+\providecommand{\approxdist}{\overset{\mathrm{a}}{\sim}}
+\providecommand{\sima}{\overset{\mathrm{a}}{\sim}}
+%\providecommand{\limd}{\overset{d.}{\longrightarrow}}
+%\newcommand{\sumobs}{\underset{i=1}{\overset{n}{\sum}}}
+\providecommand{\limprob}{\overset{p}{\underset{N\to +\infty}{\longrightarrow}}}
+\providecommand{\limloi}{\overset{L}{\underset{N\to +\infty}{\longrightarrow}}}
+\providecommand{\limpsure}{\overset{p.s.}{\underset{N\to +\infty}{\longrightarrow}}}
+\newcommand{\sumobs}{\sum_{i=1}^n}
+\newcommand{\sumiton}{\sum_{i=1}^n}
+\newcommand{\sumi}{\underset{i=1}{\overset{n}{\sum}}}
+\newcommand{\prodi}{\underset{i=1}{\overset{n}{\prod}}}
+\newcommand{\sumt}{\underset{t=1}{\overset{T}{\sum}}}
+\newcommand{\sumti}{\underset{t=1}{\overset{T_i}{\sum}}}
+\newcommand{\sumitok}{\underset{i=1}{\overset{k}{\sum}}}
+\newcommand{\sumjton}{\underset{j=1}{\overset{n}{\sum}}}
+\newcommand{\sumttoT}{\underset{t=1}{\overset{T}{\sum}}}
+\newcommand{\sumkton}{\underset{k=1}{\overset{n}{\sum}}}
+\newcommand{\sumjtoinfty}{\underset{j=1}{\overset{\infty}{\sum}}}
+\newcommand{\sumjzerotoinfty}{\underset{j=0}{\overset{\infty}{\sum}}}
+\newcommand{\sumkzerotoinfty}{\underset{k=0}{\overset{\infty}{\sum}}}
+\newcommand{\sumkonetoinfty}{\underset{k=1}{\overset{\infty}{\sum}}}
+\newcommand{\sumlzerotoinfty}{\underset{l=0}{\overset{\infty}{\sum}}}
+\newcommand{\summinftoinf}{\underset{-\infty}{\overset{\infty}{\sum}}}
+\newcommand{\limntoinfty}{\underset{n\rightarrow\infty}{\lim}}
+\newcommand{\prodobs}{\underset{i=1}{\overset{n}{\prod}}}
+\newcommand{\sumtoinf}{\underset{i=0}{\overset{\infty}{\sum}}}
+\providecommand{\sumiN}{{\sum_{i=1}^N}}
+\providecommand{\sumtT}{{\sum_{t=1}^T}}
+%\renewcommand{\to}{{\rightarrow}}
+\providecommand{\Lsq}{{\mathcal{L}^2}}
+\providecommand{\En}{\mathbb{E}_n}
+\providecommand{\Gn}{\mathrm{G}_n}
+%\providecommand{\Var}{\mathbf{Var}}
+%\providecommand{\Var}{\mathsf{Var}}
+%\providecommand{\Var}{\mathrm{Var}}
+%\providecommand{\Vr}{\mathbb{V}}
+\providecommand{\Er}{\mathbb{E}}
+%\providecommand{\Exp}{\mathbf{E}}
+%\providecommand{\Exp}{\mathsf{E}}
+%\providecommand{\Exp}{\mathbb{E}}
+%\providecommand{\Exp}{\mathrm{E}}
+%\DeclareMathOperator{\Exp}{\mathrm{E}}
+%\DeclareMathOperator{\Var}{\mathrm{Var}}
+%\DeclareMathOperator{\Cov}{\mathrm{Cov}}
+%\DeclareMathOperator{\corr}{\mathrm{corr}}
+\DeclareMathOperator{\indfun}{\mathbf{1}}
+\DeclareMathOperator{\Exp}{E}
+\DeclareMathOperator{\Expbar}{\bar{E}}
+\DeclareMathOperator{\Expn}{\mathbb{E}_n}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Vr}{V}
+\DeclareMathOperator{\Avar}{AVar}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Cv}{Cv}
+\DeclareMathOperator{\corr}{corr}
+\providecommand{\Cr}{\mathcal{C}}
+\DeclareMathOperator{\perps}{\perp_s}
+%\DeclareMathOperator{\Prob}{Pr}
+\DeclareMathOperator{\Prob}{P}
+\DeclareMathOperator{\prob}{p}
+\DeclareMathOperator{\loss}{L}
+%\DeclareMathOperator{\Exp}{\mathbf{E}}
+%\DeclareMathOperator{\Var}{\mathbf{Var}}
+%\DeclareMathOperator{\Cov}{\mathbf{Cov}}
+%\DeclareMathOperator{\corr}{\mathbf{corr}}
+%\DeclareMathOperator{\Prob}{\mathbf{Pr}}
+%\providecommand{\Cov}{\mathbf{Cov}}
+%\providecommand{\Cov}{\mathsf{Cov}}
+%\providecommand{\Cov}{\mathrm{Cov}}
+%\providecommand{\corr}{\mathbf{corr}}
+\providecommand{\Id}{\mathbf{I}}
+\providecommand{\Ind}{\mathbf{1}}
+\providecommand{\uvec}{\mathbf{1}}
+\providecommand{\vecOnes}{\mathbf{1}}
+%\providecommand{\vecOnes}{\mathbf{e}}
+\providecommand{\Rang}{\mathrm{Rang}}
+\providecommand{\Trace}{\mathrm{Trace}}
+%\providecommand{\Tr}{\mathrm{Tr}}
+%\providecommand{\Cov}{\mathbb{C}\mathrm{ov}}
+\providecommand{\Diag}{\mathrm{Diag}}
+\providecommand{\Pred}{\mathcal{P}}
+\providecommand{\sp}{\mathrm{span}}
+\providecommand{\CI}{\mathrm{CI}}
+\providecommand{\reg}{\mathrm{r}}
+\providecommand{\Likelihood}{\mathrm{L}}
+%\renewcommand{\Pr}{{\mathbb{P}}}
+\providecommand{\set}[1]{\left\{#1\right\}}
+\providecommand{\asyvar}{\mathrm{AsyVar}}
+\providecommand{\dapprox}{\overset{a.}{\approx}}
+%\providecommand{\plim}{\operatornamewithlimits{plim}}
+\newcommand\indep{\protect\mathpalette{\protect\independenT}{\perp}}
+%\newcommand{\independent}{\perp \!\!\! \perp}
+\DeclareMathOperator{\indpnt}{\perp \!\!\! \perp}
+\def\independenT#1#2{\mathrel{\setbox0\hbox{$#1#2$}%
+  \copy0\kern-\wd0\mkern4mu\box0}} 
+\providecommand{\iiddat}{\{(y_i, x_i)\}_{i=1}^n}
+\newcommand{\dsim}{\stackrel {\textrm{appr }} {\sim} }
+%\providecommand{\dsim}{{\overset{appr.}{\sim}}}
+%%Commands from Econometric Theory(Slides) by J. Stachurski.
+\newcommand\T{{\mathpalette\raiseT\intercal}}
+\newcommand\raiseT[2]{\raisebox{0.25ex}{$#1#2$}}
+\newcommand{\boldx}{ {\mathbf x} }
+\newcommand{\boldu}{ {\mathbf u} }
+\newcommand{\boldv}{ {\mathbf v} }
+\newcommand{\boldw}{ {\mathbf w} }
+\newcommand{\boldy}{ {\mathbf y} }
+\newcommand{\boldb}{ {\mathbf b} }
+\newcommand{\bolda}{ {\mathbf a} }
+\newcommand{\boldc}{ {\mathbf c} }
+\newcommand{\boldi}{ {\mathbf i} }
+\newcommand{\bolde}{ {\mathbf e} }
+\newcommand{\boldg}{ {\mathbf g} }
+\newcommand{\boldp}{ {\mathbf p} }
+\newcommand{\boldq}{ {\mathbf q} }
+\newcommand{\bolds}{ {\mathbf s} }
+\newcommand{\boldt}{ {\mathbf t} }
+\newcommand{\boldz}{ {\mathbf z} }
+\newcommand{\boldr}{ {\mathbf r} }
+\newcommand{\boldd}{ {\mathbf d} }
+
+\newcommand{\boldzero}{ {\mathbf 0} }
+\newcommand{\boldone}{ {\mathbf 1} }
+
+\newcommand{\boldalpha}{ {\boldsymbol \alpha} }
+\newcommand{\boldbeta}{ {\boldsymbol \beta} }
+\newcommand{\boldgamma}{ {\boldsymbol \gamma} }
+\newcommand{\boldtheta}{ {\boldsymbol \theta} }
+\newcommand{\boldxi}{ {\boldsymbol \xi} }
+\newcommand{\boldtau}{ {\boldsymbol \tau} }
+\newcommand{\boldepsilon}{ {\boldsymbol \epsilon} }
+\newcommand{\boldmu}{ {\boldsymbol \mu} }
+\newcommand{\boldSigma}{ {\boldsymbol \Sigma} }
+\newcommand{\boldOmega}{ {\boldsymbol \Omega} }
+\newcommand{\boldPhi}{ {\boldsymbol \Phi} }
+\newcommand{\boldLambda}{ {\boldsymbol \Lambda} }
+\newcommand{\boldGamma}{ {\boldsymbol \Gamma} }
+\newcommand{\boldPi}{ {\boldsymbol \Pi} }
+\newcommand{\boldpi}{ {\boldsymbol \pi} }
+\newcommand{\boldphi}{ {\boldsymbol \phi} }
+
+\newcommand{\Sigmax}{ {\boldsymbol \Sigma_{\boldx}}}
+\newcommand{\Sigmau}{ {\boldsymbol \Sigma_{\boldu}}}
+\newcommand{\Sigmaxinv}{ {\boldsymbol \Sigma_{\boldx}^{-1}}}
+\newcommand{\Sigmav}{ {\boldsymbol \Sigma_{\boldv \boldv}}}
+
+\newcommand{\hboldx}{ \hat {\mathbf x} }
+\newcommand{\hboldy}{ \hat {\mathbf y} }
+\newcommand{\hboldb}{ \hat {\mathbf b} }
+\newcommand{\hboldu}{ \hat {\mathbf u} }
+\newcommand{\hboldtheta}{ \hat {\boldsymbol \theta} }
+\newcommand{\hboldtau}{ \hat {\boldsymbol \tau} }
+\newcommand{\hboldmu}{ \hat {\boldsymbol \mu} }
+\newcommand{\hboldbeta}{ \hat {\boldsymbol \beta} }
+\newcommand{\hboldgamma}{ \hat {\boldsymbol \gamma} }
+\newcommand{\hboldSigma}{ \hat {\boldsymbol \Sigma} }
+\newcommand{\betahat}{\hat{\beta}}
+\newcommand{\gammahat}{\hat{\gamma}}
+\newcommand{\Ahat}{\hat{A}}
+\newcommand{\epsilonhat}{\hat{\epsilon}}
+\newcommand{\varepsilonhat}{\hat{\varepsilon}}
+\newcommand{\sigmahat}{\hat{\sigma}}
+\newcommand{\Sigmahat}{\hat{\Sigma}}
+\newcommand{\boldA}{\mathbf A}
+\newcommand{\boldB}{\mathbf B}
+\newcommand{\boldC}{\mathbf C}
+\newcommand{\boldD}{\mathbf D}
+\newcommand{\boldG}{\mathbf G}
+\newcommand{\boldI}{\mathbf I}
+\newcommand{\boldL}{\mathbf L}
+\newcommand{\boldM}{\mathbf M}
+\newcommand{\boldP}{\mathbf P}
+\newcommand{\boldQ}{\mathbf Q}
+\newcommand{\boldR}{\mathbf R}
+\newcommand{\boldX}{\mathbf X}
+\newcommand{\boldU}{\mathbf U}
+\newcommand{\boldV}{\mathbf V}
+\newcommand{\boldW}{\mathbf W}
+\newcommand{\boldY}{\mathbf Y}
+\newcommand{\boldZ}{\mathbf Z}
+
+\newcommand{\hboldU}{ \hat {\mathbf U} }
+\newcommand{\hboldOmega}{ \hat{{\boldsymbol \Omega} }}
+\newcommand{\bSigmaX}{ {\boldsymbol \Sigma_{\hboldbeta}} }
+\newcommand{\hbSigmaX}{ \mathbf{\hat \Sigma_{\hboldbeta}} }
+
+\newcommand{\RR}{\mathbbm R}
+\newcommand{\CC}{\mathbbm C}
+%\newcommand{\NN}{\mathbbm N}
+\newcommand{\PP}{\mathbbm P}
+\newcommand{\EE}{\mathbbm E \nobreak\hspace{.1em}}
+\newcommand{\EEP}{\mathbbm E_P \nobreak\hspace{.1em}}
+\newcommand{\ZZ}{\mathbbm Z}
+\newcommand{\QQ}{\mathbbm Q}
+
+
+\newcommand{\XX}{\mathcal X}
+
+\newcommand{\aA}{\mathcal A}
+\newcommand{\fF}{\mathscr F}
+\newcommand{\bB}{\mathscr B}
+\newcommand{\iI}{\mathscr I}
+\newcommand{\rR}{\mathscr R}
+\newcommand{\dD}{\mathcal D}
+\newcommand{\lL}{\mathcal L}
+\newcommand{\llL}{\mathcal{H}_{\ell}}
+\newcommand{\gG}{\mathcal G}
+\newcommand{\hH}{\mathcal H}
+\newcommand{\nN}{\textrm{\sc n}}
+\newcommand{\lN}{\textrm{\sc ln}}
+\newcommand{\pP}{\mathscr P}
+\newcommand{\qQ}{\mathscr Q}
+\newcommand{\xX}{\mathcal X}
+
+\newcommand{\ddD}{\mathscr D}
+\newcommand{\lnorm}{\mathit{l}}
+
+
+%\newcommand{\R}{{\texttt R}}
+\newcommand{\risk}{\mathcal R}
+\newcommand{\Remp}{R_{{\rm emp}}}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+\newcommand{\ess}{ \textrm{{\sc ess}} }
+\newcommand{\tss}{ \textrm{{\sc tss}} }
+\newcommand{\rss}{ \textrm{{\sc rss}} }
+\newcommand{\rssr}{ \textrm{{\sc rssr}} }
+\newcommand{\ussr}{ \textrm{{\sc ussr}} }
+\newcommand{\zdata}{\mathbf{z}_{\mathcal D}}
+\newcommand{\Pdata}{P_{\mathcal D}}
+\newcommand{\Pdatatheta}{P^{\mathcal D}_{\theta}}
+\newcommand{\Zdata}{Z_{\mathcal D}}
+
+
+\newcommand{\e}[1]{\mathbbm{E}[{#1}]}
+\newcommand{\p}[1]{\mathbbm{P}({#1})}
+
+
+
+\DeclareMathOperator{\cl}{cl}
+%\DeclareMathOperator{\argmax}{argmax}
+\DeclareMathOperator{\interior}{int}
+%\DeclareMathOperator{\Prob}{Prob}
+\DeclareMathOperator{\kernel}{ker}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\lag}{\mathbf{L}}
+\DeclareMathOperator{\AR}{\mathrm{AR}}
+\DeclareMathOperator{\MA}{\mathrm{MA}}
+\DeclareMathOperator{\ARMA}{\mathrm{ARMA}}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\determinant}{det}
+\DeclareMathOperator{\vech}{vech}
+\DeclareMathOperator{\trace}{trace}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\rank}{rank}
+%\DeclareMathOperator{\cov}{cov}
+%\DeclareMathOperator{\corr}{corr}
+\DeclareMathOperator{\range}{rng}
+%\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\mse}{mse}
+\DeclareMathOperator{\se}{se}
+%\DeclareMathOperator{\row}{row}
+%\DeclareMathOperator{\col}{col}
+\DeclareMathOperator{\dimension}{dim}
+\DeclareMathOperator{\fracpart}{frac}
+\DeclareMathOperator{\proj}{proj}
+\DeclareMathOperator{\colspace}{colspace}
+%\theoremstyle{plain}
+%\newtheorem{axiom}{Axiom}[section]
+%\newtheorem{theorem}{Theorem}[section]
+%\newtheorem{corollary}{Corollary}[section]
+%\newtheorem{lemma}{Lemma}[section]
+%\newtheorem{proposition}{Proposition}[section]
+%
+\theoremstyle{definition}
+%\newtheorem{definition}{Definition}[section]
+%\newtheorem{example}{Example}[section]
+%\newtheorem{remark}{Remark}[section]
+%\newtheorem{notation}{Notation}[section]
+\newtheorem{assumption}{Assumption}
+\renewcommand{\theassumption}{A\arabic{assumption}}
+%\newtheorem{condition}{Condition}[section]
+%\newtheorem{exercise}{Ex.}[section]
+%\newtheorem{fact}{Fact}[section]
+%%
+\newtheoremstyle{interpret}% name
+{12pt}% Space above
+{5pt}% Space below
+{}% Body font
+{}% Indent amount
+{\bfseries}% Theorem head font
+{:}% Punctuation after theorem head
+{.3em}% Space after theorem head
+{}% Theorem head spec (can be left empty, meaning `normal')
+
+\theoremstyle{interpret}
+\newtheorem{interpret}{\textsc{Interprétation}}
+\renewcommand{\theinterpret}{}
+
+%\newtheoremstyle{interpretation}% name
+%{12pt}% Space above
+%{5pt}% Space below
+%{}% Body font
+%{}% Indent amount
+%{\bfseries}% Theorem head font
+%{}% Punctuation after theorem head
+%{.5em}% Space after theorem head
+%{}% Theorem head spec (can be left empty, meaning `normal')
+
+
+\theoremstyle{remark}
+\newtheorem{interpretation}{Interprétation}
+\newtheorem*{interpretation*}{Interprétation}
+
+\theoremstyle{remark}
+%\newtheorem{remarque}{Remarque}%[section]
+%\newtheorem*{remarque*}{Remarque}
+\newtheorem{remark}{Remark}%[section]
+\newtheorem*{remark*}{Remark}
+%\newtheorem{comment}{Comment}%[section]
+%\newtheorem*{comment*}{Comment
+%\usepackage{mdframed}
+%\newtheorem{step}{Step}[section]
+%\newtheorem{rem}{Comment}[section]
+%\newtheorem{ex}{Example}[section]
+%\newtheorem{hist}{History}[section]
+%\newtheorem*{ex*}{Example}
+\theoremstyle{plain}
+\newtheorem{propriete}{Propri\'et\'e}%[section]
+\renewcommand{\thepropriete}{P\arabic{propriete}}
+\newtheorem{lemma}{Lemma}
+\newtheorem*{lemma*}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem*{theorem*}{Theorem}
+\theoremstyle{definition}
+\newtheorem{definition}{Définition}%[section]
+\theoremstyle{definition}
+
+%\newtheorem{definitionx}{D\'efinition}%[section]
+%\newenvironment{definition}
+ %{\pushQED{\qed}\renewcommand{\qedsymbol}{$\triangle$}\definitionx}
+ %{\popQED\enddefinitionx}
+
+\newtheorem{condition}{Condition}
+\renewcommand{\thecondition}{C\arabic{condition}}
+\theoremstyle{remark}
+%\newtheorem{exemple}{Exemple}
+%\newtheorem*{exemple*}{Exemple}
+\newtheorem{example}{Example}
+\newtheorem*{example*}{Example}
+\newtheorem{remarque}{Remarque}
+\newtheorem*{remarque*}{Remarque}
+\newtheorem{exemple}{Exemple}
+\newtheorem*{exemple*}{Exemple}
+%\newtheorem{example}{Example}[section]
+%\newtheorem{remark}{Remark}[section]
+%\newtheorem{notation}{Notation}[section]
+%\newtheorem{assumption}{Assumption}[section]
+%\newtheorem{condition}{Condition}[section]
+%\newtheorem{exercise}{Ex.}[section]
+%\newtheorem{fact}{Fact}[section]
+\newenvironment{prt}
+  {
+  \begin{mdframed}
+  \begin{propriete}}
+  {\end{propriete}
+  \end{mdframed}
+  }
+  
+  \newenvironment{dft}
+  {
+  \begin{mdframed}\begin{definition}}
+  {\end{definition}\end{mdframed}
+  }
+
+
+
+%\newenvironment{example*}
+ % {\begin{mdframed}\begin{ex*}}
+  %{\end{ex*}\end{mdframed}}
+
+
+\usepackage{xcolor}
+ \colorlet{linkequation}{ugablue} 
+ 
+\newcommand*{\SavedEqref}{}
+ \let\SavedEqref\eqref 
+\renewcommand*{\eqref}[1]{%
+\begingroup \hypersetup{
+      linkcolor=linkequation,
+linkbordercolor=linkequation, }%
+\SavedEqref{#1}%
+ \endgroup
+}
+
+\newcommand*{\refeq}[1]{%
+ \begingroup
+\hypersetup{ 
+linkcolor=linkequation, 
+linkbordercolor=linkequation,
+}%
+\ref{#1}%
+ \endgroup
+}
