@@ -1,0 +1,481 @@
+\documentclass[10pt, reqno]{amsart}
+\input{../Preambule2}
+\newcommand{\bxi}{ \boldx_i }
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{txfonts}
+\usepackage{mathrsfs}
+\usepackage{fancyhdr}
+
+
+
+\usepackage{fancyhdr}
+\usetikzlibrary{calc,decorations.pathmorphing,patterns}
+\usepackage{listofitems}
+\tikzstyle{mynode}=[thick,draw=blue,fill=blue!20,circle,minimum size=22]
+\usepackage{amsaddr}
+\usepackage{mathrsfs}
+
+\makeatletter
+
+\pgfdeclaredecoration{penciline}{initial}{
+    \state{initial}[width=+\pgfdecoratedinputsegmentremainingdistance,auto corner on length=1mm,]{
+        \pgfpathcurveto%
+        {% From
+            \pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}
+                            {\pgfdecorationsegmentamplitude}
+        }
+        {%  Control 1
+        \pgfmathrand
+        \pgfpointadd{\pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}{0pt}}
+                        {\pgfqpoint{-\pgfdecorationsegmentaspect\pgfdecoratedinputsegmentremainingdistance}%
+                                        {\pgfmathresult\pgfdecorationsegmentamplitude}
+                        }
+        }
+        {%TO 
+        \pgfpointadd{\pgfpointdecoratedinputsegmentlast}{\pgfpoint{1pt}{1pt}}
+        }
+    }
+    \state{final}{}
+}
+\makeatother
+
+\pagestyle{fancy}
+%\renewcommand{\subsection{mark}[1]{\markright{#1}{}}
+\fancyhead{}
+\fancyfoot{} 
+%\fancyhead[LE,LO]{\tiny{\thepage}}
+\fancyhead[C]{\small\textsc{Économètrie: L3 MIASH, S2}}
+%fancyhead[CE,CO]{\tiny{\rightmark}}
+\fancyhead[L]{\small\textsc{Université de Grenoble Alpes}}
+\fancyfoot[C]{\small{\thepage}}
+%\fancyfoot[R]{\small \textcopyright \ \  \small\textsc
+\fancyhead[R]{ \small\textsc{M. W. Urdanivia}}
+%\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+%\pagenumbering{roman}
+
+
+\begin{document} 
+\usetikzlibrary{positioning}
+\usetikzlibrary{snakes}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{shapes}
+%\tikzset{block/.style={draw, rectangle, fill=gray!20, 
+%\tikzset{empty/.style={draw, rectangle, fill=none, tex
+%\tikzset{line/.style={draw, -latex'}}
+%\onehalfspace
+
+%\includepdf{trame}
+
+\begin{titlepage}
+\centering
+	%\includegraphics[width=0.15\textwidth]{logoUGA2020}
+	{\scshape\Large \textsc{Université de Grenoble Alpes\\(L3 MIASH, S2)}\par}
+	\vspace{0.5cm}
+	{\Large\bfseries \scshape\Large \textsc{ÉCONOMÉTRIE}\par}
+	%{\scshape\large \textsc{Extremum Estimators(1)}\par}
+	%\vspace{1cm}
+	\vspace{0.5cm}
+	{\Large\bfseries \textsc{3: Régression Linéaire et endogénéité} \par}
+    \vspace{1cm}   
+    {\Large\bfseries \textsc{Variables Instrumentales} \par}
+	\vspace{1cm}
+	{(\textsc{Cette version: \today})\par}
+	\vspace{1cm}
+	{\large \textsc{Michal W. Urdanivia}
+	\footnote{Contact:  
+	\href{mailto:michal.wong-urdanivia@univ-grenoble-alpes.fr}{michal.wong-urdanivia@univ-grenoble-alpes.fr}, 
+	 Université de Grenoble Alpes,  Faculté d'\'Economie, GAEL.}\par}
+	 %\includegraphics[width=0.15\textwidth]{logoUGA}
+	%\vfill
+	%supervised by\par
+	%Dr.~Mark \textsc{Brown}
+%\vfill
+% Bottom of the page
+	
+\end{titlepage}
+
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+
+\section{Exogénéité(s) dans un modèle de régression linéaire}
+L'objectif d'un modèle de régression linéaire est de mesurer la relation entre une variable $Y\in\R$ 
+appelée variable dépendante du modèle et un vecteur de $X\in\R^K$ appelé (vecteur des) régresseurs du modèle. 
+Les variables $(Y, X)$ sont supposées être des variables aléatoires car elles portent sur un phénomène imparfaitement 
+observé par le chercheur. En outre, on se concentre sur l'espérance conditionnelle $\Exp(Y|X)$ et on suppose aussi
+que la relation entre $Y$ et $X$ obéit à:
+\begin{align}
+	Y &= X^\top \beta + U.
+	\label{eq1}
+\end{align}
+Dans \eqref{eq1} $U$ est une variable aléatoire réelle qui représente(résume) l'ensemble des facteurs inobservés 
+induisant des variations de $Y$ pour des valeurs de $X$ données. $\beta\in\R^K$ est 
+un vecteur de paramètres inconnus dont la connaissance nous permettrait 
+si l'on pouvait fixer les valeurs de $U$, de mesurer les effets de $X$ sur $Y$. Par exemple pour un élément $X_k$ 
+de $X$ continu nous pourrions calculer $\partial Y/\partial X_k = \beta_k$, pour $k = 1, \ldots, K$.
+
+$U$ n'étant pas observé on se concentre sur un modèle de régression linéaire qui est un modèle pour $\Exp(Y|X)$ 
+où l'on suppose que,
+\begin{align}
+	\Exp(Y|X) &= X^\top \beta.
+	\label{eq2}
+\end{align}
+où il est aussi  supposé que $\Exp(\abs{Y}) < \infty)$ de sorte que $\Exp(Y|X)$ existe.
+
+Il apparaît que pour avoir \eqref{eq2} tout en supposant \eqref{eq1} on doit 
+aussi supposer dans \eqref{eq1} que $U$ est en moyenne indépendant de $X$,
+
+\begin{align}
+\Exp(U|X) &=0,
+\label{eq3}
+\end{align}
+
+ car alors,
+
+\begin{align*}
+	\Exp(Y|X)&=X^\top\beta +\Exp(U|X) = X^\top\beta.
+\end{align*}
+
+Dans ce cas $\beta$ permet de mesurer les effets en moyenne d'un régresseur $X_k$ sur $Y$ pour 
+des valeurs données des autres régresseurs et sachant qu'en moyenne 
+les déterminats inobservés de $Y$ représentés par $U$ sont indépendants des régresseurs $X$. Autrement dit,
+$\beta_k = \partial \Exp(Y|X)/\partial X_k$ est un effet causal car la variation de $Y$ induite par celle de $X_k$
+ne résulte que de celle-ci et non d'autres facteurs que l'on ne peut pas contrôler car ils sont inobservés.
+
+La condition \eqref{eq3} est qualifié d'\textbf{exogénéité forte}, et les régresseurs sont alors qualifiés de fortement exogènes. 
+Cette condition implique que, 
+\begin{align*}
+	\Exp(U) &= \Exp\left(\Exp(U|X)\right) = 0,
+\end{align*}
+où nous avons utilisé la règle des espérance itérées. Cette dernière peut être appliqué de nouveau pour avoir,
+\begin{align}
+	\Exp(XU) &= \Exp\left(X\Exp(U|X)\right) = 0.
+	\label{eq4}
+\end{align}
+Il convient ici de rappeler que \eqref{eq4} est une condition d'identification de $\beta$ dans \eqref{eq1} en ce sens que
+sous cette condition et en supposant que $\Exp(XX^\top)$ soit de plein rang:
+\begin{align}
+\beta &=\left(\Exp(XX^\top)\right)^{-1}\Exp(XY)
+\label{eq5}
+\end{align}
+La condition \eqref{eq4} est qualifié d'\textbf{exogénéité faible}, et les régresseurs sont alors qualifiés de faiblement exogènes. 
+On note aussi que l'estimateur des MCO de $\beta$ peut être motivé comme contrepartie empirique de \eqref{eq5} et/ou
+estimateur des moments en utilisant \eqref{eq4}:
+\begin{align}
+	\beta^{MCO} &=\left(\sumiton X_iX_i^\top)\right)^{-1}\sumiton X_iY_i,
+	\label{eq6}
+\end{align}
+où nous supposons avoir des observations i.i.d. de $(Y, X)$, $\{(Y_i, X_i)\}_{i=1}^n$. Enfin c'est aussi en 
+utilisant  \eqref{eq4} qu'on peut montrer que $\beta^{MCO}$ est convergent pour $\beta$.
+
+Il est utile de résumer cette discussion:
+\begin{itemize}[label = -]
+	\item Nous avons deux types d'exogénéité: 
+	\begin{enumerate}
+		\item L'\textbf{exogénéité forte} qui est l'indépendance en moyenne entre les déterminants inobservés 
+		$U$ de la variable dépendante $Y$ et les régresseurs: $\Exp(U|X) = 0$.
+		\item L'\textbf{exogénéité faible} qui est l'absence de corrélation
+		(au sens d'une corrélation nulle)\footnote{Afin de parler ici d'une corrélation on suppose que $\Exp(U=0$.} 
+		entre les déterminants inobservés de la variable dépendante $Y$ et les régresseurs: $\Exp(XU) = 0$.
+	\end{enumerate}
+	\item L'exogénéité permet d'identifier $\beta$ sans avoir besoin de supposer l'exogénéité forte, et
+	 d'établir la convergence de l'estimateur des MCO.
+	 \item Pour pouvoir interpréter $\beta$ comme les paramètres d'un modèle de régression on doit 
+	 néanmoins supposer l'exogénéité forte.
+\end{itemize}
+
+
+\section{Endogénéité}
+
+Dès lors \eqref{eq4} n'est pas vérifiée on parle d'endogénéité des régresseurs. Ceci ne signifie pas que 
+ $\Exp(X_k U) \neq 0 $ pour tous les $k = 1, \ldots, K$. En fait cela peut seulement concerner certains d'entre 
+ eux(voire un seul) tout en posant un problème important pour l'inférence basée sur la méthode des MCO. 
+ Pour préciser ce \textbf{problème d'endogénéité} considérons la version suivante de 
+ \eqref{eq1},
+
+ \begin{align}
+	Y &= X_1^\top\beta_1 + X_2^\top\beta_2 + U =: X^\top\beta + U, \ \Exp(X_1U) \neq 0, \ \Exp(X_2U) = 0.
+	\label{eq7}
+\end{align}
+
+Dans \eqref{eq7} $X_1$ est un vecteur $(K_1\times 1)$ de régresseurs endogènes, $X_2$ est un vecteur $K_2\times 1$  
+de régresseurs exogènes, $\beta_1$ et $\beta_2$ sont les vecteurs de paramètres qui leur sont associés. L'ensemble des régresseurs est 
+ donc $X := (X_1^\top, X_2^\top) ^\top$ et celui des paramètres $\beta := (\beta_1^\top, \beta_2^\top) ^\top$, et 
+ $K_1 + K_2 =: K$ est le nombre total de régresseurs/paramètres.
+
+ \subsection{MCO}
+
+ Considérons l'estimateur des MCO de $\beta_1$ dans \eqref{eq7} à partir d'observations i.i.d. de la variable dépendante $Y$,
+ des régresseurs endogènes $X_1$, et des régresseurs exogènes $X_2$, $\{(Y_i, X_{1i}, X_{2i})\}_{i=1}^n$. 
+ Pour $i=1, \ldots, n$ on considère donc,
+\begin{align}
+	Y &= X_{1i}^\top\beta_1 + X_{2i}^\top\beta_2 + U_i =: X_i^\top\beta + U_i, \ \Exp(X_{1i}U_i) \neq 0, \ \Exp(X_{2i}U_i) = 0.
+	\label{eq8}
+ \end{align}
+ Utilisons la version matricielle de \eqref{eq8},
+\begin{align*}
+	\boldY = \boldX_1\beta_1 + \boldX_2\beta_2 + \boldU,
+	\end{align*}
+	où $\boldY$ est le vecteur $(n\times 1)$ ayant pour élément $i$ $Y_i$, $\boldX_1$ est la matrice $(n\times K_1)$ de régresseurs endogènes ayant pour ligne $i$ $X_{1i}^\top$, $\boldX_2$ est la matrice $(n\times K_2)$ de régresseurs exogènes ayant pour ligne $i$ $X_{2i}^\top$, et $\boldU$ est le vecteur $(n\times 1)$ ayant pour élément $i$ $U_i$. L'estimateur des MCO de $\beta_1$ est,
+	\begin{align*}
+	\widehat{\beta}_{1n} &= (\boldX_1^\top\boldM_2\boldX_1)^{-1}\boldX_1^\top\boldM_2\boldY \\
+	&=\beta_1 +(\boldX_1^\top\boldM_2\boldX_1)^{-1}\boldX_1^\top\boldM_2\boldU
+	\end{align*}
+	où $\boldM_2 = \Id_n - \boldX_2(\boldX_2^\top\boldX_2)^{-1}\boldX_2^\top$. Nous avons,
+	\begin{align*}
+	n^{-1}\boldX_1^\top\boldM_2\boldX_1 &= n^{-1}\sumiton X_{1i}X_{1i}^\top - n^{-1}\sumiton X_{1i}X_{2i}^\top\left(n^{-1}\sumiton X_{2i}X_{2i}^\top\right)^{-1} n^{-1}\sumiton X_{2i}X_{1i}^\top\\
+	n^{-1}\boldX_1^\top\boldM_2\boldU &= n^{-1}\sumiton X_{1i}U_i - n^{-1}\sumiton X_{1i}X_{2i}^\top\left(n^{-1}\sumiton X_{2i}X_{2i}^\top\right)^{-1} n^{-1}\sumiton X_{2i}U_i^\top
+	\end{align*}
+	Supposons que,
+	\begin{enumerate}[label = (A.\arabic*)]
+	\item Les observations $\{(Y_i, X_i)\}_{i=1}^n$ sont i.i.d.
+	\item $\Exp(X_{ik}^2) < \infty$ pour tout $k=1,...,K$.
+	\item $\Exp(X_iX_i^\top)$ est définie positive.
+	\item $\Exp(U_i^2) < \infty$.
+	\end{enumerate}
+	Par la loi faible des grands nombre,
+	\begin{align*}
+	n^{-1}\sumiton X_{1i}X_{1i}^\top &\limp \Exp(X_{1i}X_{1i}^\top)\\
+	n^{-1}\sumiton X_{1i}X_{2i}^\top &\limp \Exp(X_{1i}X_{2i}^\top)\\
+	n^{-1}\sumiton X_{2i}X_{2i}^\top &\limp \Exp(X_{2i}X_{2i}^\top)\\
+	n^{-1}\sumiton X_{2i}U_i^\top &\limp 0\\
+	n^{-1}\sumiton X_{1i}U_i^\top &\limp \Exp(X_{1i}U_i)
+	\end{align*}
+	Ainsi,
+	\begin{align*}
+	n^{-1}\boldX_1^\top\boldM_2\boldX_1 &\limp \Exp(X_{1i}X_{1i}^\top)-\Exp(X_{1i}X_{2i}^\top)\left( \Exp(X_{2i}X_{2i}^\top)\right)^{-1}\Exp(X_{2i}X_{1i}^\top)\\
+	n^{-1}\boldX_1^\top\boldM_2\boldU &\limp \Exp(X_{1i}U_i) - \Exp(X_{1i}X_{2i}^\top)\left( \Exp(X_{2i}X_{2i}^\top)\right)^{-1}\Exp(X_{2i}U_i)\\
+	&=\Exp(X_{1i}U_i) \\
+	&\neq 0
+	\end{align*}
+	et nous concluons que $\hat{\beta}_{1n} $ n'est pas convergent,
+	\begin{align*}
+	\hat{\beta}_{1n} &\limp \beta_1 + \left(\Exp(X_{1i}X_{1i}^\top)-\Exp(X_{1i}X_{2i}^\top)\left( \Exp(X_{2i}X_{2i}^\top)\right)^{-1}\Exp(X_{2i}X_{1i}^\top)\right)^{-1}\Exp(X_{1i}U_i)\\
+	&\neq \beta_1
+	\end{align*}
+	La non convergence de l'estimateur des MCO de $\beta_2$ peut être montré de manière similaire. Nous avons,
+	\begin{align*}
+	\hat{\beta}_{2n} = \beta_2 + (\boldX_2^\top\boldM_1\boldX_2)^{-1}\boldX_2^\top\boldM_1\boldU
+	\end{align*}
+	où $\boldM_1 = \Id_n - \boldX_1(\boldX_1^\top\boldX_1)^{-1}\boldX_1^\top$. Et nous avons,
+	\begin{align*}
+	\hat{\beta}_{2n}  &\limp \beta_2 + \left(\Exp(X_{2i}X_{2i}^\top)-\Exp(X_{2i}X_{1i}^\top)\left( \Exp(X_{1i}X_{1i}^\top)\right)^{-1}\Exp(X_{1i}X_{2i}^\top)\right)^{-1}\Exp(X_{2i}X_{1i}^\top)\Exp(X_{1i}X_{1i}^\top)^{-1}\Exp(X_{1i}U_i)\\
+	&\neq \beta_2
+	\end{align*}
+
+\subsection{Sources d'endogénéité}
+\subsubsection*{Variables omises}
+Considérons l'équation de salaire suivante,
+\begin{align*}
+\log Sal_i &= \alpha + \beta_1Etudes + \gamma Genre + \delta Abilité + V_i\\
+&=\alpha + \beta_1Etudes + \gamma Genre + U_i
+\end{align*}
+\'Etant donné que $Abilité$ est inobservable elle se retrouve dans le terme d'erreur du modèle $U_i = \delta Abilité + V_i$. Nous pouvons considérer que la variable $Genre$ est exogène, mais $Abilité$ est vraisemblablement corrélée avec le niveau d'études , et par conséquent $Etudes$ est endogène.
+\subsubsection*{\'Erreurs de mesure}
+Supposons que le vrai modèle soit,
+\begin{align*}
+Y_i = \tilde{X}_{i1}^\top\beta + X_{i2}^\top\beta_2 + V_i
+\end{align*}
+où cependant $\tilde{X}_{i1}$ est inobservable. On observe à la place, $X_{i1} =  \tilde{X}_{i1}+\epsilon_i$ où $\epsilon$ est un vecteur de bruits indépendant de $\tilde{X}_{i1}$, et $X_{i2}$. Substituons $\tilde{X}_{i1}$ dans l'équation précédente,
+\begin{align*}
+Y_i = X_{i1} ^\top\beta + X_{i2}^\top\beta_2 - \epsilon_i^\top\beta + V_i
+\end{align*}
+Posons $U_i = - \epsilon_i^\top\beta + V_i$. Alors que $ X_{i2}$ est exogène, $X_{i1}$ est endogène car  corrélé avec $U_i$ par le biais de $\epsilon_i$.
+\subsubsection*{Simultanéité}
+Considérons l'équation suivante,
+\begin{align*}
+Heures_i = \beta_1Enfants_i + X_{i2}^\top\beta_2 + U_i
+\end{align*}
+où $Heures_i$ est le nombre d'heures travaillées par semaine, $Enfants_i$ est le nombre d'enfants dans une famille, et $X_{i2}$ est un vecteur de variables exogènes. Alors que le nombre d'enfant affecte l'offre de travail, il est raisonnable de penser que les décision de carrière affectent la taille de la famille, i.e., on doit considérer une autre équation qui détermine le nombre d'enfants dans la famille,
+\begin{align*}
+Enfants_i = \gamma_1 Heures_i + Z_{i1}^\top\gamma_2+ + V_i
+\end{align*}
+où $ Z_{i1}$ est un autre vecteur de variables exogènes. En substituant l'expression pour les heures dans l'équation pour le nombre d'enfants, nous obtenons(en supposant que $1-\beta_1\gamma_1\neq 0$),
+\begin{align*}
+Enfants_i  = X_{i2}^\top\left(\frac{\beta_2\gamma_1}{1-\beta_1\gamma_1}\right) + Z_{i1}^\top \left(\frac{\gamma_2}{1-\beta_1\gamma_1}\right) + \left(\frac{\gamma_1}{1-\beta_1\gamma_1}\right)U_i + \left(\frac{1}{1-\beta_1\gamma_1}\right)V_i
+\end{align*}
+En supposant que $X_{i2}$, $Z_{i1}$, $V_i$ ne sont pas corrélés avec $U_i$, nous obtenons,
+\begin{align*}
+\Exp(U_iEnfants_i) &= \left(\frac{\gamma_1}{1-\beta_1\gamma_1}\right)\Exp(U_I^2)\\
+&\neq 0
+\end{align*}
+
+\section{Méthode des variables instrumentales}
+
+\subsection{Variables instrumentales}
+Soit $Z_{1i}$ un vecteur $(K_1\times 1)$ de 
+variables exogènes\footnote{Dans cette partie par exogénéité nous entendons la version faible de celle-ci},
+\begin{align*}
+\Exp(Z_{1i}U_i) &= 0.
+\end{align*}
+Il est important de noter que  $Z_{1i}$ est exclu des régresseurs dans \eqref{eq8}, i.e., $Z_{1i}$ 
+ne contient aucun des éléments de $X_{2i}$. En fait toutes ces variables sont supposées exogènes en ce sens 
+qu'elles sont supposées satisfaire, 
+
+\begin{align}
+	\Exp(Z_iU_i) &= 0,
+\label{eq9}
+\end{align}
+
+avec $Z_i:=(Z_{1i}\top, X_{2i}^\top)^\top$ qui est un vecteur de $K_1 + K_2 = K$ variables exogènes.
+
+On appelle les appelle \emph{variables instrumentales}(VIs) ou plus simplement \emph{instruments}
+des variables qui vérifient des condition du type \eqref{eq9} ainsi que la \emph{condition de rang} suivante,
+
+\begin{align}
+	\Rang\left(\Exp(Z_iX_i^\top)\right) &= K
+	\label{eq10}
+\end{align}
+
+Cette condition concerne l'information apporté par les instruments pour identifier les paramètres du modèle. 
+On dit aussi que les instruments sont \emph{informatifs} par rapport aux régresseurs. 
+Elle échouera si, par exemple, $\Exp(Z_{1i}X_i^\top) = 0$($Z_{1i}$ est exogène mais c'est un bruit aléatoire). 
+La condition de rang échouera aussi si certains éléments de $Z_{1i}$ sont des 
+combinaisons linéaires des éléments dans les régresseurs exogènes inclus $X_{2i}$.
+Par exemple, pour le cas "Heures/Enfants", Angrist et Evans(1998) on suggéré d'utiliser la composition 
+en termes de sexe des deux premier enfants  comme instrument pour le nombre d'enfants dans une 
+famille(l'échantillon utilisé est restreint  aux femmes avec au moins deux enfants). 
+Ceci est motivé par l'idée que si les deux premiers enfants sont du même sexe(fille-fille, ou garçon-garçon) 
+la famille sera plus encline à avoir un troisième enfant que dans le cas où les deux premiers enfants sont 
+de sexe différent. En conséquence, la variable indicatrice d'avoir deux premiers enfants du même sexe 
+doit être positivement corrélée avec le nombre d'enfants. D'un autre côté , l'instrument est 
+exogène car la composition en termes de sexe des deux premiers enfants est déterminée aléatoirement.
+
+Avant de procéder à l'estimation des paramètres du modèle notons que les régresseurs exogènes 
+apparaissent dans le vecteur des VIs, 
+et que pour chaque variables endogène nous avons une variables exogène(une VI) qui est 
+ exclue du modèle $Y_i = X_i^\top\beta +U_i$. Lorsque tous les régresseurs sont endogènes 
+ nous n'avons plus aucun élément commun à $X_i$ et à $Z_i$. 
+
+ \subsection{Estimation}
+L'application de la méthode des moments avec la condition \eqref{eq9} suggère un estimateur comme 
+solution du système suivant de $K$ équations,
+\begin{align*}
+n^{-1}\sumiton Z_i\left(Y_i-X_i^\top\hat{\beta}^{VI}_n\right) = 0
+\end{align*}
+d'où,
+\begin{align*}
+\hat{\beta}^{VI}_n &= \left(\sumiton Z_iX_i^\top\right)^{-1}\sumiton Z_iY_i\\
+&=(\boldZ^\top\boldX)^{-1}\boldZ^\top\boldY
+\end{align*}
+où $\boldX$ est la matrice $(n\times K)$ ayant pour élément $i$ $X_i^\top$, et $\boldZ$ est la matrice $(n\times K)$ ayant pour élément $i$ $Z_i^\top$.\\
+L'estimateur $\hat{\beta}^{VI}_n$ est appelé \emph{estimateur des variables instrumentales} de $\beta$.
+
+\subsection{Convergence et normalité asymptotique}
+
+Pour établir la convergence de $\hat{\beta}^{VI}_n$ on utilise \eqref{eq9}-\eqref{eq10} auxquelles on doit 
+ajouter des conditions suivantes supplémentaires. Ceci est résumé ainsi:
+\begin{condition}(\textbf{conditions pour la convergence})
+\begin{enumerate}[label = (C1.\arabic*)]
+\item Les observations $\{(Y_i, X_i, Z_i)\}_{i=1}^n$ sont i.i.d.
+\item $Y_i = X_i^\top\beta + U_i$.
+\item $\Exp(Z_iU_i) = 0$.
+\item $\Rang\left(\Exp(Z_iX_i^\top)\right) = K$.
+\item $\Exp(X_{ik}^2) < \infty$ pour tout $k=1,...,K$.
+\item $\Exp(Z_{1ik}^2) < \infty$ pour tout $k=1,...,K_1$.
+\item $\Exp(U_i^2Z_iZ_i^\top)$ est définie positive.
+\end{enumerate}
+\label{cond1}
+\end{condition}
+
+\begin{propriete}(\textbf{Convergence})
+Sous les conditions de \eqref{cond1}
+\begin{align*}
+	\hat{\beta}^{VI}_n  &\limp \beta
+\end{align*}
+	\label{pr1}
+\end{propriete}
+\begin{proof}
+\'Ecrivons,
+\begin{align}
+\hat{\beta}^{VI}_n = \beta + \left(n^{-1}\sumiton Z_iX_i^\top\right)^{-1}n^{-1}\sumiton Z_iU_i
+\label{eq3}
+\end{align}
+Notons que sous les hypothèses faites plus haut, par l'inégalité de Cauchy-Schwartz,
+\begin{align*}
+\Exp(\abs{Z_{i,r}X_{i,s}}) &\leq \sqrt{\Exp(Z_{i,r}^2)\Exp(X_{i,s}^2)}\\
+&< \infty \ \textrm{pour tout} \ r, s = 1,...,K.
+\end{align*}
+Par conséquent, par le théorème de Slutsky,
+\begin{align*}
+\hat{\beta}^{VI}_n  &\limp \beta + \Exp(Z_iX_i^\top)^{-1}\Exp(Z_iU_i)\\
+&= \beta
+\end{align*}
+\end{proof}
+
+La normalité asymptotique est obtenue avec deux conditions supplémentaires. Ceci est résumé ainsi:
+\begin{condition}(\textbf{conditions pour la normalité asymptotique})
+\begin{enumerate}[label = (C2.\arabic*)]
+\item $\Exp(Z_{ik}^4) < \infty$, pour tout $k=1,...,K$. 
+\item $\Exp(U_i^4)<\infty$.
+\end{enumerate}
+\label{cond2}
+\end{condition}
+
+\begin{propriete}(\textbf{Normalité asymptotique})
+Sous les conditions dans \eqref{cond1} - \eqref{cond2},
+\begin{align*}
+	n^{1/2}(\hat{\beta}^{VI}_n - \beta ) &\limd (\Exp(Z_iX_i^\top))^{-1}\mathcal{N}\left(0,\Exp(U_i^2Z_iZ_i^\top)\right)\\
+&=\mathcal{N}\left(0,  \Vr\right)
+\end{align*}
+où 
+\begin{align*}
+\Vr &= (\Exp(Z_iX_i^\top))^{-1}\Exp(U_i^2Z_iZ_i^\top) (\Exp(X_iZ_i^\top))^{-1}
+\end{align*}
+	\label{pr2}
+\end{propriete}
+
+\begin{proof}
+\'Ecrivons \eqref{eq3} comme suit,
+\begin{align*}
+n^{1/2}(\hat{\beta}_n^{VI} - \beta ) = \left(n^{-1}\sumiton Z_iX_i^\top\right)^{-1}n^{-1/2} \sumiton Z_iU_i
+\end{align*}
+Notons que du fait des hypothèses précédentes, pour tout $r, s = 1, \ldots, K$, 
+\begin{align*}
+\Exp\left(\abs{U_i^2Z_{i,r}Z_{i,s}}\right) &\leq \left(\Exp(U_i^4)\right)^{1/2}\left(\Exp(Z_{i,r}^4)\Exp(Z_{i,s}^4)\right)^{1/4}\\
+& < \infty
+\end{align*}
+Par conséquent, par le théorème central-limite et le théorème de convergence de Cramer,
+\begin{align*}
+n^{1/2}(\hat{\beta}_n^{VI} - \beta ) &\limd (\Exp(Z_iX_i^\top))^{-1}\mathcal{N}\left(0,\Exp(U_i^2Z_iZ_i^\top)\right)\\
+&=\mathcal{N}\left(0,  (\Exp(Z_iX_i^\top))^{-1}\Exp(U_i^2Z_iZ_i^\top) (\Exp(X_iZ_i^\top))^{-1}\right)
+\end{align*}
+\end{proof}
+
+La matrice de variances-covariances asymptotique prend une forme en sandwich et peut être estimé de manière convergente par,
+\begin{align*}
+\left(n^{-1}\sumiton Z_iX_i^\top\right)^{-1} n^{-1} \sumiton (\hat{U}_i^2Z_iZ_i^\top) \left(n^{-1}\sumiton X_iZ_i^\top\right)^{-1}
+\end{align*}
+où $\hat{U}_i = Y_i - X_i^\top\hat{\beta}_n^{VI}$.
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+
+ 
+
+\bibliographystyle{jpe}
+\bibliography{Biblio.bib}
+ \end{document}

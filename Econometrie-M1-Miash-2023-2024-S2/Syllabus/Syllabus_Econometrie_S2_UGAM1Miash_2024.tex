@@ -1,0 +1,193 @@
+\documentclass[10pt, reqno]{amsart}
+\input{../Preambule2}
+\newcommand{\bxi}{ \boldx_i }
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{txfonts}
+\usepackage{mathrsfs}
+\usepackage{fancyhdr}
+
+
+
+\usepackage{fancyhdr}
+\usetikzlibrary{calc,decorations.pathmorphing,patterns}
+\usepackage{listofitems}
+\tikzstyle{mynode}=[thick,draw=blue,fill=blue!20,circle,minimum size=22]
+\usepackage{amsaddr}
+\usepackage{mathrsfs}
+
+\makeatletter
+
+\pgfdeclaredecoration{penciline}{initial}{
+    \state{initial}[width=+\pgfdecoratedinputsegmentremainingdistance,auto corner on length=1mm,]{
+        \pgfpathcurveto%
+        {% From
+            \pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}
+                            {\pgfdecorationsegmentamplitude}
+        }
+        {%  Control 1
+        \pgfmathrand
+        \pgfpointadd{\pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}{0pt}}
+                        {\pgfqpoint{-\pgfdecorationsegmentaspect\pgfdecoratedinputsegmentremainingdistance}%
+                                        {\pgfmathresult\pgfdecorationsegmentamplitude}
+                        }
+        }
+        {%TO 
+        \pgfpointadd{\pgfpointdecoratedinputsegmentlast}{\pgfpoint{1pt}{1pt}}
+        }
+    }
+    \state{final}{}
+}
+\makeatother
+
+\pagestyle{fancy}
+%\renewcommand{\subsection{mark}[1]{\markright{#1}{}}
+\fancyhead{}
+\fancyfoot{} 
+%\fancyhead[LE,LO]{\tiny{\thepage}}
+\fancyhead[C]{\small\textsc{Économétrie, M1 Miash, S2}}
+%fancyhead[CE,CO]{\tiny{\rightmark}}
+\fancyhead[L]{\small\textsc{Université de Grenoble Alpes}}
+\fancyfoot[C]{\small{\thepage}}
+%\fancyfoot[R]{\small \textcopyright \ \  \small\textsc
+\fancyhead[R]{ \small\textsc{M. W. Urdanivia}}
+%\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+%\pagenumbering{roman}
+
+
+\begin{document} 
+\usetikzlibrary{positioning}
+\usetikzlibrary{snakes}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{shapes}
+%\tikzset{block/.style={draw, rectangle, fill=gray!20, 
+%\tikzset{empty/.style={draw, rectangle, fill=none, tex
+%\tikzset{line/.style={draw, -latex'}}
+%\onehalfspace
+
+%\includepdf{trame}
+
+\begin{titlepage}
+\centering
+	%\includegraphics[width=0.15\textwidth]{logoUGA2020}
+	{\scshape\Large \textsc{Université de Grenoble Alpes\\(M1 MIASH, S2)}\par}
+	\vspace{0.5cm}
+	{\Large\bfseries \scshape\Large \textsc{ÉCONOMÉTRIE}\par}
+	%{\scshape\large \textsc{Extremum Estimators(1)}\par}
+	%\vspace{1cm}
+	\vspace{0.5cm}
+	{\Large\bfseries \textsc{Syllabus} \par}
+    \vspace{0.5cm}   
+   %{\Large\bfseries \textsc{Récapitulatif, et résultats non asymptotiques} \par}
+	%\vspace{1cm}
+	{(\textsc{Cette version: \today})\par}
+	\vspace{1cm}
+	{\large \textsc{Michal W. Urdanivia}
+	\footnote{Contact:  
+	\href{mailto:michal.wong-urdanivia@univ-grenoble-alpes.fr}{michal.wong-urdanivia@univ-grenoble-alpes.fr}, 
+	 Université de Grenoble Alpes,  Faculté d'\'Economie, GAEL.}\par}
+	 %\includegraphics[width=0.15\textwidth]{logoUGA}
+	%\vfill
+	%supervised by\par
+	%Dr.~Mark \textsc{Brown}
+%\vfill
+% Bottom of the page
+	
+\end{titlepage}
+
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Objectifs}
+Ce cours poursuit l'enseignement d'économétrie du premier semestre. Il est organisé autour de deux parties. 
+Les thèmes de la première peuvent être vus comme des extensions du modèles de régression linéaire 
+et son inférence par la méthode des moindres carrés ordinaires(MCO). Les thèmes de la seconde concernent 
+des modèles non linéaires utilisés en présence de variables dépendantes limitées.
+
+\section{Modèles linéaires}
+Notre point de départ ici est le problème posé pour l'inférence 
+basée sur la méthode des moindres carrés ordinaires par la présence d'endogénéité. 
+Le traitement de ce problème qui est au cœur de la microéconométrie moderne sera étudié 
+dans le cadre conceptuel de la méthode des variables instrumentales(VIs). 
+Celle-ci sera présentée et approfondie en traitant de l'hétéroscédasticité et des instruments faibles. 
+Comme prolongement de l'étude du problème d'endogénéité traité par VIs nous étudierons les modèles à équations simultanées.
+Cela nous permettra en outre d'introduire les modèles linéaires pour données de panel. 
+En termes méthodologiques, cette partie nous permettra d'étudier la méthode des moments généralisés.
+
+
+\section{Variables dépendantes limitées}
+ 
+ Dans une deuxième partie nous étudierons les modèles à variable dépendantes "limitées". Il s'agit de modèles 
+ où les variables dépendantes ne peuvent pas être supposées continues étant par exemple discrètes(indicatrices de chômage, de remboursement de prêts, état de santé, choix de transport etc.),
+ ou censurées(comme la consommation, qui prend nécessairement des valeurs positives mais est potentiellement nulle). 
+ Les problèmes de sélection (offre de travail, sélection endogène d'échantillon) seront également abordés. 
+ Dans le cadre de ces modèles non-linéaires, la méthode d'estimation utilisée est principalement 
+ le maximum de vraisemblance.
+
+ \section{Plan}
+ \subsection{Modèles linéaires}
+\begin{enumerate}
+ \item Endogénéité et variables instrumentales: estimateur des 2MC, tests d'Hausman et de Sargan,
+instruments en présence d'hétéroscédasticité, instruments faibles.
+\item Équations simultanées.
+\item Modèles pour panels statiques: effets fixes et effets aléatoires, estimateurs de différences premières 
+et estimateurs within. Inférence efficace en présence d'autocorrélation.
+\item Panels dynamiques et exogénéité faible.
+\end{enumerate}
+
+\subsection{Variables dépendantes limitées}
+\begin{enumerate}
+\item Variables dépendantes discrètes.
+\begin{enumerate}
+\item Modèles logit et probit : identification, estimation, qualité du modèle, problème d'hétéroscédasticité et d'endogénéité.
+\item Modèles polytomiques ordonnés et non ordonnés: logit multinomial, modèle logit conditionnel.
+\end{enumerate}
+\item Modèles de comptage: modèle de Poisson.
+\item Modèles de censure et de sélection: modèles tobit simple, modèle de sélection généralisée, 
+modèle de troncature.
+\end{enumerate}
+
+
+\section{Bibliographie}
+
+Les notes écrites relatives au différents thèmes du cours seront mises à votre disposition sur le site/dépôt du cours(voir plus ba
+Elles ne suivent pas un ouvrage de référence mais vous pouvez les compléter avec  notamment:
+\begin{enumerate}
+\item \cite{Amemiya1985}.
+\item \cite{ap2009}.
+\item \cite{Hansen2017}.
+\item \cite{Wooldridge2010}.
+\end{enumerate}
+Des références supplémentaires seront parfois données dans le cadre des différents points traités.
+En outre parmi les références vous trouverez aussi un certain nombre d'articles qui nous 
+permettront d'illustrer certains points du cours. 
+
+
+\section{Travail individuel}
+Outre des exercices analytiques, il y aura des travaux d'application(empirique) des méthodes 
+vues en cours(notamment dans les séances de TD/TP). Les correction se feront avec le langage 
+Python\footnote{Notez que ce cours n'est pas un cours de Python. Vous aurez donc à vous former sur un certains nombre de points 
+de façon autonome si vous souhaitez suivre les corrections.} mais vous pouvez utiliser 
+le langage/logiciel de votre choix(R, Matlab, Julia, C++, \ldots). Ces applications concerneront souvent 
+des articles de recherche et vous aurez à les lire et en faire des présentations et/où synthèses.
+
+\section{Matériel du cours}
+
+Les notes écrites, les codes Python, exercices, etc, se trouveront sur le dépôt Git suivant:
+
+\url{https://github.com/MWUrda/Cours-UGA-Econometrie-M1Miash-S2}.
+
+Moodle ne sera utilisé que pour vos retours de devoirs, et des "annonces" diverses sur le cours(e.g., dates de retour pour les dev
+\bibliographystyle{jpe}
+\bibliography{../Biblio.bib}
+ \end{document}
+
