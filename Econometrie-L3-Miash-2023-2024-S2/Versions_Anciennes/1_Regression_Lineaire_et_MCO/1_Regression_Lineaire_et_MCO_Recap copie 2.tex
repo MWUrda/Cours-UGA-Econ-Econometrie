@@ -1,0 +1,532 @@
+\documentclass[10pt, reqno]{amsart}
+\input{../Preambule2}
+\newcommand{\bxi}{ \boldx_i }
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{txfonts}
+\usepackage{mathrsfs}
+\usepackage{fancyhdr}
+
+
+
+\usepackage{fancyhdr}
+\usetikzlibrary{calc,decorations.pathmorphing,patterns}
+\usepackage{listofitems}
+\tikzstyle{mynode}=[thick,draw=blue,fill=blue!20,circle,minimum size=22]
+\usepackage{amsaddr}
+\usepackage{mathrsfs}
+
+\makeatletter
+
+\pgfdeclaredecoration{penciline}{initial}{
+    \state{initial}[width=+\pgfdecoratedinputsegmentremainingdistance,auto corner on length=1mm,]{
+        \pgfpathcurveto%
+        {% From
+            \pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}
+                            {\pgfdecorationsegmentamplitude}
+        }
+        {%  Control 1
+        \pgfmathrand
+        \pgfpointadd{\pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}{0pt}}
+                        {\pgfqpoint{-\pgfdecorationsegmentaspect\pgfdecoratedinputsegmentremainingdistance}%
+                                        {\pgfmathresult\pgfdecorationsegmentamplitude}
+                        }
+        }
+        {%TO 
+        \pgfpointadd{\pgfpointdecoratedinputsegmentlast}{\pgfpoint{1pt}{1pt}}
+        }
+    }
+    \state{final}{}
+}
+\makeatother
+
+\pagestyle{fancy}
+%\renewcommand{\subsection{mark}[1]{\markright{#1}{}}
+\fancyhead{}
+\fancyfoot{} 
+%\fancyhead[LE,LO]{\tiny{\thepage}}
+\fancyhead[C]{\small\textsc{Économètrie: L3 MIASH, S2}}
+%fancyhead[CE,CO]{\tiny{\rightmark}}
+\fancyhead[L]{\small\textsc{Université de Grenoble Alpes}}
+\fancyfoot[C]{\small{\thepage}}
+%\fancyfoot[R]{\small \textcopyright \ \  \small\textsc
+\fancyhead[R]{ \small\textsc{M. W. Urdanivia}}
+%\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+%\pagenumbering{roman}
+
+
+\begin{document} 
+\usetikzlibrary{positioning}
+\usetikzlibrary{snakes}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{shapes}
+%\tikzset{block/.style={draw, rectangle, fill=gray!20, 
+%\tikzset{empty/.style={draw, rectangle, fill=none, tex
+%\tikzset{line/.style={draw, -latex'}}
+%\onehalfspace
+
+%\includepdf{trame}
+
+\begin{titlepage}
+\centering
+	%\includegraphics[width=0.15\textwidth]{logoUGA2020}
+	{\scshape\Large \textsc{Université de Grenoble Alpes\\(L3 MIASH, S2)}\par}
+	\vspace{0.5cm}
+	{\Large\bfseries \scshape\Large \textsc{ÉCONOMÉTRIE}\par}
+	%{\scshape\large \textsc{Extremum Estimators(1)}\par}
+	%\vspace{1cm}
+	\vspace{0.5cm}
+	{\Large\bfseries \textsc{Régression Linéaire et Moindres Carrés à distance finie(1)} \par}
+    \vspace{0.5cm}   
+   {\Large\bfseries \textsc{Estimateur des MCO} \par}
+	\vspace{1cm}
+	{(\textsc{Cette version: \today})\par}
+	\vspace{1cm}
+	{\large \textsc{Michal W. Urdanivia}
+	\footnote{Contact:  
+	\href{mailto:michal.wong-urdanivia@univ-grenoble-alpes.fr}{michal.wong-urdanivia@univ-grenoble-alpes.fr}, 
+	 Université de Grenoble Alpes,  Faculté d'\'Economie, GAEL.}\par}
+	 %\includegraphics[width=0.15\textwidth]{logoUGA}
+	%\vfill
+	%supervised by\par
+	%Dr.~Mark \textsc{Brown}
+%\vfill
+% Bottom of the page
+	
+\end{titlepage}
+
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+
+
+
+%\pagenumbering{arabic}
+%\section*{Objectifs du chapitre}
+
+\section{Définitions}
+Une question courante en économétrie concerne l'étude de l'effet d'un groupe de variables $X \in \mathcal{X}\subseteq \R^K$, traditionnellement appelées \emph{régresseurs}, sur une autre variable $Y\in \mathcal{Y}\subseteq\R$ traditionnellement  appelée \emph{variable dépendante}.  
+On dispose de données  sur $(Y, X)$, à savoir un \emph{échantillon} de taille $n$,  $\{(Y_i, X_i)\}_{i=1}^n$, où $Y_i$ est une variable aléatoire et $X_i$ est un vecteur $K\times 1$(de variables aléatoires), i.e.,
+\begin{align*}
+X_i = 
+\begin{pmatrix}
+X_{i1}\\
+X_{i2}\\
+\vdots\\
+X_{iK}	
+\end{pmatrix}
+\end{align*}
+Une paire $(Y_i, X_i)$ est appelée observation(sous entendu de $(Y, X)$). Le vecteur $X_i$ contient les valeurs des $K$ variables pour l'observation $i$.
+Pour des \emph{données en coupe}\footnote{Rappelons que des données en coupe sont des données où chaque observation ne concerne qu'une seule unité d'observation. Par exemple s'il s'agit d'observations sur des individus l'observation $i$ concernera un individu différent de l'observation $j$.} il est souvent supposé que toutes les observations sont tirées indépendamment les unes des autres à partir d'une même distribution. On dit dans ce cas que l'échantillon d'observations $\{(Y_i, X_i)\}_{i=1}^n$ est un échantillon aléatoire ou de manière équivalente que les observations sont identiquement et indépendamment distribuées(i.i.d. en abrégé). Remarquons que l'hypothèse d'observations i.i.d. ne signifie pas que $Y_i$ et $X_i$ soient indépendants, mais plutôt que l'observation $(Y_i, X_i)$ est indépendante de toute autre observation $(Y_j, X_j)$ pour $i\neq j$, n'excluant donc pas que $Y_i$ et $X_i$ puissent être liés\\\
+L'outil auquel nous allons nous intéresser dans ce cours pour étudier la relation entre la variable dépendante et les régresseurs est l'espérance conditionnelle de $Y_i$ sachant $X_i$, $\Exp(Y_i| X_i)$, laquelle vue comme une fonction de $X_i$ est appelée \emph{fonction de régression}(ou plus succinctement régression) de $Y_i$ sur $X_i$\
+La différence entre $Y_i$ et son espérance conditionnelle est appelée \emph{terme d'erreur}(ou plus succinctement \emph{erreur}),
+\begin{align}
+U_i = Y_i - \Exp(Y_i| X_i)
+\label{eq1}
+\end{align} 
+ et l'on note que contrairement à $X_i$ et $Y_i$, l'erreur $U_i$ n'est pas une variable observable par l'analyste étant donné que l'espérance conditionnelle lui est inconnue\\\
+Dans un cadre \emph{paramétrique} ou \emph{semi-paramétrique}, il est souvent supposé que l'espérance conditionnelle est connue à un ensemble de \emph{paramètres} près. Ainsi dans le \emph{modèle de régression linéaire} on suppose que $\Exp(Y_i|X_i)$ est linéaire par rapport à un vecteur de paramètres inconnus,
+\begin{align}
+\Exp(Y_i|X_i) = X_{i1}\beta_1 +  X_{i2}\beta_2 + ...+ X_{iK}\beta_K = X_i^\top\beta
+\label{eq2}
+\end{align}
+
+où,
+
+\begin{align*}
+ \beta = 
+ \begin{pmatrix}
+ \beta_1\\
+ \beta_2\\
+ \vdots\\
+ \beta_K
+ \end{pmatrix}
+\end{align*}
+est un vecteur de $K$ paramètres constants. La linéarité de $\Exp(Y_i|X_i)$ peut être justifiée, si par exemple, la distribution des observations $\{(Y_i, X_i)\}_{i=1}^n$ est une loi normale multivariée. Rappelons néanmoins que lorsque $\Exp(Y_i|X_i)$ n'est pas linéaire il est possible de caractériser $\beta$ de manière à ce que \eqref{eq2} constitue la \emph{meilleure prédiction linéaire} de la variable dépendante par les régresseurs. Notons aussi que comme
+\begin{align*}
+\beta_k = \frac{\partial \Exp(Y_i|X_i)}{\partial X_{ik}}, \ \ k=1,2,...,K.
+\end{align*}
+le vecteur $\beta$ est le vecteur des \emph{effets marginaux} des régresseurs, i.e., $\beta_k$ donne la variation dans l'espérance  conditionnelle de $Y_i$ lorsque le régresseur $X_{ik}$ varie, pour des valeurs fixes des autres régresseurs $X_{il}$, $l=1,2,...,K$, $l\neq k$. Ceci est une des raisons pour lesquelles un des principaux objectifs est l'estimation du vecteur inconnu $\beta$ à partir des données\\\
+Observons que les équations \eqref{eq1} et \eqref{eq2} permettent d'écrire,
+\begin{align}
+Y_i = X_i^\top\beta +U_i
+\label{eq3}
+\end{align}
+où par définition de \eqref{eq1}
+\begin{align}
+\Exp(U_i|X_i) = 0
+\label{eq4}
+\end{align}
+Ceci implique que les régresseurs ne contiennent aucune information quant à l'écart entre $Y_i$ et sont espérance conditionnelle. En outre, la \emph{règle des espérances itérées} implique que les erreurs ont une espérance nulle: $\Exp(U_i) = 0$. Notons aussi qu'avec des observations i.i.d. les erreurs sont aussi i.i.d\\\
+Une hypothèse fréquente sur les erreurs consiste à supposer qu'ils sont \emph{homoscédastiques}(on parle d'hypothèse d'homoscédasticité), par quoi on entend que leur variance est indépendante des régresseurs, et la même pour toutes les observations,
+\begin{align*}
+\Var(U_i|X_i) = \sigma^2
+\end{align*}
+pour une constante $\sigma^2>0$.
+
+\section{Conditions}
+Avant de donner une définition formelle du modèle de régression linéaire, introduisons les notations vectorielles et matricielles suivantes,
+
+\begin{align*}
+\boldY=
+\begin{pmatrix}
+Y_1\\
+Y_2\\
+\vdots\\
+Y_n
+\end{pmatrix}
+\  , \
+\boldX=
+\begin{pmatrix}
+X_1^\top\\
+X_2^\top\\
+\vdots\\
+X_n^\top
+\end{pmatrix}
+=
+\begin{pmatrix}
+X_{11} & X_{12}&\ldots&X_{1K}\\
+X_{21} & X_{22}&\ldots&X_{2K}\\
+\vdots&\vdots&\vdots&\vdots\\
+X_{n1} & X_{n2}&\ldots&X_{nK}
+\end{pmatrix}
+\  , \
+\boldU=
+\begin{pmatrix}
+U_1\\
+U_2\\
+\vdots\\
+U_n
+\end{pmatrix}
+\end{align*}
+
+Le modèle de régression linéaire consiste dans les hypothèses suivantes:
+\begin{condition}
+$\boldY = \boldX\beta +\boldU$
+\label{cond1}
+\end{condition}
+\begin{condition}
+$\Exp(\boldU | \boldX) = 0$ p.s.
+\label{cond2}
+\end{condition}
+\begin{condition}
+$\Var(\boldU|\boldX) = \sigma^2\Id_n$ p.s.
+\label{cond3}
+\end{condition}
+\begin{condition}
+$\Rang(\boldX) = K$ p.s.\footnote{Le rang colonne(ligne) d'une matrice est le nombre maximal de colonnes(lignes) lnéairement indépendantes). On peut montrer que pour toute matrice, le rang colonne et le rang ligne sont égaux. Si $\boldA$ est une matrice $n\times K$, alors $\Rang(\boldA) \leq \min (n, K)$. Si  $\Rang(\boldA) = n$(ou $\Rang(\boldA) = K$), on dit que $\boldA$ est de rang ligne(colonne) plein. Quelques propriétés:
+\begin{align*}
+\Rang(\boldA) =& \Rang(\boldA^\top) =  \Rang(\boldA^\top \boldA)  =   \Rang(\boldA\boldA^\top ),\\
+\Rang(\boldA\mathbf{B}) \leq& \min \left(\Rang(\boldA), \Rang(\mathbf{B})\right),\\
+\Rang(\boldA\mathbf{B})=&\Rang(\boldA) \ \textrm{si $\mathbf{B}$ est carrée ou de rang plein}
+\end{align*}
+  }
+\label{cond4}
+\end{condition}
+Plutôt que de conditionner par rapport  aux valeurs observées des régresseurs, on peut supposer que $\boldX$ n'est pas aléatoire, i.e., supposer que la valeur de $\boldX$ est fixe dans des échantillons répétés. Dans ce cas là les hypothèses \eqref{cond2} et \eqref{cond3} peuvent être remplacés par, respectivement $\Exp(\boldU) = 0$ et $\Var(\boldU) = \sigma^2\Id_n$. Dans la mesure où conditionner par rapport à $\boldX$ est équivalent à traiter les valeurs des régresseurs comme fixes, les deux ensembles d'hypothèses conduisent aux mêmes résultats\
+Pour l'inférence on suppose parfois que,
+\begin{condition}
+$\boldU | \boldX \sim \mathcal{N}(\mathbf{0}, \Id_n)$
+\label{cond5}
+\end{condition}
+Dans le cas de régresseur fixes, plutôt que \eqref{cond5} il sera supposé que la distribution 
+inconditionnelle des erreurs est normale. Les hypothèses \eqref{cond1}-\eqref{cond5} définissent alors le \emph{modèle de régression linéaire normal} avec dans ce cas,
+\begin{align*}
+\boldY|\boldX \sim\mathcal{N}(\boldX\beta, \sigma^2\Id_n)
+\end{align*}
+Remarquons qu'étant donné que les covariances dans \eqref{cond5} sont toutes nulles, 
+ \eqref{cond5} implique l'indépendance des erreurs. Les hypothèses \eqref{cond1}-\eqref{cond4} seules, 
+ n'impliquent pas l'indépendance entre les observations. En fait, plusieurs résultats importants n'exigent pas 
+ d'observations indépendantes. Néanmoins, nous supposerons parfois l'indépendance  sans la normalité.
+\begin{condition}
+Les observations $\{(Y_i, X_i)\}_{i=1}^n$ sont i.i.d.
+\label{cond6}
+\end{condition}
+Dans le cas de régresseurs fixes cette hypothèse peut être remplacé par celle d'erreurs, $U_1, ..., U_n$, i.i.d\
+L'hypothèse \eqref{cond2} dit que $\boldU$ est indépendant de $\boldX$ en espérance, ce qui est une hypothèse forte. On appelle aussi
+qualifie aussi cette condition, \emph{condition d'exogénéité forte}. Cependant, plusieurs résultats importants peuvent être obtenus avec
+ une hypothèse plus faible  d'absence de corrélation. Celle-ci est qualifiée de \emph{condition d'exogénéité faible}:
+\begin{condition}
+Pour $i=1,2,...,n$, $\Exp(X_iU_i)=0$, et $\Exp(U_i)=0$.
+\label{cond7}
+\end{condition}
+Toutefois sous cette condition $X_i^\top\beta$ ne peut pas s'interpréter comme une espérance conditionnelle, auquel cas \eqref{eq3} doit être vu comme un \emph{processus générateur des données}\
+L'hypothèse \eqref{cond3} implique que les erreurs $U_i$ ont la même variance pour tout $i$, et ne sont pas corrélés entre eux, i.e., $\Exp(U_iU_j| \boldX) = 0$ pour $i\neq j$. Notons que l'indépendance entre les erreurs peut aussi être obtenue avec la condition \eqref{cond5} ou sous les  conditions \eqref{cond1} et \eqref{cond6}\
+L'hypothèse \eqref{cond4} exige que le colonnes de $\boldX$ soient linéairement indépendantes. Que cette hypothèse ne soit pas vérifiée signifie qu'un ou plus de régresseurs duplique l'information contenue dans les autres, et ce faisant doit être écarté\
+Souvent, une des colonnes de $\boldX$(souvent la première) est le vecteur unitaire et le paramètre qui lui est associé est appelé \emph{constante}. La constante du modèle donne la valeur moyenne de la variable dépendante lorsque tous les régresseurs sont égaux à zéro.
+
+\section{Estimation par la méthode des moments}
+Nous allons à présent construire des estimateurs des paramètres $\beta$ et $\sigma^2$. Rappelons qu'un estimateur est toute fonction des observations $\{(Y_i, X_i)\}_{i=1}^n$. Un estimateur peut dépendre des erreurs inconnues ou des paramètres inconnus $\beta$ mais uniquement par le biais des variables observables $\boldY$ et $\boldX$. Un estimateur n'est pas forcément unique en ce sens que pour un même paramètre plusieurs estimateur peuvent exister\\
+Une des méthodes les plus anciennes pour construire des estimateurs est la \emph{méthode des moments}(MM). La MM consiste à construire des estimateurs pour des paramètres définis par des moments théoriques en considérant les contreparties empiriques de ces moments appelées alors moments empiriques. Par exemple si un paramètre est défini au travers d'une espérance(moment théorique), son  estimateur sera construit à partir d'une moyenne(moment empirique) calculée sur les observations\
+Dans le cas présent, les hypothèses \eqref{cond1}, et \eqref{cond2} ou \eqref{cond7} impliquent que la vraie valeur de $\beta$ doit satisfaire,
+\begin{align}
+\Exp(X_iU_i) = \Exp\left(X_i(Y_i-X_i^\top\beta)\right) = 0
+\label{eq5}
+\end{align}
+ Un \emph{estimateur des moments}(i.e., obtenu selon la MM) de $\beta$, $\hat{\beta}$,  est obtenu en remplaçant l'espérance dans \eqref{eq5} par la moyenne empirique,
+\begin{align}
+n^{-1}\sumi X_i(Y_i - X_i^\top\hat{\beta}) = n^{-1}\sumi X_iY_i - n^{-1}\sumi X_iX_i^\top\hat{\beta} = 0
+\label{eq6}
+\end{align}
+En résolvant par rapport à $\hat{\beta}$ on obtient,
+\begin{align}
+\hat{\beta} = \left(n^{-1}\sumi X_iX_i^\top\right)^{-1}n^{-1}\sumi X_iY_i
+\label{eq7}
+\end{align}
+qui peut s'écrire alternativement,
+\begin{align}
+\hat{\beta} = \left(\sumi X_iX_i^\top\right)^{-1}\sumi X_iY_i
+\label{eq8}
+\end{align}
+ou,
+\begin{align}
+\hat{\beta} = \left(\boldX^\top\boldX\right)^{-1}\boldX^\top\boldY
+\label{eq9}
+\end{align}
+où l'on note que la matrice $\sumi X_iX_i^\top = \boldX^\top\boldX$ est inversible sous l'hypothèse \eqref{cond4}\footnote{Pour montrer que 
+$\boldX^\top\boldX = \sumobs X_iX_i^\top$ notons que,
+\begin{align*}
+\boldX^\top\boldX=&
+\begin{pmatrix}
+X_1^\top\\
+X_2^\top\\
+\vdots\\
+X_n^\top
+\end{pmatrix}^\top
+\begin{pmatrix}
+X_1^\top\\
+X_2^\top\\
+\vdots\\
+X_n^\top
+\end{pmatrix}
+= 
+\begin{pmatrix}
+X_1&X_2&\ldots&X_n
+\end{pmatrix}
+\begin{pmatrix}
+X_1^\top\\
+X_2^\top\\
+\vdots\\
+X_n^\top
+\end{pmatrix}
+= X_1X_1^\top + X_2X_2^\top+\ldots+X_nX_n^\top
+=\sumi X_iX_i^\top
+\end{align*}
+
+}\\\
+Une fois $\hat{\beta}$ calculé, on définit les \emph{valeurs ajustées} ou \emph{prédictions} , ainsi qu'un vecteur $n\times 1$ des valeurs ajustées ou des prédictions, par respectivement,
+\begin{align*}
+\hat{Y}_i = X_i^\top\hat{\beta}, \ \ \hat{\boldY} = (\hat{Y}_1,  \hat{Y}_2,..., \hat{Y}_n)^\top
+\end{align*}
+De la même manière, on définit  les \emph{résidus}  , et le vecteur  $n\times 1$ des résidus, par respectivement,
+\begin{align*}
+\hat{U}_i = Y_i - X_i^\top\hat{\beta}, \ \ \hat{\boldU} = (\hat{U}_1, \hat{U}_2,...,\hat{U}_n)^\top
+\end{align*}
+Notons que du fait de \eqref{eq6} le vecteur des résidus vérifie les $K$  \emph{équations normales},
+\begin{align}
+ \sumi\hat{U}_iX_i=
+\left(
+\begin{array}{c}
+\sumi\hat{U}_iX_{i1}\\
+\sumi\hat{U}_iX_{i2}\\
+\vdots\\
+\sumi\hat{U}_iX_{iK}
+\end{array}
+\right)
+=0
+\label{eq10}
+\end{align}
+ou en notation matricielle,
+\begin{align}
+\boldX^\top\hat{\boldU} = 0
+\label{eq11}
+\end{align}
+Remarquons aussi que si le modèle contient une constante alors il résulte des équations normales que $\sumi\hat{U}_i = 0$(il suffit en effet de considérer que, par exemple, le premier régresseur est constant et égal à 1)\\\
+Afin d'estimer $\sigma^2$ considérons,
+\begin{align*}
+\sigma^2 = \Exp(U_i^2)=\Exp\left((Y_i - X_i^\top\beta)^2\right)
+\end{align*}
+Dans la mesure où $\beta$, est inconnu un estimateur  sera obtenu en remplaçant $\beta$ par sont estimateur des moments,
+\begin{align}
+\hat{\sigma}^2 = n^{-1}\sumi(Y_i-X_i^\top\hat{\beta})^2
+\label{eq12}
+\end{align}
+
+\section{Moindres carrés}
+Pour motiver l'estimation par la méthode des moindres carrés prenons comme point de départ 
+le problème consistant à minimiser l'erreur de prédiction quand on cherche 
+à prédire $Y_i$ par son espérance conditionnelle, $\Exp(Y_i|X_i)$, supposée être une fonction linéaire telle que \eqref{eq2}. Plus précisément, $Y_i - \Exp(Y_i|X_i)$ étant l'erreur de prédiction  on cherche $\beta$ qui minimise un critère de perte quadratique,
+\begin{align*}
+\beta \in \argmin_{b\in \R^K}S(b)
+\end{align*}
+où $S(b) =\Exp\left((Y_i - X_i^\top b)^2\right)$.
+La contrepartie empirique de ce problème permet de définir un estimateur de $\beta$ par,
+\begin{align*}
+\hat{\beta} \in \argmin_{b\in \R^K}S_n(b)
+\end{align*}
+où $S_n(b)=n^{-1}\sumi\left((Y_i - X_i^\top\beta)^2\right)$, est la contrepartie empirique de la fonction objectif $S(b)$\
+Nous pouvons montrer que l'estimateur des moments de la section précédente est aussi l'estimateur des moindres carrés. Pour cela réécrivons la fonction objectif précédente,
+\begin{align*}
+S_n(b) = & (\boldY - \boldX b)^\top (\boldY - \boldX b)\\
+=&(\boldY - \boldX \hat{\beta}+ \boldX \hat{\beta}  - \boldX b)^\top (\boldY - \boldX \hat{\beta}+ \boldX \hat{\beta} - \boldX b)\\
+=&(\boldY - \boldX \hat{\beta})^\top(\boldY - \boldX \hat{\beta}) +(\boldX \hat{\beta} - \boldX b)^\top (\boldX \hat{\beta} - \boldX b)+ 2(\boldY-\boldX \hat{\beta})^\top(\boldX \hat{\beta}-\boldX b)\\
+=&(\boldY - \boldX \hat{\beta})^\top(\boldY - \boldX \hat{\beta}) + (\hat{\beta}-b)^\top \boldX ^\top\boldX  (\hat{\beta}-b) 
++ 2\hat{\boldU}^\top \boldX (\hat{\beta}-b)\\
+=&(\boldY - \boldX \hat{\beta})^\top(\boldY - \boldX \hat{\beta}) + (\hat{\beta}-b)^\top \boldX ^\top\boldX  (\hat{\beta}-b) 
+\end{align*}
+On note que la minimisation de $S_n(b)$ équivaut à minimiser $(\hat{\beta}-b)^\top \boldX ^\top\boldX  (\hat{\beta}-b)$ car $(\boldY - \boldX \hat{\beta})^\top(\boldY - \boldX \hat{\beta})$ ne fait pas intervenir $b$.  Sous l'hypothèse \eqref{cond4} la matrice $\boldX $ est de plein rang, et dans ce cas $\boldX ^\top\boldX $ est définie positive,
+\begin{align*}
+(\hat{\beta}-b)^\top \boldX ^\top\boldX  (\hat{\beta}-b) \geq 0
+\end{align*}
+et $(\hat{\beta}-b)^\top \boldX ^\top\boldX  (\hat{\beta}-b) = 0$ ssi $\hat{\beta} = b$\
+Alternativement, nous pouvons montrer que $\hat{\beta}=(\boldX ^\top\boldX )^{-1}\boldX ^\top\boldY$ est l'estimateur des moindres carrés de $\beta$(i.e., il minimise $S_n(b)$). Pour cela, écrivons,
+\begin{align*}
+S_n(b) = \boldY^\top\boldY - 2b^\top\boldX ^\top\boldY+b^\top\boldX ^\top\boldX b
+\end{align*}
+En utilisant le fait que pour une matrice symétrique $\boldA$,
+\begin{align*}
+\frac{\partial (x^\top\boldA x)}{\partial x} = 2\boldA x
+\end{align*}
+la condition du premier ordre est,
+\begin{align*}
+\frac{\partial S_n(\hat{\beta})}{\partial b} = -2\boldX ^\top\boldY + 2\boldX ^\top\boldX \hat{\beta} = 0
+\end{align*}
+ce qui permet d'obtenir,
+\begin{align*}
+\hat{\beta} = (\boldX ^\top\boldX )^{-1}\boldX ^\top\boldY
+\end{align*}
+Remarquons aussi que les conditions du premier ordre peuvent s'écrire $\boldX ^\top(\boldY - \boldX \hat{\beta}) = 0$, ce qui correspond aux équations normales vue précédemment.
+
+\section{Propriétés de l'estimateur des moindres carrés}
+
+Nous allons présenter un certain nombre de propriétés de l'estimateur des moindres carrés.
+\begin{propriete}$\hat{\beta}$ est un estimateur linéaire.
+\end{propriete}
+\begin{proof}
+Un estimateur $b$ est linéaire s'il peut s'écrire comme $b=\boldA\boldY$, où $\boldA$ est une matrice quelconque qui dépend de $\boldX $ uniquement, et ne dépend pas de $\boldY$. Pour l'estimateur des moindres carrés nous avons, $\boldA = (\boldX ^\top\boldX )^{-1}\boldX ^\top$.
+\end{proof}
+\begin{propriete}
+Sous les hypothèses \eqref{cond1}, \eqref{cond2}, et \eqref{cond4}, $\hat{\beta}$ est sans biais, i.e.,
+\begin{align*}
+\Exp(\hat{\beta}) = \beta
+\end{align*}
+\end{propriete}
+\begin{proof}
+Pour montrer cette propriété écrivons, en utilisant l'hypothèse \eqref{cond1},
+\begin{align*}
+\hat{\beta} = (\boldX ^\top\boldX )^{-1}\boldX ^\top\boldY =  (\boldX ^\top\boldX )^{-1}\boldX ^\top (\boldX \beta + \boldU) = 
+\beta + (\boldX ^\top\boldX )^{-1}\boldX ^\top\boldU
+\end{align*}
+Calculons l'espérance conditionnelle de $\hat{\beta}$,
+\begin{align*}
+\Exp\left(\hat{\beta} | \boldX \right) = \Exp\left(\beta + (\boldX ^\top\boldX )^{-1}\boldX ^\top\boldU | \boldX \right) = \beta +\ \Exp\left((\boldX ^\top\boldX )^{-1}\boldX ^\top\boldU | \boldX \right)
+\end{align*}
+Notons que,
+\begin{align*}
+\Exp\left((\boldX ^\top\boldX )^{-1}\boldX ^\top\boldU | \boldX \right) = 
+\left(\boldX \boldX \right)^{-1}\boldX ^\top\Exp(\boldU|\boldX ) = 0
+\end{align*} 
+car sous l'hypothèse \eqref{cond2}, $\Exp(\boldU|\boldX ) = 0$. Nous avons donc,
+\begin{align}
+\Exp\left(\hat{\beta} | \boldX \right) = \beta
+\label{eq13}
+\end{align}
+et par la règle des espérances itérées,
+\begin{align*}
+\Exp\left(\hat{\beta}\right) = \Exp\left(\Exp\left(\hat{\beta} | \boldX \right)\right)=\beta
+\end{align*}
+\end{proof}
+L'équation \eqref{eq13} montre que $\hat{\beta}$ est conditionnellement sans biais sachant $\boldX $. On remarque aussi que pour que $\hat{\beta}$ soit sans biais l'hypothèse \eqref{cond7} n'est pas suffisante.
+\begin{propriete}
+Sous les hypothèses \eqref{cond1}, \eqref{cond2}, et \eqref{cond4},
+\begin{align*}
+\Var\left(\hat{\beta} | \boldX \right) = (\boldX ^\top\boldX )^{-1}\boldX ^\top\Exp\left(\boldU\boldU^\top | \boldX \right)\boldX (\boldX ^\top\boldX )^{-1}
+\end{align*}
+et avec des erreurs homoscédastiques(i.e., sous l'hypothèse \eqref{cond3}),
+\begin{align*}
+\Var\left(\hat{\beta} | \boldX \right) = \sigma^2(\boldX ^\top\boldX )^{-1}
+\end{align*}
+\end{propriete}
+\begin{proof}
+Pour montrer ces résultats, partons de la définition de la variance conditionnelle de $\hat{\beta}$,
+\begin{align*}
+\Var\left(\hat{\beta} | \boldX \right) =& \Exp\left(\left(\hat{\beta} - \Exp(\hat{\beta} | \boldX )\right) \left(\hat{\beta} - \Exp(\hat{\beta} | \boldX )\right)^\top | \boldX \right)\\
+=&\Exp\left(\left(\hat{\beta} - \beta\right) \left(\hat{\beta} - \beta\right) ^\top | \boldX \right)\\
+=&\Exp\left((\boldX ^\top\boldX )^{-1}\boldX ^\top\boldU\boldU^\top\boldX (\boldX ^\top\boldX )^{-1}|\boldX \right)\\
+=&(\boldX ^\top\boldX )^{-1}\boldX ^\top\Exp\left(\boldU\boldU^\top | \boldX \right)\boldX (\boldX ^\top\boldX )^{-1}
+\end{align*}
+Et avec des erreurs homoscédastiques, $\Exp(\boldU\boldU^\top| \boldX ) = \sigma^2\Id_n$, de sorte que,
+\begin{align*}
+(\boldX ^\top\boldX )^{-1}\boldX ^\top\Exp\left(\boldU\boldU^\top | \boldX \right)\boldX (\boldX ^\top\boldX )^{-1} =& (\boldX ^\top\boldX )^{-1}\boldX ^\top \sigma^2\Id_n \boldX (\boldX ^\top\boldX )^{-1}\\
+=& \sigma^2(\boldX ^\top\boldX )^{-1}\boldX ^\top\boldX (\boldX ^\top\boldX )^{-1}\\
+=&\sigma^2(\boldX ^\top\boldX )^{-1}
+\end{align*}
+Notons qu'avec des régresseurs fixes $\Var\left(\hat{\beta}\right) =  \sigma^2(\boldX ^\top\boldX )^{-1}$.
+\end{proof}
+\begin{propriete}
+Sous les hypothèses \eqref{cond1} - \eqref{cond5},
+\begin{align*}
+\hat{\beta} | \boldX  \sim \mathcal{N}\left(\beta, \sigma^2(\boldX ^\top\boldX )^{-1}\right)
+\end{align*}
+\end{propriete}
+\begin{proof}
+Il est suffit ici de montrer ici que conditionnellement à $\boldX $ la distribution de $\hat{\beta}$ est normale. On aura alors que, $\hat{\beta} | \boldX \sim \mathcal{N}\left(\Exp(\hat{\beta}| \boldX ), \Var(\hat{\beta} | \boldX )\right)$. Néanmoins la normalité de $\hat{\beta} | \boldX $ résulte ici de ce que $\hat{\beta}$ est une fonction de linéaire de $\boldY$, et que sous l'hypothèse \eqref{cond5} $\boldY|\boldX $ est normale.
+\end{proof}
+Notons que dans le cas de régresseur fixes, il suffit d'omettre le conditionnement par rapport à $\boldX $ et,
+\begin{align*}
+\hat{\beta}\sim\mathcal{N}\left(\beta, \sigma^2(\boldX ^\top\boldX )^{-1}\right)
+\end{align*}
+\begin{propriete}(\textbf{\'Efficacité\footnote{Ce résultat est aussi connu sous le nom de \emph{théorème de Gauss-Markov.}}}) Sous les hypothèses \eqref{cond1}-\eqref{cond4}, l'estimateur des moindres carrés est le meilleur estimateur linéaire sans biais de $\beta$, dans le sens où il s'agit de l'estimateur, dans la classe des estimateurs linéaires et sans biais, qui présente la plus petite variance. i.e., pour tout estimateur linéaire sans biais, $b$, la matrice $\Var\left(b|\boldX \right)-\Var\left(\hat{\beta}|\boldX \right)$ doit être semi-définie positive:
+\begin{align*}
+\Var\left(b|\boldX \right)-\Var\left(\hat{\beta}|\boldX \right) \geq 0
+\end{align*}
+En outre, si $\tilde{\beta}$ est un estimateur linéaire et sans biais et 
+$\Var\left(\tilde{\beta}|\boldX \right) = \Var\left(\hat{\beta}|\boldX \right)$, alors $\tilde{\beta} = \hat{\beta}$ p.s.
+\end{propriete}
+Avant de démontrer ce résultat notons qu'il discute la variance conditionnelle de l'estimateur des moindres carrés, et ce faisant il se réfère à des estimateurs conditionnellement sans biais.
+\begin{proof}
+Soit $b$ un estimateur linéaire sans biais de $\beta$. Il doit ainsi vérifier,
+\begin{align*}
+b=\boldA\boldY, \ \ \ \Exp(b|\boldX ) = \beta
+\end{align*} 
+Ces deux conditions impliquent que $\boldA\boldX  =\Id_K$ p.s. En effet,
+\begin{align*}
+\Exp(b | \boldX ) = &\Exp\left(\boldA\left(\boldX \beta + \boldU\right)\right)\\
+=&\boldA\boldX \beta + \boldA\Exp(\boldU| \boldX )
+\end{align*}
+Par l'hypothèse \eqref{cond2}, $\Exp(\boldU | \boldX ) = 0$, et par conséquent, pour que $b$ soit sans biais nous avons besoin de $\boldA\boldX  = \Id_K$\
+Montrons maintenant que $\Cov\left(\hat{\beta}, b | \boldX \right) = \Var\left(\hat{\beta} | \boldX \right)$,
+\begin{align*}
+\Cov\left(\hat{\beta}, b | \boldX \right) =& \Exp\left((\hat{\beta} - \beta)(b-\beta)^\top\right)\\
+=&\Exp\left((\boldX ^\top\boldX )^{-1}\boldX^\top\boldU\boldU^\top\boldA^\top | \boldX \right)\\
+=&(\boldX ^\top\boldX )^{-1}\boldX^\top\Exp(\boldU\boldU^\top|\boldX )\boldA^\top)\\
+=&\sigma^2(\boldX ^\top\boldX )^{-1}\boldX ^\top\boldA^\top(\textrm{car sous \eqref{cond3}, \  } \Exp(\boldU\boldU^\top| \boldX ) = \sigma^2\Id_n)\\
+=&\sigma^2(\boldX ^\top\boldX )^{-1}(\textrm{car, \ } \boldX ^\top\boldA^\top = \Id_K)\\
+=&\Var\left(\hat{\beta}| \boldX \right)
+\end{align*}
+Finalement, 
+\begin{align}
+\Var\left(\hat{\beta} - b | \boldX \right) =&\Var\left(\hat{\beta}| \boldX \right) - \Cov\left(\hat{\beta}, b | \boldX \right) - \Cov\left(b, \hat{\beta} | \boldX \right) + \Var\left(b\boldX \right)\nonumber\\
+=&   \Var\left(b | \boldX \right) - \Var\left(\hat{\beta}| \boldX \right)
+\label{eq14}
+\end{align}
+et notons que dans la mesure où toute matrice de variance-covariances est semi-définie positive, nous avons,
+\begin{align*}
+ \Var\left(b | \boldX \right) - \Var\left(\hat{\beta}| \boldX \right) \geq 0
+\end{align*}
+Pour démontrer l'unicité, considérons un estimateur linéaire sans biais $\tilde{\beta}$ tel que $\Var\left(\tilde{\beta}|\boldX \right)=\Var\left(\hat{\beta}|\boldX \right)$. Alors, par \eqref{eq14}, $\Var\left(\hat{\beta} - b | \boldX \right) = 0$, et par conséquent, $\tilde{\beta} = \hat{\beta}+c(\boldX )$ pour une fonction $c(\boldX )$ à valeurs dans $\R^K$ qui dépend uniquement de $\boldX $. Cependant, comme $\hat{\beta}$ et $\tilde{\beta}$ sont conditionnellement sans biais sachant $\boldX $, il s'en suit que $c(\boldX ) = 0$  p.s.
+\end{proof}
+Notons que l'hypothèse \eqref{cond3}, $\Exp(\boldU\boldU^\top|\boldX )=\sigma^2\Id_n$, joue un rôle crucial dans la démonstration du résultat précédent. Sans elle, il ne serait pas possible de tirer des conclusions quant à  l'efficacité de l'estimateur des moindres carrés.
+
+%\bibliographystyle{jpe}
+%\bibliography{Biblio.bib}
+ \end{document}

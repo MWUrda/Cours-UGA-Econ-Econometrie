@@ -1,0 +1,463 @@
+\documentclass[10pt, reqno]{amsart}
+\input{../../Preambule2}
+\newcommand{\bxi}{ \boldx_i }
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{txfonts}
+\usepackage{mathrsfs}
+\usepackage{fancyhdr}
+
+\usepackage{fancyhdr}
+\usetikzlibrary{calc,decorations.pathmorphing,patterns}
+\usepackage{listofitems}
+\tikzstyle{mynode}=[thick,draw=blue,fill=blue!20,circle,minimum size=22]
+\usepackage{amsaddr}
+\usepackage{mathrsfs}
+
+\makeatletter
+
+\pgfdeclaredecoration{penciline}{initial}{
+    \state{initial}[width=+\pgfdecoratedinputsegmentremainingdistance,auto corner on length=1mm,]{
+        \pgfpathcurveto%
+        {% From
+            \pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}
+                            {\pgfdecorationsegmentamplitude}
+        }
+        {%  Control 1
+        \pgfmathrand
+        \pgfpointadd{\pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}{0pt}}
+                        {\pgfqpoint{-\pgfdecorationsegmentaspect\pgfdecoratedinputsegmentremainingdistance}%
+                                        {\pgfmathresult\pgfdecorationsegmentamplitude}
+                        }
+        }
+        {%TO 
+        \pgfpointadd{\pgfpointdecoratedinputsegmentlast}{\pgfpoint{1pt}{1pt}}
+        }
+    }
+    \state{final}{}
+}
+\makeatother
+
+\pagestyle{fancy}
+%\renewcommand{\subsection{mark}[1]{\markright{#1}{}}
+\fancyhead{}
+\fancyfoot{} 
+%\fancyhead[LE,LO]{\tiny{\thepage}}
+\fancyhead[C]{\small\textsc{Économètrie: L3 MIASH, S2}}
+%fancyhead[CE,CO]{\tiny{\rightmark}}
+\fancyhead[L]{\small\textsc{Université de Grenoble Alpes}}
+\fancyfoot[C]{\small{\thepage}}
+%\fancyfoot[R]{\small \textcopyright \ \  \small\textsc
+\fancyhead[R]{ \small\textsc{M. W. Urdanivia}}
+%\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+%\pagenumbering{roman}
+
+
+\begin{document} 
+\usetikzlibrary{positioning}
+\usetikzlibrary{snakes}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{shapes}
+%\tikzset{block/.style={draw, rectangle, fill=gray!20, 
+%\tikzset{empty/.style={draw, rectangle, fill=none, tex
+%\tikzset{line/.style={draw, -latex'}}
+%\onehalfspace
+
+%\includepdf{trame}
+
+
+\begin{titlepage}
+\centering
+	%\includegraphics[width=0.15\textwidth]{logoUGA2020}
+	{\scshape\Large \textsc{Université de Grenoble Alpes\\(L3 MIASH, S2)}\par}
+	\vspace{0.5cm}
+	{\Large\bfseries \scshape\Large \textsc{ÉCONOMÉTRIE}\par}
+	%{\scshape\large \textsc{Extremum Estimators(1)}\par}
+	%\vspace{1cm}
+	\vspace{0.5cm}
+	{\Large\bfseries \textsc{Régression Linéaire et Hétéroscédasticité:
+    } \par}
+    \vspace{1cm}   
+	{\Large\bfseries \textsc{Moindres Carrés Généralisés} \par}
+	\vspace{1cm}
+	{(\textsc{Cette version: \today})\par}
+	\vspace{1cm}
+	{\large \textsc{Michal W. Urdanivia}
+	\footnote{Contact:  
+	\href{mailto:michal.wong-urdanivia@univ-grenoble-alpes.fr}{michal.wong-urdanivia@univ-grenoble-alpes.fr}, 
+	 Université de Grenoble Alpes,  Faculté d'\'Economie, GAEL.}\par}
+	 %\includegraphics[width=0.15\textwidth]{logoUGA}
+	%\vfill
+	%supervised by\par
+	%Dr.~Mark \textsc{Brown}
+%\vfill
+% Bottom of the page
+	
+\end{titlepage}
+
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Estimateur des moindres carrés généralisés}
+
+On considère le modèle linéaire sans endogénéité étudié dans les cours
+précédents. Toutefois, plutôt que la condition $\Exp(X_iU_i) = 0$ nous
+allons utiliser la condition(plus forte) $\Exp(U_i|X_i)=0$. En résumé,
+le conditions que l'on impose sont les suivantes;
+
+\begin{condition}
+Les données  $\{(Y_i, X_i), i = 1,\ldots,n\}$ sont un échantillon i.i.d.
+\label{cond1}
+\end{condition}
+\begin{condition} $Y_i$  et $X_i$ vérifient,
+\begin{align*} 
+Y_i= X_i^\tr\beta + U_i \ \ i = 1,\ldots,n
+\end{align*}
+où $U_i$ est une variable inobservée(ou terme d'erreur) vérifiant $\Exp(U_i) = 0$.
+\label{cond2} 
+\end{condition}
+\begin{condition}$X_i$ est exogène par rapport à $U_i$,
+\begin{align*}
+\Exp(U_i|X_i) = 0
+\end{align*}
+\label{cond3} 
+\end{condition}
+\begin{condition} 
+La matrice $\Exp(X_iX_i^\tr)$ est finie et définie positive.
+\label{cond4}
+\end{condition}
+\begin{condition}
+$\Exp(X_{i,k}^4) < \infty$ , pour tout $k=1,\ldots,K$.
+\label{cond5}
+\end{condition}
+\begin{condition}
+$\Exp(U_i^4) < \infty$
+\label{cond6}
+\end{condition}
+\begin{condition}
+$\Exp(U_i^2X_iX_i^\tr)$ est définie positive.
+\label{cond7}
+\end{condition}
+
+Comme cela a été déjà noté la condition \eqref{cond3} est plus forte que
+celle dont on a besoin pour établir la convergence et la normalité asymptotique de l'estimateur des
+MCO. Toutefois elle va nous permettre d'étudier le problème de
+l'efficacité dans le cas d'erreurs
+hétécédastiques où $\Exp(U_i^2|X_i)=\sigma^2_i$, et $\sigma^2_i$ étant une
+fonction de $X_i$: $\sigma^2_i =\sigma^2(X_i)$.
+
+\begin{exemple}
+Supposons que $Y_{i,j}=X_{i,j}^\tr\beta + U_{i,j}$ pour
+$i=1,...,n$($n$ secteurs industriels) et $j=1,...,m_i$($m_i$
+entreprises dans le secteur $i$). Supposons les observations
+i.i.d. selon $i$ et $j$, et que l'on observe seulement des valeurs
+moyennes des variables pour les $n$ secteurs, soit: $\bar{Y}_i =
+m_i^{-1}\underset{j=1}{\overset{m_i}{\sum}} Y_{i,j}$, et $\bar{X}_i=
+m_i^{-1}\underset{j=1}{\overset{m_i}{\sum}} X_{i,j}$. Supposons aussi
+que des erreurs $U_{i,j}$ homoscédastiques,
+i.e.,$\Exp(U_{i,j}^2|X_{i,j}) = \sigma^2$ pour tout $i=1,...,n$ et
+$j=1,...,m_i$. Cependant,
+$\bar{U}_i=m_i^{-1}\underset{j=1}{\overset{m_i}{\sum}} U_{i,j}$,
+et $\Exp\left(\bar{U}_i^2|\bar{X}_i\right) = \sigma^2/m_i$.
+\end{exemple}
+En présence d'hétéroscédasticité, l'estimateur des MCO est convergent
+et asymptotiquement normal, mais il n'est plus efficace. Il existe en
+effet un estimateur avec une variance asymptotique plus petite. Sous
+\eqref{cond1}, et \eqref{cond3}, $\Exp\left(\hat{\beta}_n|\mathbf{X}\right)
+= \beta$(sans biais), et,
+\begin{align*}
+\Vr\left(\hat{\beta}_n|\mathbf{X}\right) &=
+                                               (\mathbf{X}^\tr\mathbf{X})^{-1}
+\mathbf{X}^\tr\mathbf{D}\mathbf{X}(\mathbf{X}^\tr\mathbf{X})^{-1}
+\end{align*}
+avec,
+\begin{align*}
+\mathbf{D} &=
+\left(
+\begin{array}{cccccc}
+\sigma^2_1&0&.&.&.&0\\
+0&\sigma^2_2&.&.&.&0\\
+.&0&.&.&.&.\\
+.&.&.&.&.&.\\
+.&.&.&.&.&.\\
+0&.&.&.&0&\sigma^2_n\\
+\end{array}
+\right)
+\end{align*}
+Supposons aussi que $\sigma_i^2 = \sigma^2(X_i)$ soit connu pour tout
+$i$. L'estimateur des moindres carrés généralisés(MCG) est défini
+comme suit,
+
+\begin{align}
+\hat{\beta}_n^{MCG} &=
+                          \left(\mathbf{X}^\tr\mathbf{D}^{-1}\mathbf{X}\right)^{-1}\mathbf{X}^\tr\mathbf{D}^{-1}\mathbf{Y}
+  \nonumber\\
+&= \sumobs(\sigma^{-2}_iX_iX_i^\tr)^{-1}\sumobs \sigma^{-2}X_iY_i
+\label{eqGLS1}
+\end{align}
+Dans le cas de $\mathbf{D}$ diagonale, l'estimateur des MCG est aussi
+appelé \emph{estimateur des moindres carrés pondérés} car il fait
+intervenir les moyennes pondérées des termes $X_iX_i^\tr$ et $X_iY_i$
+pondérées par les termes $\sigma^{-2}_i$.\\
+Sous les conditions \eqref{cond1} et \eqref{cond3}, on établit que
+$\hat{\beta}_n^{MCG}$ est sans biais,
+\begin{align*}
+\Exp\left(\hat{\beta}_n^{MCG} | \mathbf{X}\right) &= \beta +
+                                                       \left(\mathbf{X}^\tr\mathbf{D}^{-1}\mathbf{X}\right)^{-1}\mathbf{X}^\tr\mathbf{D}^{-1}\Exp(\mathbf{U}|\mathbf{X})\\
+&=\beta
+\end{align*}
+
+Et sa variance est donnée par,
+
+\begin{align*}
+\Vr\left(\hat{\beta}_n^{MCG}|\mathbf{X}\right)&=
+                                                    \left(\mathbf{X}^\tr\mathbf{D}^{-1}\mathbf{X}\right)^{-1}\mathbf{X}^\tr\mathbf{D}^{-1}\Exp\left(\mathbf{U}\mathbf{U}^\tr|\mathbf{X}\right)\mathbf{D}^{-1}\mathbf{X}
+                                                    \left(\mathbf{X}^\tr\mathbf{D}^{-1}\mathbf{X}\right)^{-1}\\
+&= \left(\mathbf{X}^\tr\mathbf{D}^{-1}\mathbf{X}\right)^{-1}
+\end{align*}
+Montrons à présent que
+$\Vr\left(\hat{\beta}_n^{MCG}|\mathbf{X}\right)\leq
+\Vr\left(\hat{\beta}_n|\mathbf{X}\right)$. Notons d'abord que,
+
+\begin{align*}
+\Vr\left(\hat{\beta}_n^{MCG}|\mathbf{X}\right)\leq
+\Vr\left(\hat{\beta}_n|\mathbf{X}\right) &\Leftrightarrow
+\left(\Vr\left(\hat{\beta}_n^{MCG}|\mathbf{X}\right)\right)^{-1}\geq
+\left(\Vr\left(\hat{\beta}_n|\mathbf{X}\right)\right)^{-1}
+\end{align*}
+Ensuite que,
+\begin{align*}
+\mathbf{X}^\tr\mathbf{D}^{-1}\mathbf{X} -
+  \mathbf{X}^\tr\mathbf{X}\left(\mathbf{X}^\tr\mathbf{D}\mathbf{X}\right)^{-1}
+  \mathbf{X}^\tr\mathbf{X} &=
+                              \mathbf{X}^\tr\mathbf{D}^{-1/2}\left(\Id
+                              - \mathbf{D}^{1/2}\mathbf{X}\left(\mathbf{X}^\tr\mathbf{D}\mathbf{X}\right)^{-1}\mathbf{X}\mathbf{D}^{1/2}\right)\mathbf{D}^{-1/2}\mathbf{X}
+\end{align*}
+où l'on note que $\Id
+                              -
+                              \mathbf{D}^{1/2}\mathbf{X}\left(\mathbf{X}^\tr\mathbf{D}\mathbf{X}\right)^{-1}\mathbf{X}\mathbf{D}^{1/2}$
+                              est symmétrique et semi-définie
+                              positive, et par conséquent,
+
+\begin{align*}
+\mathbf{X}^\tr\mathbf{D}^{-1}\mathbf{X} &\geq
+  \mathbf{X}^\tr\mathbf{X}\left(\mathbf{X}^\tr\mathbf{D}\mathbf{X}\right)^{-1}
+  \mathbf{X}^\tr\mathbf{X}
+\end{align*}
+
+L'efficacité de l'estimateur des MCG résulte de l'application du
+théorème de Gauss-Markov. En effet, avec l'hétéroscédasticité des
+erreurs une des conditions pour l'obtenir n'est plus satisfaite. Mais
+considèrons le modèle tranformé suivant,
+\begin{align*}
+\tilde{Y}_i &=\tilde{X}_i^\tr\beta + \tilde{U}_i
+\end{align*}
+où $\tilde{Y}_i = Y_i/\sigma$, $\tilde{X}_i = X_i/\sigma$, et
+$\tilde{U}_i = U_i/\sigma$. Les erreurs transformés sont
+homoscédastiques,
+\begin{align*}
+\Exp\left(\tilde{U}_i^2|X_i\right) &= \sigma_i^2/\sigma_i^2\\
+&=1
+\end{align*}
+et par le théorème de Gauss-Markov l'estimateur BLUE est donné par,
+\begin{align*}
+\left(\sumobs\tilde{X}_i\tilde{X}_i^\tr\right)^{-1}\sumobs
+  \tilde{X}_i\tilde{Y}_i&=
+\left(\sumobs\sigma^{-2}_i X_iX_i^\tr\right)^{-1}\sumobs
+  \sigma^{-2}_iX_iY_i\\
+&=\hat{\beta}_n^{MCG}
+\end{align*}
+
+\section{Propriétés asymptotiques}
+
+On commence par discuter la convergence de l'estimateur. Pour cela
+écrivons,
+\begin{align*}
+\hat{\beta}_n^{MCG} &= \beta + \left(\sumobs (\sigma^{-2}_iX_iX_i^\tr\right)^{-1}\sumobs\sigma^{-2}_iX_iU_i
+\end{align*}
+Nous supposons que la fonction $\sigma^2(X_i)$ présente une borne
+inférieure, i.e., avec une probabilité de 1,
+$\sigma^2(X_i)>\underline{\sigma}^2>0$. Ce qui garantit, que
+$\Exp(\sigma^{-2}_iX_iX_i^\tr)$ "n'explose pas". Pour $k, l =
+1,...,K$, nous avons
+$\Exp\left(\abs{\sigma_i^{-2}X_{i,k}X_{i,l}}\right) \leq
+\underline{\sigma}^2\Exp\left(\abs{X_{i,k}X_{i,l}}\right)<\infty$(en
+utilisant la condition \eqref{cond4}). Par la loi faible des grands
+nombres et le théorème de Slutsky,
+
+\begin{align*}
+ \left(\sumobs \sigma^{-2}_iX_iX_i^\tr\right)^{-1} &\limp \left(\Exp(\sigma_i^{-2}X_iX_i^\tr)\right)^{-1}
+\end{align*}
+
+Nous avons aussi que,
+
+\begin{align*}
+\Exp\left(\sigma_i^{-2}X_iU_i\right) &= \Exp\left(\sigma_i^{-2}
+                                      X_i\Exp(U_i|X_i)\right)\\
+&=0
+\end{align*}
+et ainsi,
+\begin{align*}
+\sumobs\sigma^{-2}_iX_iU_i&\limp 0
+\end{align*}
+Par conséquent, $\hat{\beta}_n^{MCG}\limp \beta$ lorsque $n
+\rightarrow \infty$. Notons qu'en général,  $\hat{\beta}_n^{MCG}$
+  n'est pas convergent sous la condition $\Exp(X_iU_i)=0$, étant donné
+  que comme $\sigma_i^2$ est une fonction de $X_i$ on ne peut pas
+  garantir que $\Exp\left(\sigma_i^{-2}X_iU_i\right) = 0$ avec
+  $\Exp(X_iU_i)=0$. Pour établir la normalité asymptotique de
+  $\hat{\beta}_n^{MCG}$, écrivons,
+\begin{align*}
+n^{1/2}\left(\hat{\beta}_n^{MCG} -
+  \beta\right)&=\left(n^{-1}\sumobs
+                \sigma_i^{-2}X_iX_i^\tr\right)^{-1}n^{-1/2} \sumobs\sigma_i^{-2}X_iU_i
+\end{align*}
+Nous avons,
+\begin{align*}
+\Vr\left(\sigma_i^{-2}X_iU_i\right)&=
+                                     \Exp\left(\sigma_i^{-4}X_iX_i^\tr
+                                     U_i^2\right)\\
+&= \Exp\left(\sigma_i^{-4}X_iX_i^\tr
+                                     \Exp(U_i^2|X_i)\right)\\
+& = \Exp\left(\sigma_i^{-2}X_iX_i^\tr\right)
+ \end{align*}
+et par conséquent,
+\begin{align*}
+n^{1/2}\left(\hat{\beta}_n^{MCG} -
+  \beta\right)&\limd
+                \left(\Exp\left(\sigma_i^{-2}X_iX_i^\tr\right)\right)^{-1}\mathcal{N}\left(0,
+                \Exp\left(\sigma_i^{-2}X_iX_i^\tr\right)\right)\\
+&=\mathcal{N}\left(0,
+                \Exp\left(\sigma_i^{-2}X_iX_i^\tr\right)^{-1}\right)
+\end{align*}
+
+\section{Moindres carrés quasi-généralisés}
+L'estimateur des MCG n'est pas applicable dès lors que l'on ne connaît
+pas $\sigma_i^2$. Une solution naturelle à ce problème consiste à
+remplacer le terme inconnu $\sigma_i^2$ dans \eqref{eqGLS1} par un
+estimateur $\hat{\sigma}^2_i$. Pour cela une pratique courante
+consiste à supposer que,
+
+\begin{align}
+\sigma_i^2&= Z_i^\tr\alpha
+\label{eqGLS2}
+\end{align}
+
+où $Z_i$ est un vecteur $q\times 1$ de fonctions de $X_i$. Ils
+consistent en général en produits et produits croisés des éléments de
+$X_i$. \'Etant donné
+que $\sigma_i^2 = \Exp(U_i^2|X_i)$, on peut écrire,
+
+\begin{align*}
+U_i^2&=Z_i^\tr\alpha + \nu_i
+\end{align*}
+
+où $\Exp(\nu_i|Z_i)=0$. Ce modèle est appelé \emph{régression
+  scédastique}. Comme les termes $U_i$ ne sont pas observés on utilise
+les résidus de la régression estimée par MCO(de $Y_i$ sur $X_i$),
+$\hat{U}_i$, et on estime $\alpha$ par,
+
+\begin{align*}
+\hat{\alpha}_n &= \left(\sumobs Z_iZ_i^\tr\right)^{-1}\sumobs Z_i\hat{U}_i^2
+\end{align*}
+
+Et l'on peut montrer que $\hat{\alpha}_n\limp \alpha$ et
+$n^{1/2}\left(\hat{\alpha}_n-\alpha\right)\limd\mathcal{N}\left(0,
+\Vr_\alpha\right)$ où $\Vr_\alpha$ est la même variance que dans le
+cas où les termes $U_i^2$ étaient observés. L'estimateur des moindres
+carrés quasi-généralisés(MCQG) est alors donné par,
+
+\begin{align*}
+\hat{\beta}_n^{MCQG}
+  &=\left(\mathbf{X}^\tr\hat{\mathbf{D}}_n^{-1}\mathbf{X}\right)^{-1}
+\mathbf{X}^\tr\hat{\mathbf{D}}_n^{-1}\mathbf{Y}\\
+&=\left(\sumobs\hat{\sigma}_i^{-2}X_iX_i^\tr\right)^{-1}\sumobs\hat{\sigma}_i^{-2}X_iY_i
+\end{align*}
+où
+\begin{align*}
+\hat{\mathbf{D}}_n &=
+\left(
+\begin{array}{cccccc}
+\hat{\sigma}^2_1&0&.&.&.&0\\
+0&\hat{\sigma}^2_2&.&.&.&0\\
+.&0&.&.&.&.\\
+.&.&.&.&.&.\\
+.&.&.&.&.&.\\
+0&.&.&.&0&\hat{\sigma}^2_n\\
+\end{array}
+\right)
+\end{align*}
+et,
+\begin{align*}
+\hat{\sigma}^2_i &= Z_i^\tr\hat{\alpha}_n
+\end{align*}
+De plus, on peut montrer que $\hat{\beta}_n^{MCQG}\limp \beta$, et
+que,
+\begin{align}
+n^{1/2}\left(\hat{\beta}_n^{MCQG} -
+  \beta\right)&\limd \mathcal{N}\left(0,
+                \Exp\left(\sigma_i^{-2}X_iX_i^\tr\right)^{-1}\right)
+\label{eqGLS3}
+\end{align}
+autrement dit, la même distribution que pour l'estimateur des MCG, à
+condition que \eqref{eqGLS2} soit correctement spécifié. Ci-après nous
+listons les étapes pour construire l'estimateur des MCQG.
+\begin{enumerate}
+\item Obtenir $\hat{\beta}_n$, l'estimateur des MCO de $\beta$.
+\item Construire $\hat{U}_i = Y_i - X_i^\tr\hat{\beta}_n$.
+\item Obtenir $\hat{\alpha}_n$, l'estimateur des MCO dans la
+  régression de $\hat{U}_i^2$ sur $Z_i$.
+\item Construire $\hat{\sigma}_i^2=Z_i^\tr\hat{\alpha}_n$.
+\item Calculer $\hat{\beta}_n^{MCQG}$.
+\end{enumerate}
+Un problème avec l'estimateur des MCQG dans l'approche ci-avant est
+que $\hat{\sigma}_i^2 = Z_i^\tr\hat{\alpha}_n$ peut être très
+proche de zéro voire négatif. Plusieurs solutions sont possibles. La
+première consiste à tronquer la distribution des
+$\hat{\sigma}_i^2$ en choisissant $\underline{\sigma}^2 > 0$ et
+posant $\hat{\sigma}_i^2 =
+\max\left\{Z_i\hat{\alpha}_n,\underline{\sigma}^2 \right\}$. Une
+alternative est de considérer une régression scédastique non-linéaire,
+par exemple,
+\begin{align*}
+\sigma_i^2 &= \exp\left(Z_i^\tr\alpha\right)
+\end{align*}
+Dans ce cas à la troisième étape on doit régresser
+$\log\left(\hat{U}_i^2\right)$ sur $Z_i$ et à la quatrième étape calculer
+$\hat{\sigma}_i^2 = \exp\left(Z_i\hat{\alpha}_n\right)$.\\
+La procédure pour les MCQG repose sur deux hypothèses très
+fortes. D'abord que la régression scédastique soit correctement
+spécifiée. En cas de mauvaise spécification, $\hat{\sigma}^2_i$
+fournit seulement une approxiamtion de $\sigma_i^2$, et la variance
+asymptotique dans \eqref{eqGLS3} aura la forme en " sandwich",
+
+\[
+\left(\Exp\left((Z_i^\tr\alpha)^{-1}X_iX_i^\tr\right)\right)^{-1}
+\Exp\left((Z_i^\tr\alpha)^{-2}\sigma_i^2X_iX_i^\tr\right)
+\left(\Exp\left((Z_i^\tr\alpha)^{-1}X_iX_i^\tr\right)\right)^{-1}
+\]
+et l'estimateur des MCQG aura une performance encore moin bonne que
+celle de l'estimateur des MCO. En outre, si la condition
+$\Exp(U_i|X_i)=0$ n'est pas satisfaite les estimateurs des MCG et des
+MCQG ne seront pas convergents. Alors que l'estimateur des MCO est
+moins efficace que celui des MCQG sous certaines conditions, il
+fournit des estimateurs plus \emph{robustes}.
+
+%\section{Tester l'hétéroscédasticité}
+%\bibliography{../../Biblio.bib}
+ \end{document}

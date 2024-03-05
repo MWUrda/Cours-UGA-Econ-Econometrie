@@ -1,0 +1,188 @@
+\documentclass[10pt, reqno]{amsart}
+\input{../../Preambule2}
+\newcommand{\bxi}{ \boldx_i }
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{txfonts}
+\usepackage{mathrsfs}
+\usepackage{fancyhdr}
+
+
+
+\usepackage{fancyhdr}
+\usetikzlibrary{calc,decorations.pathmorphing,patterns}
+\usepackage{listofitems}
+\tikzstyle{mynode}=[thick,draw=blue,fill=blue!20,circle,minimum size=22]
+\usepackage{amsaddr}
+\usepackage{mathrsfs}
+
+\makeatletter
+
+\pgfdeclaredecoration{penciline}{initial}{
+    \state{initial}[width=+\pgfdecoratedinputsegmentremainingdistance,auto corner on length=1mm,]{
+        \pgfpathcurveto%
+        {% From
+            \pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}
+                            {\pgfdecorationsegmentamplitude}
+        }
+        {%  Control 1
+        \pgfmathrand
+        \pgfpointadd{\pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}{0pt}}
+                        {\pgfqpoint{-\pgfdecorationsegmentaspect\pgfdecoratedinputsegmentremainingdistance}%
+                                        {\pgfmathresult\pgfdecorationsegmentamplitude}
+                        }
+        }
+        {%TO 
+        \pgfpointadd{\pgfpointdecoratedinputsegmentlast}{\pgfpoint{1pt}{1pt}}
+        }
+    }
+    \state{final}{}
+}
+\makeatother
+
+\pagestyle{fancy}
+%\renewcommand{\subsection{mark}[1]{\markright{#1}{}}
+\fancyhead{}
+\fancyfoot{} 
+%\fancyhead[LE,LO]{\tiny{\thepage}}
+\fancyhead[C]{\small\textsc{Économètrie: L3 MIASH, S2}}
+%fancyhead[CE,CO]{\tiny{\rightmark}}
+\fancyhead[L]{\small\textsc{Université de Grenoble Alpes}}
+\fancyfoot[C]{\small{\thepage}}
+%\fancyfoot[R]{\small \textcopyright \ \  \small\textsc
+\fancyhead[R]{ \small\textsc{M. W. Urdanivia}}
+%\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+%\pagenumbering{roman}
+
+
+\begin{document} 
+\usetikzlibrary{positioning}
+\usetikzlibrary{snakes}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{shapes}
+%\tikzset{block/.style={draw, rectangle, fill=gray!20, 
+%\tikzset{empty/.style={draw, rectangle, fill=none, tex
+%\tikzset{line/.style={draw, -latex'}}
+%\onehalfspace
+
+%\includepdf{trame}
+
+\begin{titlepage}
+\centering
+	%\includegraphics[width=0.15\textwidth]{logoUGA2020}
+	{\scshape\Large \textsc{Université de Grenoble Alpes\\(L3 MIASH, S2)}\par}
+	\vspace{0.5cm}
+	{\Large\bfseries \scshape\Large \textsc{ÉCONOMÉTRIE}\par}
+	%{\scshape\large \textsc{Extremum Estimators(1)}\par}
+	%\vspace{1cm}
+	\vspace{0.5cm}
+	{\Large\bfseries \textsc{Travaux} \par}
+    \vspace{0.5cm}   
+   {\Large\bfseries \textsc{Travail 2} \par}
+	\vspace{1cm}
+	{(\textsc{Cette version: \today})\par}
+	\vspace{1cm}
+	{\large \textsc{Michal W. Urdanivia}
+	\footnote{Contact:  
+	\href{mailto:michal.wong-urdanivia@univ-grenoble-alpes.fr}{michal.wong-urdanivia@univ-grenoble-alpes.fr}, 
+	 Université de Grenoble Alpes,  Faculté d'\'Economie, GAEL.}\par}
+	 %\includegraphics[width=0.15\textwidth]{logoUGA}
+	%\vfill
+	%supervised by\par
+	%Dr.~Mark \textsc{Brown}
+%\vfill
+% Bottom of the page
+	
+\end{titlepage}
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Régression et Projection Linéaires}
+
+On considère un échantillon i.i.d., $\{(y_i, \boldx_i), i=1, \ldots N\}$ et on se propose d'étudier la relation entre $y_i\in \R$ 
+et $\boldx_i\in\R^K$ en commençant par considérer que cette relation soit représentée par:
+
+\begin{align}
+y_i &=\boldx_i^\prime\bolda_0 + u_i, \ \Exp[u_i] \equiv 0,
+  \label{eq1}
+\end{align}
+
+où $\bolda_0\in \R^K$ est un vecteur de coefficients, $u_i$ est une variable inobservable par l'économètre, et on suppose aussi
+que le vecteur $\boldx_i$ contient un élément constant.
+
+\begin{enumerate}
+\item Indiquez la condition qu'on doit imposer à $u_i$ pour que \eqref{eq1} soit l'équation d'un modèle de régression linéaire.
+\item Sans que forcément la condition de la question précédente ne soit imposée et en considérant que $\boldx_i^\prime\bolda_0$
+est la projection linéaire de $y_i$ sur $\boldx_i$:
+\begin{enumerate}
+  \item Indiquez comment $\bolda_0$ est défini et donnez en une expression en termes de moments de $\boldx_i$ et $y_i$.
+  \item Indiquez ce que dans ce cas la relation entre $\boldx_i$ et $u_i$ vérifierait.
+  \item Proposez un estimateur convergent de $\bolda_0$.
+  \item S'agit t-il aussi d'un estimateur convergent de $\bolda_0$ lorsque l'on considère un modèle de régression linéaire? Argumentez votre réponse.
+\end{enumerate}
+
+\section{Théorème de Frisch-Waugh Lovell}
+
+Dans cette partie on commence par une illustration numérique/empirique de ce résultat qu'on dérive théoriquement par la suite 
+en utilisant les propriétés des projections linéaires.
+
+\subsection{Illustration numérique/empirique}
+
+Nous allons utiliser des données qui sont 
+disponible sur le site que \href{https://www.ssc.wisc.edu/~bhansen/}{Bruce Hansen}. 
+Plus précisément, nous allons utiliser des données extraites du \emph{Current Population Survey}(CPS) de 2009. 
+Une description du fichier est \href{https://www.ssc.wisc.edu/~bhansen/econometrics/cps09mar_description.pdf}{ici}.
+
+\medskip
+
+On considère la version suivante de \eqref{eq1}:
+
+\begin{align}
+  lwage &=  \alpha_0 + b_{1, 0} education + b_{2, 0} exper + b_{3, 0} exper^2 + b_{4, 0} female +  b_{5, 0} black + u_i.
+  \label{eq2}
+\end{align}
+où $education$ et le nombre d'années d'études, $lwage$ est le salaire horaire en logarithme, $exper$ est une approximation de l'expérience 
+sur le marché du travail, $female$ et $black$ des indicatrices d'être respectivement une femme, et une personne afro-américaine.
+
+\begin{enumerate}
+\item Estimez les coefficients de \eqref{eq2} par MCO et indiquez dans quels cas il estiment les coefficient d'un projection linéaire et/ou
+ ceux d'une régression linéaire. Discutez cela dans le cadre de cette application.
+\item Appliquez la procédure suivante:
+\begin{enumerate}[label=(\arabic*)]
+  \item Estimez la projection linéaire de $female$ sur les autres régresseurs et calculez le vecteur des valeurs prédites, et le vecteur des résidus estimés.
+  \label{e1}
+  \item Estimez la projection linéaire de $lwage$ sur les régresseurs de \eqref{eq2} sans $female$ et calculez le vecteur des valeurs prédites, et le vecteur des résidus estimés.
+  \label{e2}
+  \item Estimez la projection linéaire du vecteur des résidus estimés de l'étape \ref{e2} sur ceux de l'étape \ref{e1} et 
+  comparez votre résultat à celui de la première question. Que constatez vous?
+\end{enumerate}
+\end{enumerate}
+
+
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%\bibliographystyle{jpe}
+%\bibliography{../../Biblio.bib}
+ \end{document}

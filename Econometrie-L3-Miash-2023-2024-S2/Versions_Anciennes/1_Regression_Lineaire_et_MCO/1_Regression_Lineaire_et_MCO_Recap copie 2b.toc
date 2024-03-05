@@ -1,0 +1,7 @@
+\babel@toc {french}{}
+\contentsline {section}{\tocsection {}{1}{Matrices de projection}}{2}{section.1}
+\contentsline {section}{\tocsection {}{2}{Propri\IeC {\'e}t\IeC {\'e}s de $\mathaccentV {hat}05E{\sigma }^2$}}{4}{section.2}
+\contentsline {section}{\tocsection {}{3}{R\IeC {\'e}gression partitionn\IeC {\'e}e}}{5}{section.3}
+\contentsline {section}{\tocsection {}{4}{Qualit\IeC {\'e} de l'ajustement et coefficient de d\IeC {\'e}termination ou $R^2$}}{8}{section.4}
+\contentsline {section}{\tocsection {}{5}{Propri\IeC {\'e}t\IeC {\'e}s du $R^2$}}{9}{section.5}
+\contentsline {section}{\tocsection {}{6}{$R^2$ ajust\IeC {\'e}}}{11}{section.6}

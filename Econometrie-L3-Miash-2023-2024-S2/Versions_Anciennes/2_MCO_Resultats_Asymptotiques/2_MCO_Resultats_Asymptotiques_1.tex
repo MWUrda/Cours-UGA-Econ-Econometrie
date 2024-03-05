@@ -121,21 +121,21 @@ Les données  $\{(Y_i, X_i), i = 1,...,n\}$ sont un échantillon i.i.d.
 \end{condition}
 \begin{condition} $Y_i$  et $X_i$ vérifient,
 \begin{align*} 
-Y_i= X_i^\top\beta + U_i \ \ i = 1,...,n
+Y_i= X_i^\tr\beta + U_i \ \ i = 1,...,n
 \end{align*}
 où $U_i$ est une variable inobservée(ou terme d'erreur) vérifiant $\Exp(U_i) = 0$.
 \label{cond2} 
 \end{condition}
 \begin{condition}$X_i$ est (faiblement)exogène\footnote{On pourrait aussi supposer une \emph{exogénéité forte} avec $\Exp(U_i|X_i) = 0$
-    auquel cas $\beta$ dans $Y_i = X_i^\top\beta + U_i$ seraient les paramètres d'un modèle de régression linéaire, à savoir d'un modèle tel 
-    que $\Exp(Y_i|X_i) = X_i^\top \beta $.} par rapport à $U_i$,
+    auquel cas $\beta$ dans $Y_i = X_i^\tr\beta + U_i$ seraient les paramètres d'un modèle de régression linéaire, à savoir d'un modèle tel 
+    que $\Exp(Y_i|X_i) = X_i^\tr \beta $.} par rapport à $U_i$,
 \begin{align*}
 \Exp(X_iU_i) = 0
 \end{align*}
 \label{cond3} 
 \end{condition}
 \begin{condition} 
-La matrice $\Exp(X_iX_i^\top)$ est finie et définie positive.
+La matrice $\Exp(X_iX_i^\tr)$ est finie et définie positive.
 \label{cond4}
 \end{condition}
 \begin{condition}
@@ -147,14 +147,14 @@ $\Exp(U_i^4) < \infty$
 \label{cond6}
 \end{condition}
 \begin{condition}
-$\Exp(U_i^2X_iX_i^\top)$ est définie positive.
+$\Exp(U_i^2X_iX_i^\tr)$ est définie positive.
 \label{cond7}
 \end{condition}
 
 \section{Convergence}
 Rappelons qu'une écriture de l' estimateur des moindres carrés est,
 \begin{align*}
-\hat{\beta}_n= \left(\sumobs X_iX_i^\top\right)^{-1}\sumobs X_iY_i
+\hat{\beta}_n= \left(\sumobs X_iX_i^\tr\right)^{-1}\sumobs X_iY_i
 \end{align*}
 Cet estimateur est convergent pour $\beta$ si $\hat{\beta}_n\limp \beta$ quand $n\to \infty$, ce qui est établi par la propriété suivant.
 \begin{propriete}(\textbf{Convergence de l'estimateur des moindres carrés})
@@ -163,7 +163,7 @@ Sous les hypothèses \ref{cond1} - \ref{cond4}, $\hat{\beta}_n\limp \beta$ quand
 \begin{proof}
 $\hat{\beta}_n$ peut s'écrire,
 \begin{align}
-\hat{\beta}_n= \beta +  \left(n^{-1}\sumobs X_iX_i^\top\right)^{-1}n^{-1}\sumobs X_iU_i
+\hat{\beta}_n= \beta +  \left(n^{-1}\sumobs X_iX_i^\tr\right)^{-1}n^{-1}\sumobs X_iU_i
 \label{eq1}
 \end{align}
 Les termes $U_i$'s et les termes $X_iU_i$'s sont i.i.d. sous l'hypothèse \ref{cond1}. 
@@ -201,18 +201,18 @@ par conséquent que $\Exp(\abs{X}) < \infty$.
 \begin{align*}
 n^{-1} \sumobs X_iU_i \limp \Exp(X_iU_i) = 0
 \end{align*}
-Où l'on utilise \ref{cond3}. Dans la mesure où $E(X_iX_i^\top)$ est finie sous l'hypothèse \ref{cond4} nous avons par la loi faible des grand nombres,
+Où l'on utilise \ref{cond3}. Dans la mesure où $E(X_iX_i^\tr)$ est finie sous l'hypothèse \ref{cond4} nous avons par la loi faible des grand nombres,
 \begin{align*}
-n^{-1} \sumobs X_iX_i^\top \limp \Exp(X_iX_i^\top)
+n^{-1} \sumobs X_iX_i^\tr \limp \Exp(X_iX_i^\tr)
 \end{align*}
-et comme  $E(X_iX_i^\top)$ est définie positive, nous avons  par le théorème de Slutsky,
+et comme  $E(X_iX_i^\tr)$ est définie positive, nous avons  par le théorème de Slutsky,
 \begin{align}
-\left(n^{-1} \sumobs X_iX_i^\top\right)^{-1} \limp \left(\Exp(X_iX_i^\top)\right)^{-1}
+\left(n^{-1} \sumobs X_iX_i^\tr\right)^{-1} \limp \left(\Exp(X_iX_i^\tr)\right)^{-1}
 \label{eq2}
 \end{align}
 Et par conséquent,
 \begin{align*}
-\left(n^{-1}\sumobs X_iX_i^\top\right)^{-1}n^{-1}\sumobs X_iU_i \limp 0
+\left(n^{-1}\sumobs X_iX_i^\tr\right)^{-1}n^{-1}\sumobs X_iU_i \limp 0
 \end{align*}
 et donc,
 \begin{align*}
@@ -229,17 +229,17 @@ n^{1/2}(\hat{\beta}_n- \beta) \limd \mathcal{N}(0, \Vr)
 \end{align*}
 où
 \begin{align*}
-\Vr = Q^{-1} \Omega Q^{-1}, \ \ Q = \Exp(X_iX_i^\top), \ \ \Omega =  \Exp(U_i^2X_iX_i^\top)
+\Vr = Q^{-1} \Omega Q^{-1}, \ \ Q = \Exp(X_iX_i^\tr), \ \ \Omega =  \Exp(U_i^2X_iX_i^\tr)
 \end{align*}
 \end{propriete}
 \begin{proof}
 Nous avons en utilisant \eqref{eq1},
 \begin{align*}
-n^{1/2}(\hat{\beta}_n- \beta) = \left(n^{-1}\sumobs X_iX_i^\top\right)^{-1}n^{-1/2}\sumobs X_iU_i 
+n^{1/2}(\hat{\beta}_n- \beta) = \left(n^{-1}\sumobs X_iX_i^\tr\right)^{-1}n^{-1/2}\sumobs X_iU_i 
 \end{align*}
 Commençons en considérant le terme $n^{-1/2}\sumobs X_iU_i$. Par \ref{cond3}, $\Exp(X_iU_i) = 0$. Ensuite, considérons 
-$\Var(X_iU_i) = \Exp(U_i^2X_iX_i^\top)$.    
-L'élément  $(r, s)$, $r,s = 1,...,K$, de $\Var(X_iU_i) = \Exp(U_i^2X_iX_i^\top)$ est $\Exp(U_i^2X_{i,r}X_{i,s})$.  
+$\Var(X_iU_i) = \Exp(U_i^2X_iX_i^\tr)$.    
+L'élément  $(r, s)$, $r,s = 1,...,K$, de $\Var(X_iU_i) = \Exp(U_i^2X_iX_i^\tr)$ est $\Exp(U_i^2X_{i,r}X_{i,s})$.  
 Par l'inégalité de Cauchy-Schwartz et sous les hypothèses \ref{cond5} , \ref{cond6},
 \begin{align*}
 \Exp\left(\abs{U_i^2 X_{i,r}  X_{i,s}}\right) \leq \left[\Exp(U_i^4)\Exp(X_{i,r}^2X_{i,s}^2)\right]^{1/2} \leq  \left[\Exp(U_i^4)^{1/2}
@@ -247,12 +247,12 @@ Par l'inégalité de Cauchy-Schwartz et sous les hypothèses \ref{cond5} , \ref{
 \end{align*}
 Par le théorème central-limite,
 \begin{align}
-n^{-1/2}\sumobs X_iU_i  \limd \mathcal{N}\left(0, \Exp(U_i^2X_iX_i^\top)\right) = \mathcal{N}(0, \Omega)
+n^{-1/2}\sumobs X_iU_i  \limd \mathcal{N}\left(0, \Exp(U_i^2X_iX_i^\tr)\right) = \mathcal{N}(0, \Omega)
 \label{eq3}
 \end{align}
 Finalement \eqref{eq2}, \eqref{eq3} et le théorème de convergence de Cramer(son extension multivariée) impliquent que,
 \begin{align*}
-\left(n^{-1}\sumobs X_iX_i^\top\right)^{-1}n^{-1/2}\sumobs X_iU_i \limd Q^{-1} \mathcal{N}(0, \Omega) = \mathcal{N}(0, Q^{-1}\Omega Q^{-1})
+\left(n^{-1}\sumobs X_iX_i^\tr\right)^{-1}n^{-1/2}\sumobs X_iU_i \limd Q^{-1} \mathcal{N}(0, \Omega) = \mathcal{N}(0, Q^{-1}\Omega Q^{-1})
 \end{align*}
 \end{proof}
 \begin{remarque}\label{re1}
@@ -261,31 +261,31 @@ Les hypothèses de la propriété \ref{pr2} n'excluent pas le cas où la varianc
 \begin{remarque}\label{re2}
 La matrice de variances-covariances asymptotique de $\hat{\beta}_n$ est donnée par la formule "en sandwich",
 \begin{align*}
-\Vr = \left(\Exp(X_iX_i^\top)\right)^{-1} \Exp(U_i^2X_iX_i^\top) \left(\Exp(X_iX_i^\top)\right)^{-1}
+\Vr = \left(\Exp(X_iX_i^\tr)\right)^{-1} \Exp(U_i^2X_iX_i^\tr) \left(\Exp(X_iX_i^\tr)\right)^{-1}
 \end{align*}
 Si nous imposons la condition que $\Exp(U_i^2|X_i) = \sigma^2$, alors $V$ se simplifie en la matrice des variances-covariances \emph{homoscédastique},
 \begin{align}
-\Vr = \sigma^2\left(\Exp(X_iX_i^\top)\right)^{-1}
+\Vr = \sigma^2\left(\Exp(X_iX_i^\tr)\right)^{-1}
 \label{eq4}
 \end{align}
 En effet par la règle des espérances itérées,
 \begin{align*}
-\Exp(U_i^2X_iX_i^\top) = \Exp\left(\Exp(U_i^2X_iX_i^\top) | X_i) \right) = \Exp\left(X_iX_i^\top\Exp(U_i^2|X_i)\right) = \sigma^2\Exp(X_iX_i^\top)
+\Exp(U_i^2X_iX_i^\tr) = \Exp\left(\Exp(U_i^2X_iX_i^\tr) | X_i) \right) = \Exp\left(X_iX_i^\tr\Exp(U_i^2|X_i)\right) = \sigma^2\Exp(X_iX_i^\tr)
 \end{align*}
 ainsi dans ce cas, 
 \begin{align*}
-\Omega = \sigma^2 Q \ \ \textrm{et,} \ \ \Vr = Q^{-1}\Omega  Q^{-1} = \sigma^2  Q^{-1} =\sigma^2\left(\Exp(X_iX_i^\top)\right)^{-1}
+\Omega = \sigma^2 Q \ \ \textrm{et,} \ \ \Vr = Q^{-1}\Omega  Q^{-1} = \sigma^2  Q^{-1} =\sigma^2\left(\Exp(X_iX_i^\tr)\right)^{-1}
 \end{align*}
 \end{remarque}
 
 \section{Estimation de la matrice des variances-covariances}
-A partir d'un estimateur de $\beta$, nous pouvons construire les résidus $\hat{U}_i = Y_i - X_i^\top \hat{\beta}_n$.  Considérons l'estimateur suivant de $V$ obtenu par application du principe d'analogie,
+A partir d'un estimateur de $\beta$, nous pouvons construire les résidus $\hat{U}_i = Y_i - X_i^\tr \hat{\beta}_n$.  Considérons l'estimateur suivant de $V$ obtenu par application du principe d'analogie,
 \begin{align*}
 \hat{\Vr}_n = \hat{Q}_n^{-1} \hat{\Omega}_n \hat{Q}_n^{-1}
 \end{align*}
 où,
 \begin{align*}
-\hat{Q}_n = n^{-1}\sumobs X_iX_i^\top \ \ , \ \ \hat{\Omega}_n = n^{-1}\sumobs \hat{U}_i^2 X_iX_i^\top
+\hat{Q}_n = n^{-1}\sumobs X_iX_i^\tr \ \ , \ \ \hat{\Omega}_n = n^{-1}\sumobs \hat{U}_i^2 X_iX_i^\tr
 \end{align*}
 Nous avons déjà montré que $\hat{Q}_n ^{-1} \limd Q^{-1}$(c.f., \eqref{eq2}). Considérons maintenant $\hat{\Omega}_n$. Nous pouvons écrire ici,
 \begin{align*}
@@ -293,17 +293,17 @@ Nous avons déjà montré que $\hat{Q}_n ^{-1} \limd Q^{-1}$(c.f., \eqref{eq2}).
 \end{align*}
 Il en résulte que,
 \begin{align}
-n^{-1}\sumobs \hat{U}_i^2 X_iX_i^\top = n^{-1} \sumobs U_i^2X_iX_i^\top - 2R_{1,n} + R_{2,n}
+n^{-1}\sumobs \hat{U}_i^2 X_iX_i^\tr = n^{-1} \sumobs U_i^2X_iX_i^\tr - 2R_{1,n} + R_{2,n}
 \label{eq5}
 \end{align}
 où,
 \begin{align*}
-R_{1,n} = n^{-1} \sumobs \left((\hat{\beta}_n- \beta)X_iU_i\right)X_iX_i^\top \ \  , \ \ 
-R_{2,n} = n^{-1} \sumobs \left((\hat{\beta}_n- \beta)X_i\right)^2X_iX_i^\top
+R_{1,n} = n^{-1} \sumobs \left((\hat{\beta}_n- \beta)X_iU_i\right)X_iX_i^\tr \ \  , \ \ 
+R_{2,n} = n^{-1} \sumobs \left((\hat{\beta}_n- \beta)X_i\right)^2X_iX_i^\tr
 \end{align*}
-Sous les hypothèses de la propriété \ref{pr2}, $\Exp(U_i^2X_iX_i^\top)$ est finie, comme cela a été montré dans la démonstration de la propriété. Par conséquent, par la loi faible des grand nombres,
+Sous les hypothèses de la propriété \ref{pr2}, $\Exp(U_i^2X_iX_i^\tr)$ est finie, comme cela a été montré dans la démonstration de la propriété. Par conséquent, par la loi faible des grand nombres,
 \begin{align*}
-n^{-1} \sumobs U_i^2 X_iX_i^\top \limp \Exp(U^2X_iX_i^\top)
+n^{-1} \sumobs U_i^2 X_iX_i^\tr \limp \Exp(U^2X_iX_i^\tr)
 \end{align*}
 En outre, il est possible de montrer que $R_{1,n}$ et $R_{2,n}$ convergent en probabilité vers zéro(c.f., annexe) de sorte que,
 \begin{align*}
@@ -334,9 +334,9 @@ où $Z$ est une variable aléatoire et $Z \sim \mathcal{N}(0, 1)$. A présent,
 \begin{align*}
 \Prob(\beta_k \in \CI_{n, k, 1-\alpha} ) = \Prob\left(\frac{\sqrt{n}(\hat{\beta}_{n,k} - \beta_k)}{\sqrt{\left[\hat{\Vr}_n\right]_{k,k} }} \leq z_{1-\alpha/2} \right) \rightarrow \Prob(\abs{Z} \leq z_{1-\alpha/2}  ) = 1 - \alpha
 \end{align*}
-Considérons, par exemple, le cas avec des termes d'erreur homoscédastiques.  Nous avons vu que dans ce cas $\sqrt{n}(\hat{\beta}_n- \beta) \limd \mathcal{N}\left(0, \sigma^2\left(\Exp(XX^\top)\right)^{-1}\right)$. Comme $s^2 \limp \sigma^2$, la matrice des variances-covariances peut être estimée par $s^2\left(\sumobs X_iX_i^\top\right)^{-1}$. Et l'intervalle de confiance pour $\beta_k$ est alors,
+Considérons, par exemple, le cas avec des termes d'erreur homoscédastiques.  Nous avons vu que dans ce cas $\sqrt{n}(\hat{\beta}_n- \beta) \limd \mathcal{N}\left(0, \sigma^2\left(\Exp(XX^\tr)\right)^{-1}\right)$. Comme $s^2 \limp \sigma^2$, la matrice des variances-covariances peut être estimée par $s^2\left(\sumobs X_iX_i^\tr\right)^{-1}$. Et l'intervalle de confiance pour $\beta_k$ est alors,
 \begin{align*}
-\left[\hat{\beta}_{n, k} \pm  z_{1 -  \alpha/2} \sqrt{ \left[s^2\left(n^{-1}\sumobs X_iX_i^\top\right)^{-1} \right]_{k,k} \Big{/} n}\right] = \left[\hat{\beta}_{n, k}  \pm z_{1-\alpha/2} \sqrt{\left[s^2\left(\mathbf{X}^\top\mathbf{X}\right)\right]_{k,k}}\right] 
+\left[\hat{\beta}_{n, k} \pm  z_{1 -  \alpha/2} \sqrt{ \left[s^2\left(n^{-1}\sumobs X_iX_i^\tr\right)^{-1} \right]_{k,k} \Big{/} n}\right] = \left[\hat{\beta}_{n, k}  \pm z_{1-\alpha/2} \sqrt{\left[s^2\left(\mathbf{X}^\tr\mathbf{X}\right)\right]_{k,k}}\right] 
 \end{align*}
 qui est le même intervalle de confiance que celui à distance finie, sauf qu'on utilise ici les quantiles de la distribution normale standard plutôt que ceux de la loi de student.
 
@@ -345,7 +345,7 @@ Dans cette section nous considérons les tests asymptotiques de l'hypothèse $H_
  $H_1: h(\beta) \neq 0$, où $h: \mathbb{R}^K \mapsto \mathbb{R}^q$ est une fonction continument dérivable dans un voisinage de $\beta$. La contrainte sous $H_0$ inclut le cas des contraintes linéaires de la forme $h(\beta) = \mathbf{R}\beta - r$, où $\mathbf{R}$ est une matrice $q\times K$ et $r$ est un vecteur de taille $q$.\\ 
 Considérons la \emph{statistique de test de Wald},
 \begin{align*}
- W_n = nh(\hat{\beta}_n)^\top \left(\hat{\asyvar}\left(h(\hat{\beta}_n)\right)\right)^{-1}h(\hat{\beta}_n) = n h(\hat{\beta}_n)^\top\left(\frac{\delta h}{\delta \beta ^ \top}(\hat{\beta}_n)\hat{\Vr}_n \frac{\delta h}{\delta \beta}(\hat{\beta}_n)^\top \right)^{-1} h(\hat{\beta}_n)
+ W_n = nh(\hat{\beta}_n)^\tr \left(\hat{\asyvar}\left(h(\hat{\beta}_n)\right)\right)^{-1}h(\hat{\beta}_n) = n h(\hat{\beta}_n)^\tr\left(\frac{\delta h}{\delta \beta ^ \tr}(\hat{\beta}_n)\hat{\Vr}_n \frac{\delta h}{\delta \beta}(\hat{\beta}_n)^\tr \right)^{-1} h(\hat{\beta}_n)
 \end{align*}
 où $\asyvar$ désigne la variance asymptotique. Le test asymptotique de taille $\alpha$ de $H_0: h(\beta) = 0$ est alors défini par la règle,
 \begin{align*}
@@ -363,16 +363,16 @@ Sous les hypothèses \ref{cond1}-\ref{cond6},
 \begin{enumerate}
 \item Comme $n^{1/2}(\hat{\beta}_n- \beta) \limd \mathcal{N}(0, \Vr)$ et que $h(.)$ est continue en $\beta$, sous $H_0$, et en appliquant la méthode delta,
 \begin{align*}
-n^{1/2}h(\hat{\beta}_n) \limd \mathcal{N}\left(0, \frac{\delta h}{\delta \beta^\top}(\beta) \Vr \frac{\delta h}{\delta \beta}(\beta)^\top \right)
+n^{1/2}h(\hat{\beta}_n) \limd \mathcal{N}\left(0, \frac{\delta h}{\delta \beta^\tr}(\beta) \Vr \frac{\delta h}{\delta \beta}(\beta)^\tr \right)
 \end{align*}
 En outre,
 \begin{align*}
-\frac{\delta h}{\delta \beta^\top}(\hat{\beta}_n) \limp \frac{\delta h}{\delta \beta^\top}(\beta) \ \ \textrm{et}, \ \ \hat{\Vr}_n \limp \Vr
+\frac{\delta h}{\delta \beta^\tr}(\hat{\beta}_n) \limp \frac{\delta h}{\delta \beta^\tr}(\beta) \ \ \textrm{et}, \ \ \hat{\Vr}_n \limp \Vr
 \end{align*}
 Par la propriété de convergence de Cramer, sous $H_0$,
 \begin{align*}
-\left(\frac{\delta h}{\delta \beta ^ \top}(\hat{\beta}_n)\hat{\Vr}_n \frac{\delta h}{\delta \beta}(\hat{\beta}_n)^\top \right)^{-1/2}n^{1/2} h(\hat{\beta}_n) 
-\limd & \left(\frac{\delta h}{\delta \beta^\top}(\beta) \Vr \frac{\delta h}{\delta \beta}(\beta)^\top\right)^{-1/2} \mathcal{N}\left(0, \frac{\delta h}{\delta \beta^\top}(\beta) \Vr \frac{\delta h}{\delta \beta}(\beta)^\top\right)\\
+\left(\frac{\delta h}{\delta \beta ^ \tr}(\hat{\beta}_n)\hat{\Vr}_n \frac{\delta h}{\delta \beta}(\hat{\beta}_n)^\tr \right)^{-1/2}n^{1/2} h(\hat{\beta}_n) 
+\limd & \left(\frac{\delta h}{\delta \beta^\tr}(\beta) \Vr \frac{\delta h}{\delta \beta}(\beta)^\tr\right)^{-1/2} \mathcal{N}\left(0, \frac{\delta h}{\delta \beta^\tr}(\beta) \Vr \frac{\delta h}{\delta \beta}(\beta)^\tr\right)\\
 = & \mathcal{N}\left(0, \Id_q \right)
 \end{align*}
 Et par la propriété des applications continues, sous $H_0$,
@@ -386,7 +386,7 @@ h(\hat{\beta}_n)\limp h(\beta) \neq 0
 \end{align*}
 Par conséquent, 
 \begin{align*}
-W_n /n \limp h(\beta)^\top\left(\frac{\delta h}{\delta \beta^\top}(\beta) \Vr \frac{\delta h}{\delta \beta^\top}(\beta)^\top \right)^{-1} h(\beta)
+W_n /n \limp h(\beta)^\tr\left(\frac{\delta h}{\delta \beta^\tr}(\beta) \Vr \frac{\delta h}{\delta \beta^\tr}(\beta)^\tr \right)^{-1} h(\beta)
 \end{align*}
 et par conséquent, sous $H_1$, 
 \begin{align*}
@@ -396,11 +396,11 @@ W_n \rightarrow \infty
 \end{proof}
 Remarquons que dans le cas de contraintes linéaires $h(\beta) = R\beta - r$, nous avons:
 \begin{align*}
-W_n = n\left(R\hat{\beta}_n- r\right)^\top\left(R\hat{\Vr}_nR^\top\right)\left(R\hat{\beta}_n- r\right)
+W_n = n\left(R\hat{\beta}_n- r\right)^\tr\left(R\hat{\Vr}_nR^\tr\right)\left(R\hat{\beta}_n- r\right)
 \end{align*}
-En outre dans le cas homoscédastique, on peut remplacer $\hat{\Vr}_n$ par $s^2(\mathbf{X}^\top\mathbf{X}/n)^{-1}$. Alors, la statistique de Wald devient,
+En outre dans le cas homoscédastique, on peut remplacer $\hat{\Vr}_n$ par $s^2(\mathbf{X}^\tr\mathbf{X}/n)^{-1}$. Alors, la statistique de Wald devient,
 \begin{align*}
-W_n = \left(R\hat{\beta}_n- r\right)^\top\left(s^2R(\mathbf{X}^\top\mathbf{X})^{-1}R^\top\right)^{-1}\left(R\hat{\beta}_n-r\right)
+W_n = \left(R\hat{\beta}_n- r\right)^\tr\left(s^2R(\mathbf{X}^\tr\mathbf{X})^{-1}R^\tr\right)^{-1}\left(R\hat{\beta}_n-r\right)
 \end{align*}
 qui est similaire à l'expression de la statistique de Fisher, mis à part l'ajustement relatif au nombre de degrés de liberté dans le numérateur.
 
@@ -454,20 +454,20 @@ Dans cette annexe nous montrons que les termes $R_{1,n}$ et $R_{2,n}$ de l'équa
 
 La convergence en probabilité vers zéro élément par élément est équivalente à la convergence en probabilité des normes vers zéro. La norme d'une matrice $A$ est donnée par,
 \begin{align*}
-\norm{A}& = \left(\Tr(A^\top A)\right)^{1/2}\\
+\norm{A}& = \left(\Tr(A^\tr A)\right)^{1/2}\\
 &= \left(\underset{i}{\sum}\underset{j}{\sum}a_{ij}^2\right)^{1/2}
 \end{align*}
 où $a_{ij}$ est l'élément $(i, j)$ de la matrice $A$. Pour $R_{1,n}$,
 \begin{align*}
-\norm{n^{-1}\sumobs\left((\hat{\beta}_n- \beta)^\top X_iU_i\right)X_iX_i^\top} &\leq 
-n^{-1} \sumobs \norm{\left((\hat{\beta}_n- \beta)^\top X_iU_i\right)X_iX_i^\top}\\
- &= n^{-1} \sumobs \Tr\left(U_i^2\left(\left(\hat{\beta}_n- \beta\right)^\top X_i\right)^2 X_iX_i^\top X_iX_i^\top\right)^{1/2}\\
- &=n^{-1} \sumobs \abs{U_i}\abs{\left(\hat{\beta}_n- \beta\right)^\top X_i}\norm{X_i}\Tr(X_iX_i^\top)^{1/2} \\
- &=n^{-1}\sumobs \abs{U_i}\abs{\left(\hat{\beta}_n- \beta\right)^\top}\norm{X_i}^2
+\norm{n^{-1}\sumobs\left((\hat{\beta}_n- \beta)^\tr X_iU_i\right)X_iX_i^\tr} &\leq 
+n^{-1} \sumobs \norm{\left((\hat{\beta}_n- \beta)^\tr X_iU_i\right)X_iX_i^\tr}\\
+ &= n^{-1} \sumobs \Tr\left(U_i^2\left(\left(\hat{\beta}_n- \beta\right)^\tr X_i\right)^2 X_iX_i^\tr X_iX_i^\tr\right)^{1/2}\\
+ &=n^{-1} \sumobs \abs{U_i}\abs{\left(\hat{\beta}_n- \beta\right)^\tr X_i}\norm{X_i}\Tr(X_iX_i^\tr)^{1/2} \\
+ &=n^{-1}\sumobs \abs{U_i}\abs{\left(\hat{\beta}_n- \beta\right)^\tr}\norm{X_i}^2
 \end{align*}
 
 \begin{align*}
-\abs{(\hat{\beta}_n- \beta)^\top X_i} \leq \norm{\hat{\beta}_n- \beta}\norm{X_i}
+\abs{(\hat{\beta}_n- \beta)^\tr X_i} \leq \norm{\hat{\beta}_n- \beta}\norm{X_i}
 \end{align*}
 Par conséquent,
 \begin{align*}
@@ -491,8 +491,8 @@ n^{-1} \sumobs \abs{U_i}\norm{X_i}^3 \limp \Exp(\abs{U_i}\norm{X_i}^3)
 et comme nous avons $\norm{\hat{\beta}_n- \beta} \limp 0$, nous avons que $R_{1,n} \limp 0$.\\
 Considérons maintenant le cas de $R_{2,n}$. Par des arguments similaires aux précédents, nous pouvons borner $R_{2,n}$ par,
 \begin{align*}
-\norm{n^{-1} \sumobs \left((\hat{\beta}_n-\beta)^\top X_i\right)^2 X_iX_i^\top} &\leq
-n^{-1}\sumobs  \left((\hat{\beta}_n-\beta)^\top X_i\right)^2 \norm{X_i}\Tr(X_iX_i^\top)^{1/2}\\
+\norm{n^{-1} \sumobs \left((\hat{\beta}_n-\beta)^\tr X_i\right)^2 X_iX_i^\tr} &\leq
+n^{-1}\sumobs  \left((\hat{\beta}_n-\beta)^\tr X_i\right)^2 \norm{X_i}\Tr(X_iX_i^\tr)^{1/2}\\
 &= \norm{(\hat{\beta}_n-\beta)}^2n^{-1} \sumobs\norm{X_i}^4
 \end{align*}
 Et par \eqref{eq6} et la LFGN,

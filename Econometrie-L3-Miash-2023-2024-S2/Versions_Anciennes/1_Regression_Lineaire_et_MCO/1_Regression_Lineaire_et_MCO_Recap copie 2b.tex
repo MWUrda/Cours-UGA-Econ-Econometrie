@@ -1,0 +1,587 @@
+\documentclass[10pt, reqno]{amsart}
+\input{../Preambule2}
+\newcommand{\bxi}{ \boldx_i }
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{txfonts}
+\usepackage{mathrsfs}
+\usepackage{fancyhdr}
+
+
+
+\usepackage{fancyhdr}
+\usetikzlibrary{calc,decorations.pathmorphing,patterns}
+\usepackage{listofitems}
+\tikzstyle{mynode}=[thick,draw=blue,fill=blue!20,circle,minimum size=22]
+\usepackage{amsaddr}
+\usepackage{mathrsfs}
+
+\makeatletter
+
+\pgfdeclaredecoration{penciline}{initial}{
+    \state{initial}[width=+\pgfdecoratedinputsegmentremainingdistance,auto corner on length=1mm,]{
+        \pgfpathcurveto%
+        {% From
+            \pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}
+                            {\pgfdecorationsegmentamplitude}
+        }
+        {%  Control 1
+        \pgfmathrand
+        \pgfpointadd{\pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}{0pt}}
+                        {\pgfqpoint{-\pgfdecorationsegmentaspect\pgfdecoratedinputsegmentremainingdistance}%
+                                        {\pgfmathresult\pgfdecorationsegmentamplitude}
+                        }
+        }
+        {%TO 
+        \pgfpointadd{\pgfpointdecoratedinputsegmentlast}{\pgfpoint{1pt}{1pt}}
+        }
+    }
+    \state{final}{}
+}
+\makeatother
+
+\pagestyle{fancy}
+%\renewcommand{\subsection{mark}[1]{\markright{#1}{}}
+\fancyhead{}
+\fancyfoot{} 
+%\fancyhead[LE,LO]{\tiny{\thepage}}
+\fancyhead[C]{\small\textsc{Économètrie: L3 MIASH, S2}}
+%fancyhead[CE,CO]{\tiny{\rightmark}}
+\fancyhead[L]{\small\textsc{Université de Grenoble Alpes}}
+\fancyfoot[C]{\small{\thepage}}
+%\fancyfoot[R]{\small \textcopyright \ \  \small\textsc
+\fancyhead[R]{ \small\textsc{M. W. Urdanivia}}
+%\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+%\pagenumbering{roman}
+
+
+\begin{document} 
+\usetikzlibrary{positioning}
+\usetikzlibrary{snakes}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{shapes}
+%\tikzset{block/.style={draw, rectangle, fill=gray!20, 
+%\tikzset{empty/.style={draw, rectangle, fill=none, tex
+%\tikzset{line/.style={draw, -latex'}}
+%\onehalfspace
+
+%\includepdf{trame}
+
+\begin{titlepage}
+\centering
+	%\includegraphics[width=0.15\textwidth]{logoUGA2020}
+	{\scshape\Large \textsc{Université de Grenoble Alpes\\(L3 MIASH, S2)}\par}
+	\vspace{0.5cm}
+	{\Large\bfseries \scshape\Large \textsc{ÉCONOMÉTRIE}\par}
+	%{\scshape\large \textsc{Extremum Estimators(1)}\par}
+	%\vspace{1cm}
+	\vspace{0.5cm}
+	{\Large\bfseries \textsc{Régression Linéaire et Moindres Carrés à distance finie(2)} \par}
+    \vspace{0.5cm}   
+   {\Large\bfseries \textsc{Estimateur des MCO} \par}
+	\vspace{1cm}
+	{(\textsc{Cette version: \today})\par}
+	\vspace{1cm}
+	{\large \textsc{Michal W. Urdanivia}
+	\footnote{Contact:  
+	\href{mailto:michal.wong-urdanivia@univ-grenoble-alpes.fr}{michal.wong-urdanivia@univ-grenoble-alpes.fr}, 
+	 Université de Grenoble Alpes,  Faculté d'\'Economie, GAEL.}\par}
+	 %\includegraphics[width=0.15\textwidth]{logoUGA}
+	%\vfill
+	%supervised by\par
+	%Dr.~Mark \textsc{Brown}
+%\vfill
+% Bottom of the page
+	
+\end{titlepage}
+
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Matrices de projection}
+Nous pouvons penser à $\boldY$ et aux colonnes $\boldX$ comme des éléments de l'espace euclidien à $n$ dimensions, $\R^n$. On peut définir un sous-espace de $\R^n$ appelé l'\emph{espace des colonnes} d'une matrice $n\times K$, $\boldX$. Il s'agit de la collection de tous les vecteurs dans $\R^n$ qui peuvent s'écrire comme des combinaisons linéaires des colonnes de $\boldX$,
+\begin{align*}
+\mathcal{S}(\boldX) = \left\{z \in \R^n: z = \boldX b, b = (b_1, b_2,...,b_K) \in \R^K  \right\}
+\end{align*}
+\'Etant donné deux vecteurs $a$, $b$, dans $\R^n$, la distance entre $a$ et $b$ est donné par la norme euclidienne\footnote{Pour un vecteur $x=(x_1, x_2,...,x_n)$ sa norme euclidienne est définie comme $||x|| = \sqrt{x^\top x} = \sqrt{\sumobs x_i^2}$.} de leur différence $||a-b|| = \sqrt{(a-b)^\top(a-b)}$. En conséquence, le problème des moindres carrés, à savoir la minimisation de la somme des carrés des erreurs, $(\boldY-\boldX b)^\top(\boldY-\boldX b)$, est celui de trouver, parmi tous les éléments de $\mathcal{S}(\boldX)$, celui dont la distance par rapport à $\boldY$ est la plus petite,
+\begin{align*}
+\underset{\tilde{\boldY}\in \mathcal{S}(\boldX)}{\min} ||\boldY - \tilde{\boldY}||^2
+\end{align*}
+Le point le plus proche est obtenu en "traçant une perpendiculaire". Autrement dit, une solution au problème des moindres carrés, $\hat{Y} = \boldX\hat{\beta}$ doit être choisie de sorte que le vecteur des résidus, $\hat{\boldU} = \boldY-\hat{\boldY}$ soit orthogonal(perpendiculaire) à chaque colonne de $\boldX$,
+\begin{align*}
+\hat{\boldU}^\top\boldX = 0
+\end{align*}
+Un  résultat de cela est que $\hat{\boldU}$ est orthogonal à chaque élément de $\mathcal{S}(\boldX)$. En effet, si $z\in \mathcal{S}(\boldX)$, alors il existe $b\in\R^K$ tel que $z=\boldX b$, et,
+\begin{align*}
+\hat{\boldU}^\top z &= \hat{\boldU}^\top\boldX b\\
+& = 0
+\end{align*}
+La collection des éléments de $\R^n$ orthogonaux à $\mathcal{S}(\boldX)$ est appelée \emph{complément orthogonal} de $\mathcal{S}(\boldX)$,
+\begin{align*}
+\mathcal{S}^\perp(\boldX) = \left\{z \in \R^n: z^\top\boldX=0\right\}
+\end{align*}
+Soulignons que tout élément de $\mathcal{S}^\perp(\boldX)$ est orthogonal à chaque élément de $\mathcal{S}(\boldX)$.\\
+Comme nous l'avions vu dans le cours précédent, la solution au problème des moindres carrés est donnée par,
+\begin{align*}
+\hat{\boldY} &= \boldX\hat{\beta}\\
+&=\boldX(\boldX^\top\boldX)^{-1}\boldX^\top\boldY\\
+&=\boldP_{\boldX}\boldY
+\end{align*}
+où 
+\begin{align*} \boldP_{\boldX} = \boldX(\boldX^\top\boldX)^{-1}\boldX^\top
+\end{align*}
+est appelée \emph{matrice de projection orthogonale}. Pour tout vecteur $\boldY\in\R^n$,
+\begin{align*}
+\boldP_{\boldX}\boldY \in \mathcal{S}(\boldX)
+\end{align*}
+En outre, le vecteur des résidus est dans  $\mathcal{S}^\perp(\boldX)$,
+\begin{align}
+\boldY - \boldP_{\boldX}\boldY \in \mathcal{S}^\perp(\boldX)
+\label{eq15}
+\end{align}
+Pour montrer \eqref{eq15}, notons d'abord, qu'étant donné que les colonnes de $\boldX$ sont dans $\mathcal{S}(\boldX)$,
+\begin{align*}
+\boldP_\boldX\boldX &= \boldX(\boldX\boldX)^{-1}\boldX^\top\boldX\\
+&=\boldX
+\end{align*}
+et comme $\boldP_\boldX$ est une matrice symétrique,
+\begin{align*}
+\boldX^\top\boldP_\boldX = \boldX^\top
+\end{align*}
+Maintenant,
+\begin{align*}
+\boldX^\top(\boldY - \boldP_\boldX\boldY) &= \boldX^\top\boldY-\boldX^\top\boldP_\boldX\boldY\\
+& = \boldX^\top\boldY-\boldX^\top\boldY\\
+&=0 
+\end{align*}
+Ainsi, par définition, les résidus $\boldY - \boldP_\boldX\boldY\in\mathcal{S}^\perp(\boldX)$. Les résidus peuvent s'écrire,
+\begin{align*}
+\hat{\boldU} &= \boldY-\boldP_\boldX\boldY \\
+&= (\Id_n - \boldP_\boldX)\boldY\\
+& = \boldM_\boldX\boldY
+\end{align*}
+où,
+\begin{align*}
+\boldM_\boldX &= \Id_n - \boldP_\boldX\\
+& = \Id_n - \boldX(\boldX^\top\boldX)^{-1}\boldX^\top
+\end{align*}
+est une matrice de projection dans $\mathcal{S}^\perp(\boldX)$.\\
+Les matrices $\boldP_\boldX$ et $\boldM_\boldX$ présentent les propriétés suivantes.
+\begin{enumerate}
+\item $\boldP_\boldX+\boldM_\boldX = \Id_n$. Ceci implique, que pour tout $\boldY\in \R^n$,
+\begin{align*}
+\boldY = \boldP_\boldX\boldY+\boldM_\boldX\boldY
+\end{align*}
+\item $\boldP_\boldX$ et $\boldM_\boldX$ sont symétriques,
+\begin{align*}
+\boldP_\boldX^\top = \boldP_\boldX, \ \ \ \boldM_\boldX^\top= \boldM_\boldX
+\end{align*}
+\item $\boldP_\boldX$ et $\boldM_\boldX$ sont idempotentes,
+\begin{align*}
+\boldP_\boldX\boldP_\boldX = \boldP_\boldX, \ \ \ \boldM_\boldX \boldM_\boldX= \boldM_\boldX
+\end{align*}
+En effet,
+\begin{align*}
+\boldP_\boldX\boldP_\boldX &= \left(\boldX(\boldX^\top\boldX)^{-1}\boldX^\top\right)\left(\boldX(\boldX^\top\boldX)^{-1}\boldX^\top\right)\\ 
+&= \boldX(\boldX^\top\boldX)^{-1}\boldX^\top \\
+&= \boldP_\boldX
+\end{align*}
+de même,
+\begin{align*}
+\boldM_\boldX\boldM_\boldX &= (\Id_n - \boldP_\boldX)(\Id_n - \boldP_\boldX)\\
+& = \Id_n - 2\boldP_\boldX + \boldP_\boldX\boldP_\boldX\\
+&=\Id_n - \boldP_\boldX\\
+&=\boldM_\boldX
+\end{align*}
+\item $\boldP_\boldX$ et $\boldM_\boldX$ sont orthogonales,
+\begin{align*}
+\boldP_\boldX\boldM_\boldX &= \boldP_\boldX(\Id_n -  \boldP_\boldX)\\
+& =  \boldP_\boldX -  \boldP_\boldX \boldP_\boldX\\
+&= \boldP_\boldX- \boldP_\boldX\\
+&=0
+\end{align*}
+Cette propriété implique que $\boldM_\boldX\boldX = 0$. En effet,
+\begin{align*}
+\boldM_\boldX\boldX &= (\Id_n - \boldP_\boldX)\boldX\\ 
+&= \boldX-\boldP_\boldX\boldX\\
+& = \boldX - \boldX\\
+& = 0
+\end{align*}
+\end{enumerate}
+Observons que, dans la discussion ci-dessus, aucune des hypothèses quant au modèle de régression n'ont été utilisées. \'Etant donné des données, $\boldY$ et $\boldX$, nous pouvons toujours calculer l'estimateur des moindres carrés, indépendamment du processus générateur des données derrière les données. Néanmoins, nous avons besoin d'un modèle(i.e., d'hypothèses) pour pouvoir discuter des propriétés d'un estimateur(e.g., le fait qu'il soit ou non sans biais, etc).
+
+\section{Propriétés de $\hat{\sigma}^2$}
+Nous avions suggéré précédemment d'estimer $\sigma^2$ par,
+\begin{align*}
+\hat{\sigma}^2 &= n^{-1}\sumobs (Y_i-X_i^\top\hat{\beta})^2\\
+&= n^{-1}\sumobs (Y_i-\hat{Y}_i)^2\\
+&= n^{-1}\sumobs \hat{U}_i^2\\
+& =  n^{-1}\hat{\boldU}^\top\hat{\boldU}
+\end{align*}
+Il s'avère cependant que sous les hypothèses usuelles, \eqref{cond1} - \eqref{cond4}, $\hat{\sigma}^2$ est un estimateur biaisé. Pour le voir, écrivons d'abord,
+\begin{align*}
+\hat{\boldU} &= \boldM_\boldX\boldY\\
+& = \boldM_\boldX(\boldX\beta + \boldU)\\
+& = \boldM_\boldX\boldU
+\end{align*}
+où la dernière égalité résulte de ce que $\boldM_\boldX\boldX = 0$. A présent,
+\begin{align*}
+n\hat{\sigma}^2 &= \hat{\boldU}^\top\hat{\boldU}\\
+& = \boldU^\top\boldM_\boldX\boldM_\boldX\boldU \\
+&= \boldU^\top\boldM_\boldX\boldU
+\end{align*}
+\'Etant donné que $\boldU^\top\boldM_\boldX\boldU$ est un scalaire,
+\begin{align*}
+\boldU^\top\boldM_\boldX\boldU = \Tr\left(\boldU^\top\boldM_\boldX\boldU\right)
+\end{align*}
+où $\Tr(A)$ désigne la trace de la matrice A. Nous avons,
+\begin{align*}
+\Exp\left(\boldU^\top\boldM_\boldX\boldU|\boldX\right) =&  \Exp\left(\Tr(\boldU^\top\boldM_\boldX\boldU)|\boldX\right)\\
+=&\Exp\left(\Tr(\boldM_\boldX\boldU\boldU^\top)|\boldX\right)(\textrm{car \ } \Tr(ABC) = \Tr(BCA))\\
+=&\Tr\left(\boldM_\boldX\Exp\left(\boldU\boldU^\top)|\boldX\right)\right)(\textrm{car l'opérateur trace et l'espérance sont linéaires })\\
+=&\sigma^2\Tr(\boldM_\boldX)
+\end{align*}
+La dernière égalité résulte de ce que par l'hypothèse \eqref{cond3}, $\Exp(\boldU^\top\boldU) = \sigma^2\Id_n$. Maintenant,
+\begin{align*}
+\Tr(\boldM_\boldX) = &\Tr\left(\Id_n - \boldX(\boldX^\top\boldX)^{-1}\boldX^\top\right)\\
+=&\Tr(\Id_n) - \Tr\left(
+\boldX(\boldX^\top\boldX)^{-1}\boldX^\top\right)\\
+=&\Tr(\Id_n) - \Tr\left((\boldX^\top\boldX)^{-1}\boldX^\top\boldX\right)\\
+=&\Tr(\Id_n) - \Tr(\Id_K)\\
+=&n-K
+\end{align*}
+Il s'en suit que,
+\begin{align}
+\Exp(\hat{\sigma}^2) = \frac{n-K}{n}\sigma^2
+\label{eq16}
+\end{align}
+L'estimateur $\hat{\sigma}^2$ est biaisé, mais le résultat précédent suggère qu'il est aisé de le modifier afin d'obtenir un estimateur sans biais. Pour cela, définissons,
+\begin{align*}
+s^2 &= \hat{\sigma}^2\frac{n}{n-K}\\
+&=(n-K)^{-1}\sumobs \hat{U}_i^2
+\end{align*}
+il résulte de \eqref{eq16} que, 
+\begin{align*}
+\Exp(s^2) = \sigma^2
+\end{align*}
+
+\section{Régression partitionnée}
+Considérons la partition de la matrice des régresseurs, $\boldX$,
+\begin{align*}
+\boldX = \left(\boldX_1 \  \boldX_2\right)
+\end{align*}
+et écrivons le modèle comme suit,
+\begin{align*}
+\boldY = \boldX_1\beta_1 + \boldX_2\beta_2 + \boldU
+\end{align*}
+où $\boldX_1$ est une matrice $(n\times K_1)$, $\boldX_2$ est une matrice $(n\times K_2)$, $K_1+K_2 = K$, et,
+\begin{align*}
+\beta = \left(
+\begin{array}{c}
+\beta_1\\
+\beta_2
+\end{array}
+\right)
+\end{align*}
+$\beta_1$ et $\beta_2$ étant des vecteurs de paramètres, respectivement, $(K_1\times 1)$ et $(K_2\times 1)$. Partant de cette décomposition du modèle de régression concentrons nous sur un groupe de variables et leurs paramètres correspondants, par exemple $\boldX_1$ et $\beta_1$.\\\\
+ Soit l'estimateur des moindres carrés de $\beta$,
+\begin{align*}
+\hat{\beta} = \left(
+\begin{array}{c}
+\hat{\beta}_1\\
+\hat{\beta}_2
+\end{array}
+\right)
+\end{align*}
+Nous pouvons écrire la version suivante des équations normales,
+\begin{align*}
+\left(\boldX^\top\boldX\right)\hat{\beta}=\boldX^\top\boldY
+\end{align*}
+comme suit,
+\begin{align*}
+\left(
+\begin{array}{cc}
+\boldX_1^\top\boldX_1&\boldX_1^\top\boldX_2\\
+\boldX_2^\top\boldX_1&\boldX_2^\top\boldX_2
+\end{array}
+\right)
+\left(
+\begin{array}{c}
+\hat{\beta}_1\\
+\hat{\beta}_2
+\end{array}
+\right)
+=
+\left(
+\begin{array}{c}
+\boldX_1^\top\boldY\\
+\boldX_2^\top\boldY
+\end{array}
+\right)
+\end{align*}
+On peut  obtenir des expressions pour $\hat{\beta}_1$ et $\hat{\beta}_2$ par inversion de la matrice partitionnée à gauche de l'équation ci-dessus. Alternativement, définissons $\boldM_2$ comme la matrice de projection sur l'espace orthogonal à l'espace $\mathcal{S}(\boldX_2)$,
+\begin{align*}
+\boldM_2 = \Id_n - \boldX_2(\boldX_2^\top\boldX_2)^{-1}\boldX_2^\top
+\end{align*}
+alors,
+\begin{align}
+\hat{\beta}_1 = (\boldX_1^\top\boldM_2 \boldX_1)^{-1}\boldX_1^\top\boldM_2\boldY
+\label{eq17}
+\end{align}
+Pour montrer cela, commençons par écrire,
+\begin{align}
+\boldY = \boldX_1\hat{\beta}_1+\boldX_2\hat{\beta}_2 + \hat{\boldU}
+\label{eq18}
+\end{align} 
+Notons que par construction,
+\begin{align*}
+\boldM_2\hat{\boldU} &= \hat{\boldU}(\hat{\boldU} \ \textrm{est orthogonal à} \ \boldX_2)\\
+\boldM_2\boldX_2 &= 0\\
+\boldX_1^\top\hat{\boldU} &=0\\
+\boldX_2^\top\hat{\boldU} &=0
+\end{align*}
+Substituons l'équation \eqref{eq18} dans la partie droite de l'équation \eqref{eq17},
+\begin{align*}
+\left(\boldX_1^\top\boldM_2\boldX_1\right)^{-1}
+\boldX_1^\top\boldM_2\boldY&=\left(\boldX_1^\top\boldM_2\boldX_1\right)^{-1}
+\boldX_1^\top\boldM_2\left(\boldX_1\hat{\beta}_1+\boldX_2\hat{\beta}_2 + \hat{\boldU}\right)\\
+&=\left(\boldX_1^\top\boldM_2\boldX_1\right)^{-1}
+\boldX_1^\top\boldM_2\boldX_1\hat{\beta}_1\\
+ &\ \ \ +
+\left(\boldX_1^\top\boldM_2\boldX_1\right)^{-1}
+\boldX_1^\top\hat{\boldU} \ \ (\textrm{car \ }\boldM_2\boldX_2 = 0 \textrm{ \ et \ } 
+ \boldM_2\hat{\boldU} = \hat{\boldU})\\
+&=\hat{\beta}_1
+\end{align*}
+\'Etant donné que $\boldM_2$ est symétrique et idempotente, on peut écrire,
+\begin{align*}
+\hat{\beta}_1 &= \left((\boldM_2\boldX_1)^\top(\boldM_2\boldX_1)\right)^{-1}
+(\boldM_2\boldX_1)^\top(\boldM_2\boldY)\\
+&=\left(\tilde{\boldX}_1^\top\tilde{\boldX}_1\right)^{-1}\tilde{\boldX}_1\tilde{\boldY}
+\end{align*}
+où,
+\begin{align*}
+\tilde{\boldX}_1&=\boldM_2\boldX_1\\
+&= \boldX_1 - \boldX_2(\boldX_2^\top\boldX_2)^{-1}\boldX_2^\top\boldX_1
+\end{align*}
+à savoir les résidus de la régression de $\boldX_1$ sur $\boldX_2$. Et où,
+\begin{align*}
+\tilde{\boldY}&=\boldM_2\boldY\\
+&= \boldY - \boldX_2(\boldX_2^\top\boldX_2)^{-1}\boldX_2^\top\boldY
+\end{align*}
+à savoir les résidus de la régression de $\boldY$ sur $\boldX_2$.\\\\
+Ainsi, pour obtenir les coefficients de $K_1$ premiers régresseurs, plutôt que de réaliser la régression avec les $K_1+K_2 =K$ régresseurs, on peut régresser $\boldY$ sur $\boldX_2$ pour obtenir les résidus $\tilde{\boldY}$, régresser $\boldX_1$ sur $\boldX_2$ pour obtenir les résidus $\tilde{\boldX}_1$, et alors régresser $\tilde{\boldY}$ sur $\tilde{\boldX}_1$ pour obtenir $\hat{\beta}_1$. Autrement dit, $\hat{\beta}_1$ décrit l'effet de $\boldX_1$ une fois que ceux de $\boldX_2$ ont été contrôlés.\\\\
+De manière similaire que pour $\hat{\beta}_1$, nous avons pour $\hat{\beta}_2$,
+\begin{align*}
+\hat{\beta}_2 = (\boldX_2^\top\boldM_1\boldX_2)^{-1} \boldX_2^\top\boldM_1\boldY
+\end{align*}
+où,
+\begin{align*}
+\boldM_1 = \Id_n - \boldX_1(\boldX_1^\top\boldX_1)^{-1}\boldX_1^\top
+\end{align*}
+Prenons comme exemple le modèle suivant,
+\begin{align*}
+Y_i = \beta_1 + \beta_2 X_i + U_i, \ \ \ i = 1,2,...,n
+\end{align*}
+Soit $\vecOnes_n$  le vecteur $(n\times 1)$ dont tous les éléments sont le nombre 1, i.e.,
+\begin{align*}
+\vecOnes_n =
+\left(
+\begin{array}{c}
+1\\
+1\\
+.\\
+.\\
+.\\
+1
+\end{array}
+\right)
+\end{align*}
+La matrice des régresseurs est alors,
+\begin{align*}
+ \left(\vecOnes_n \ \ X\right) = 
+\left(
+\begin{array}{cc}
+1&X_1\\
+1&X_2\\
+.&.\\
+.&.\\
+.&.\\
+1&X_n
+\end{array}
+\right)
+\end{align*}
+Considérons,
+\begin{align*}
+\boldM_1 = \Id_n - \vecOnes_n(\vecOnes_n^\top\vecOnes_n)^{-1}\vecOnes_n^\top
+\end{align*}
+et,
+\begin{align*}
+\hat{\beta}_2 = \frac{X^\top\boldM_1\boldY}{X^\top\boldM_1X}
+\end{align*}
+Nous avons, $\vecOnes_n^\top\vecOnes_n = n$, par conséquent,
+\begin{align*}
+\boldM_1 = \Id_n - \frac{\vecOnes_n\vecOnes_n^\top}{n}
+\end{align*}
+et,
+\begin{align*}
+\boldM_1X &= X - \vecOnes_n\frac{\vecOnes_n^\top X}{n}\\
+& = X - \bar{X}\vecOnes_n\\
+& = 
+\left(
+\begin{array}{c}
+X_1 - \bar{X}\\
+X_2 - \bar{X}\\
+.\\
+.\\
+.\\
+X_n - \bar{X}
+\end{array}
+\right)
+\end{align*}
+où,
+\begin{align*}
+\bar{X} &= \frac{\vecOnes_n^\top X}{n}\\
+&=n^{-1}\sumobs X_i
+\end{align*}
+Ainsi la matrice $\boldM_1$ transforme le vecteur $X$ en un vecteur dont les éléments sont les écarts des observations $X_i$ à leur moyenne. Et nous pouvons écrire,
+\begin{align*}
+\hat{\beta}_2 &= \frac{\sumobs(X_i - \bar{X})Y_i}{\sumobs(X_i - \bar{X}) ^2}\\
+&= \frac{\sumobs(X_i - \bar{X})(Y_i - \bar{Y})}{\sumobs(X_i - \bar{X}) ^2}
+\end{align*}
+
+\section{Qualité de l'ajustement et coefficient de détermination ou $R^2$}
+\'Ecrivons,
+\begin{align*}
+\boldY &= \boldP_\boldX\boldY+ \boldM_\boldX\boldY\\
+&=\hat{\boldY}+\hat{\boldU}
+\end{align*}
+où par construction,
+\begin{align*}
+\hat{\boldY}^\top\hat{\boldU} &= (\boldP_\boldX\boldY)^\top (\boldM_\boldX\boldY)\\ 
+&= \boldY^\top  \boldP_\boldX \boldM_\boldX\boldY\\
+& = 0
+\end{align*}
+Supposons que le modèle contienne une constante, par exemple la première colonne de la matrice des régresseurs $\boldX$ est le vecteur unitaire $\vecOnes_n$. La \emph{variation totale} dans $\boldY$ est,
+\begin{align*}
+\sumobs(Y_i - \bar{Y})^2 &= \boldY^\top\boldM_1\boldY\\
+&=(\hat{\boldY}  + \hat{\boldU} )^\top\boldM_1(\hat{\boldY}  + \hat{\boldU} )\\
+&=\hat{\boldY}^\top\boldM_1\hat{\boldY} + \hat{\boldU}^\top\boldM_1\hat{\boldU} + 2\hat{\boldY}^\top\boldM_1\hat{\boldU}
+\end{align*}
+où $\bar{Y} = n^{-1}\sumobs Y_i$. Comme le modèle contient une constante,
+\begin{align*}
+\vecOnes_n^\top\hat{\boldU} = 0
+\end{align*}
+et,
+\begin{align*}
+\boldM_1\hat{\boldU} =\hat{\boldU}  
+\end{align*}
+Cependant, $\hat{\boldY}^\top \hat{\boldU} =0$, et par conséquent,
+\begin{align*}
+\boldY^\top\boldM_1\boldY = \hat{\boldY}^\top\boldM_1\hat{\boldY} +
+\hat{\boldU}^\top\hat{\boldU} 
+\end{align*}
+ou,
+\begin{align*}
+\sumobs(Y_i-\bar{Y})^2 = \sumobs(\hat{Y}_i - \bar{\hat{Y}})^2 + \sumobs \hat{U}_i^2
+\end{align*}
+où $\bar{\hat{Y}} = n^{-1}\sumobs \hat{Y}_i$. Notons que,
+\begin{align*}
+\bar{Y} &= \frac{\vecOnes_n^\top\boldY}{n} \\
+&= \frac{\vecOnes_n^\top\hat{\boldY}}{n}
++ \frac{\vecOnes_n^\top\hat{\boldU}}{n}\\
+& = \frac{\vecOnes_n^\top\hat{\boldY}}{n} \\
+&= \bar{\hat{Y}}
+\end{align*}
+Ainsi, la moyenne des $Y_i$ et celle de leurs valeurs ajustées $\hat{Y}_i$ étant égales, nous pouvons écrire,
+\begin{align*}
+\sumobs(Y_i-\bar{Y})^2 = \sumobs(\hat{Y}_i - \bar{Y})^2 + \sumobs \hat{U}_i^2
+\end{align*}
+ou,
+\begin{align*}
+SCT = SCE + SCR
+\end{align*}
+où,
+$SCT := \sumobs(Y_i-\bar{Y})^2$ est la \emph{somme des carrés totale},  $SCE :=  \sumobs(\hat{Y}_i - \bar{Y})^2$  est la \emph{somme des carrés expliqués}, et $SCR:= \sumobs \hat{U}_i^2$ est la \emph{somme des carrés des résidus}.\\
+Le rapport de la $SCE$ à la $SCT$ est appelé coefficient de détermination\footnote{On l'appelle/prononce généralement "R deux".} ou $R^2$,
+\begin{align*}
+R^2 &= \frac{SCE}{SCT}\\
+& = \frac{ \sumobs(\hat{Y}_i - \bar{Y})^2}{\sumobs(Y_i-\bar{Y})^2}\\
+&=1 - \frac{\sumobs \hat{U}_i^2}{\sumobs(Y_i-\bar{Y})^2}\\
+& = 1 - \frac{\hat{\boldU}^\top\hat{\boldU}}{\boldY^\top\boldM_1\boldY}
+\end{align*}
+\section{Propriétés du $R^2$}
+\begin{enumerate}
+\item Le $R^2$ est borné entre 0 et 1 ainsi que cela est indiqué par sa décomposition. Remarquez néanmoins que ceci n'est plus vrai dans un modèle sans constante, et dans ce cas il est indiqué de ne pas utiliser la définition précédente du $R^2$. Remarquez aussi que si $R^2 =  1$ alors $\hat{\boldU}^\top\hat{\boldU} = 0$, ce qui sera vrai seulement si $\boldY\in \mathcal{S}(X)$, i.e., $\boldY$ est \emph{exactement} une combinaison linéaire des colonnes de $\boldX$.
+\item Le $R^2$ augmente avec le nombre de régresseurs. Pour montrer cette propriété considérons une partition de la matrice des régresseurs $\boldX = (\boldZ \ \ \boldW)$. \'Etudions l'effet d'ajouter $\boldW$ sur le $R^2$. Notons,
+\begin{align*}
+\boldP_\boldX = &\boldX(\boldX^\top\boldX)^{-1}\boldX^\top\\
+\boldP_\boldZ = &\boldZ(\boldZ^\top\boldZ)^{-1}\boldZ^\top
+\end{align*}
+respectivement, la matrice de projection du modèle "complet"(i.e., avec $\boldZ$ et $\boldW$), et la matrice de projection du modèle avec uniquement $\boldZ$ comme matrice des régresseurs. Définissons aussi,
+\begin{align*}
+\boldM_\boldX  &= \Id_n - \boldP_\boldX\\
+\boldM_\boldZ &= \Id_n - \boldP_\boldZ
+\end{align*}
+Observons que comme $\boldZ$ est une partie de $\boldX$,
+\begin{align*}
+\boldP_\boldX  \boldZ = \boldZ
+\end{align*}
+et,
+\begin{align*}
+\boldP_\boldX\boldP_\boldZ &= \boldP_\boldX \boldZ(\boldZ^\top\boldZ)^{-1}\boldZ^\top\\
+& = \boldZ(\boldZ^\top\boldZ)^{-1}\boldZ^\top \\
+&= \boldP_\boldZ
+\end{align*}
+Par conséquent,
+\begin{align*}
+\boldM_\boldX\boldM_\boldZ& = (\Id_n - \boldP_\boldX)(\Id_n - \boldP_\boldZ)\\
+&=\Id_n - \boldP_\boldX - \boldP_\boldZ + \boldP_\boldX\boldP_\boldZ\\
+&=\Id_n - \boldP_\boldX - \boldP_\boldZ +  \boldP_\boldZ\\
+& = \boldM_\boldX
+\end{align*}
+Supposons que $\boldZ$ contienne un vecteur constant de sorte que les deux régressions(la complète et celle sans $\boldW$) contiennent chacune une constante. Définissons,
+\begin{align*}
+\hat{\boldU}_\boldX = \boldM_\boldX\boldY \ , \ \  
+\hat{\boldU}_\boldZ = \boldM_\boldZ\boldY
+\end{align*}
+\'Ecrivons,
+\begin{align*}
+(\hat{\boldU}_\boldX - \hat{\boldU}_\boldZ)^\top(\hat{\boldU}_\boldX - \hat{\boldU}_\boldZ) = \hat{\boldU}_\boldX^\top \hat{\boldU}_\boldX + \hat{\boldU}_\boldZ^\top\hat{\boldU}_\boldZ -2\hat{\boldU}_\boldX ^\top\hat{\boldU}_\boldZ\geq 0
+\end{align*}
+Notons que,
+\begin{align*}
+\hat{\boldU}_\boldX ^\top\hat{\boldU}_\boldZ  &= \boldY^\top\boldM_\boldX\boldM_\boldZ\boldY\\
+& = 
+\boldY^\top\boldM_\boldX\boldY\\
+& = \hat{\boldU}_\boldX^\top\hat{\boldU}_\boldX
+\end{align*}
+d'où,
+\begin{align*}
+\hat{\boldU}_\boldZ^\top\hat{\boldU}_\boldZ\geq \hat{\boldU}_\boldX^\top\hat{\boldU}_\boldX
+\end{align*}
+\item Le $R^2$ indique la part de la variation de $\boldY$ dans l'échantillon qui est expliquée par $\boldX$. Cependant notre objectif n'est pas d'expliquer des variations dans l'échantillon mais celle de la population (dont est tiré l'échantillon). Il en résulte qu'un $R^2$ élevé n'est pas nécessairement un indicateur d'un bon modèle de régression et un $R^2$ faible n'est pas non plus un argument en défaveur du modèle considéré.
+\item Il est toujours possible de trouver une matrice de régresseurs $\boldX$ pour laquelle $R^2 = 1$, il suffit de prendre $n$ vecteurs linéairement indépendants. En effet, un tel ensemble de vecteurs génère tout l'espace $\R^n$ de sorte que tout vecteur $\boldY\in\R^n$ peut s'écrire comme une combinaison linéaire exacte des colonnes de $\boldX$.
+\end{enumerate}
+
+\section{$R^2$ ajusté}
+\'Etant donné que le $R^2$ augmente avec le nombre de régresseurs, une mesure alternative pour juger de la qualité de la régression est le $R^2$ \emph{ajusté},
+\begin{align*}
+\bar{R}^2 &= 1 - \frac{n-1}{n-K}(1 - R^2)\\
+& = 1 - \frac{\hat{\boldU}^\top\hat{\boldU}/(n-K)}{\boldY^\top\boldM_1\boldY/(n-1)}
+\end{align*}
+Le $R^2$ ajusté diminue la qualité de ajustement lorsque le nombre de régresseurs augmente relativement au nombre d'observations de sorte que $\bar{R}^2 $ peut diminuer avec le nombre de régresseurs. Cependant il n'y a pas vraiment d'argument fort pour utiliser une telle mesure de l'ajustement.
+
+%\bibliographystyle{jpe}
+%\bibliography{Biblio.bib}
+ \end{document}
+

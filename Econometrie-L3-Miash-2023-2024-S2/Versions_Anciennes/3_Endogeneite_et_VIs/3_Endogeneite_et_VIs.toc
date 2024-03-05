@@ -1,12 +1,12 @@
-\select@language {french}
+\babel@toc {french}{}
 \contentsline {section}{\tocsection {}{1}{Exog\IeC {\'e}n\IeC {\'e}it\IeC {\'e}(s) dans un mod\IeC {\`e}le de r\IeC {\'e}gression lin\IeC {\'e}aire}}{2}{section.1}
 \contentsline {section}{\tocsection {}{2}{Endog\IeC {\'e}n\IeC {\'e}it\IeC {\'e}}}{3}{section.2}
-\contentsline {subsection}{\tocsubsection {}{2.1}{MCO}}{4}{subsection.2.1}
+\contentsline {subsection}{\tocsubsection {}{2.1}{MCO}}{3}{subsection.2.1}
 \contentsline {subsection}{\tocsubsection {}{2.2}{Sources d'endog\IeC {\'e}n\IeC {\'e}it\IeC {\'e}}}{5}{subsection.2.2}
 \contentsline {subsubsection}{\tocsubsubsection {}{}{Variables omises}}{5}{section*.2}
 \contentsline {subsubsection}{\tocsubsubsection {}{}{\'Erreurs de mesure}}{5}{section*.3}
-\contentsline {subsubsection}{\tocsubsubsection {}{}{Simultan\IeC {\'e}it\IeC {\'e}}}{6}{section*.4}
+\contentsline {subsubsection}{\tocsubsubsection {}{}{Simultan\IeC {\'e}it\IeC {\'e}}}{5}{section*.4}
 \contentsline {section}{\tocsection {}{3}{M\IeC {\'e}thode des variables instrumentales}}{6}{section.3}
 \contentsline {subsection}{\tocsubsection {}{3.1}{Variables instrumentales}}{6}{subsection.3.1}
-\contentsline {subsection}{\tocsubsection {}{3.2}{Estimation}}{7}{subsection.3.2}
+\contentsline {subsection}{\tocsubsection {}{3.2}{Estimation}}{6}{subsection.3.2}
 \contentsline {subsection}{\tocsubsection {}{3.3}{Convergence et normalit\IeC {\'e} asymptotique}}{7}{subsection.3.3}

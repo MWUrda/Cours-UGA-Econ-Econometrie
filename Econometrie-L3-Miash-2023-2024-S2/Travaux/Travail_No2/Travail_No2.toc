@@ -1,0 +1,4 @@
+\babel@toc {french}{}
+\contentsline {section}{\tocsection {}{1}{R\IeC {\'e}gression et Projection Lin\IeC {\'e}aires}}{2}{section.1}
+\contentsline {section}{\tocsection {}{2}{Th\IeC {\'e}or\IeC {\`e}me de Frisch-Waugh Lovell}}{2}{section.2}
+\contentsline {subsection}{\tocsubsection {}{2.1}{Illustration num\IeC {\'e}rique/empirique}}{2}{subsection.2.1}

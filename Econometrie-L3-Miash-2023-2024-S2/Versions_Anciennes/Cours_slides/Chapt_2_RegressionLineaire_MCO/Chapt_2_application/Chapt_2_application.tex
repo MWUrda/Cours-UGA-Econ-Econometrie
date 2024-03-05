@@ -1,0 +1,230 @@
+\input{../../Preambule}
+
+\usepackage{tikz}
+\usepackage{enumitem}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+%\renewcommand{\subsection{mark}[1]{\markright{#1}{}}
+\fancyhead{}
+\fancyfoot{} 
+%\fancyhead[LE,LO]{\tiny{\thepage}}
+\fancyhead[C]{\small\textsc{Économétrie}}
+%fancyhead[CE,CO]{\tiny{\rightmark}}
+\fancyhead[L]{\small\textsc{UGA}}
+\fancyfoot[C]{\small{\thepage}}
+%\fancyfoot[R]{\small \textcopyright \ \  \small\textsc
+\fancyhead[R]{ \small\textsc{M. Urdanivia}}
+%\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+%\pagenumbering{roman}
+
+
+\begin{document} 
+\usetikzlibrary{positioning}
+\usetikzlibrary{snakes}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{shapes}
+%\tikzset{block/.style={draw, rectangle, fill=gray!20, 
+%\tikzset{empty/.style={draw, rectangle, fill=none, tex
+%\tikzset{line/.style={draw, -latex'}}
+%\onehalfspace
+
+\begin{titlepage}
+\centering
+	%\includegraphics[width=0.15\textwidth]{logoUGA2020
+	{\scshape\Large \textsc{Économétrie: UGA}\par}
+	\vspace{1cm}
+	%{\scshape\large \textsc{Extremum Estimators(1)}\par}
+	%\vspace{1cm}
+	{\Large\bfseries \textsc{2: MODÈLE DE RÉGRESSION LINÉAIRE ET ESTIMATION PAR MCO} \par}
+    \vspace{1cm}   
+    {\Large\bfseries \textsc{Application}\footnote{Dans ces notes on applique certaines des méthodes et 
+	résultats théoriques du cours. Bien que celui-ci puisse être brièvement rappelé. 
+	pour plus de détails veuillez vous reporter à celui-ci. Remarquons aussi que les notations 
+	utilisées peuvent être différentes par rapport au cours.} \par}
+	\vspace{1cm}
+	{(\textsc{Cette version: \today})\par}
+	\vspace{1cm}
+	{\large \textsc{Michal Urdanivia}
+	\footnote{Contact:  
+	\href{mailto:michal.wong-urdanivia@univ-grenoble-alpes.fr}{michal.wong-urdanivia@univ-grenoble-alpes.fr}, 
+	 Université de Grenoble Alpes,  Faculté d'\'Economie, GAEL.}\par}
+	%\vfill
+	%supervised by\par
+	%Dr.~Mark \textsc{Brown}
+%\vfill
+% Bottom of the page
+	
+\end{titlepage}
+
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Projection et moindres carrés}
+
+On considère un couple  $(y_i, \boldx_i) \in \R\times \R^K$ qui sont des variables aléatoires pour lesquelles 
+on observe un échantillon d'observations i.i.d., $\{(y_i, \boldx_i) ; i=1, \ldots, N\}$. Dans tout ce qui suit 
+on suppose que $\Exp[\boldx_i \boldx_i^\prime]$ et $\Exp[y_i^2]$ sont finis.
+
+Définissons le paramètre de la projection de $y_i$ sur $\boldx_i$ par,
+
+\begin{align*}
+	\boldgamma &:=\arg\min_{\boldg}\Exp\left[(y_i - \boldx_i^\prime \boldg)^2\right]
+\end{align*}
+
+où $\boldgamma$ vérifie les conditions du premier ordre:
+
+\begin{align*}
+\Exp\left[\boldx_i(y_i - \boldx_i^\prime\boldgamma)\right] &=0,
+\end{align*}
+et dès lors que $\Exp[\boldx_i\boldx_i^\prime]$ est de rang plein ce qui revient 
+à l'absence de multicolinéarité des éléments de $\boldx_i$, $\boldgamma$ est donnée par l'expression: 
+\begin{align*}
+	\boldgamma &= \Exp[\boldx_i\boldx_i^\prime]^{-1}\Exp[\boldx_iy_i].
+\end{align*}
+On peut définir le résidu de la projection,
+\begin{align*} 
+e_i &= y_i - \boldx_i^\prime\boldgamma,
+\end{align*}
+et obtenir la décomposition de $y_i$ suivante:
+
+\begin{align*} 
+y_i &= \boldx_i^\prime\boldgamma + e_i, \quad \Exp[\boldx_i e_i] = 0.
+\end{align*}
+On remarque que cette décomposition ne nécessite aucune hypothèse de linéarité.
+
+D'une façon similaire on peut définir le paramètre de la projection de $y_i$ sur sur $\boldx_i$ dans
+l'échantillon ou estimateur des moindres carrés par,
+
+\begin{align*}
+	\hat{\boldgamma} &:=\arg\min_{\boldg}\Expbar\left[(y_i - \boldx_i^\prime \boldg)^2\right].
+\end{align*}
+où $\Expbar[f(w_i)] = \frac{1}{N}\sum_{i=1}^N f(w_i)$ est l'abbreviation de la moyenne empirique de 
+$f(w_i)$ pour les différentes valeurs de $w_i$ dans l'échantillon de $N$ observations.
+
+$\hat{\boldgamma}$ vérifie les conditions du premier ordre:
+
+
+\begin{align*}
+	\Expbar\left[\boldx_i(y_i - \boldx_i^\prime\hat{\boldgamma})\right] &=0,
+	\end{align*}
+	et dès lors que $\Expbar[\boldx_i\boldx_i^\prime]$ est de rang plein ce qui revient 
+	à l'absence de multicolinéarité des éléments de $\boldx_i$ dans l'échantillon, $\boldgamma$ est donnée par l'expression: 
+	\begin{align*}
+		\hat{\boldgamma} &= \Expbar[\boldx_i \boldx_i^\prime]^{-1}\Expbar[\boldx_iy_i].
+	\end{align*}
+	On peut définir,
+	\begin{align*} 
+	\hat{e}_i &= y_i - \boldx_i^\prime\hat{\boldgamma},
+	\end{align*}
+	et obtenir la décomposition de $y_i$ suivante:
+	
+	\begin{align*} 
+	y_i &= \boldx_i^\prime\hat{\boldgamma} + \hat{e}_i, \quad \Expbar[\boldx_i \hat{e}_i] = 0.
+\end{align*}
+
+\section{Théorème de Frisch-Waugh-Lovell}
+
+Considérons une partition de $\boldx_i$ en deux groupes $\boldx_{1, i}$ et $\boldx_{2,i}$ de respectivement $K_1$ et $K_2$ 
+éléments(on suppose que le régresseur constant appartient à  $\boldx_{2i}$) et écrivons:
+
+\begin{align}
+y_i &= \boldx_{1, i}^\prime \boldgamma_1 + \boldx_{1, i}^\prime \boldgamma_2 + e_i
+\label{eq1}
+\end{align}
+
+où l'on a décomposé le paramètre de la projection de $y_i$ sur $\boldx_i$ 
+conformément à la décomposition de $\boldx_i$.
+
+Définissons l'opérateur de Frisch-Waugh-Lovell par rapport à un vecteur de variables aléatoires $\boldw_i$ telle que $\Exp[\boldw_i\boldw_i^\prime]
+$ soit fini, celui qui appliqué à une variable aléatoire $v_i$ telle que $\Exp[v_i^2]$ soit finie, lui associe le résidu de sa projection sur $\boldw_i$ 
+que l'on note $\tilde{v}_i$ avec donc:
+
+\begin{align*}
+\tilde{v}_i &= v_i -\boldw_i^\prime\boldgamma_{\boldw_i}, \quad
+\boldgamma_{\boldw_i} = \arg\min_{\boldg}\Exp\left[(v_i - \boldw_i^\prime \boldg)^2\right]
+\end{align*}
+Quand nous appliquons cette opérateur à un vecteur $\boldv_i$ on notera $\tilde{\boldv}_i$ 
+le vecteur qui empile les résultats de cette application sur chaque élément de  $\boldv_i$.
+
+Il est facile de vérifier que cet opérateur est linéaire au sens où pour $y_i = v_i + u_i$ avec
+$\Exp[v_i^2] + \Exp[u_i^2]<\infty$:
+
+\begin{align*}
+\tilde{y}_i &= \tilde{v}_i + \tilde{u}_i.
+\end{align*}
+
+Quand nous appliquons cette opérateur sur les termes de \eqref{eq1} nous obtenons,
+
+\begin{align*}
+\tilde{y}_i &= \tilde{\boldx}_{1, i}^\prime\boldgamma_1 + \tilde{\boldx}_{2, i}^\prime\boldgamma_2 +
+\tilde{e}_i,
+\end{align*}
+ce qui implique que: 
+\begin{align}
+	\tilde{y}_i &= \tilde{\boldx}_{1, i}^\prime\boldgamma_1 + e_i, \quad \Exp[ \tilde{\boldx}_{1, i} e_i]=0.
+	\label{eq2}
+\end{align}
+La dernière ligne résulte de ce que $\tilde{\boldx}_{2, i} = 0$ par définition, et de ce que $\tilde{e}_i = e_i$ 
+en raison de l'orthogonalité de $e_i$ et $\boldx_i$, $\Exp[\boldx_ie_i] = 0$; et de plus comme 
+$\tilde{\boldx}_{1, i}$ 
+est une combinaison linéaire d'éléments de $\boldx_i$ nous avons que $\Exp[\tilde{\boldx}_{1, i}e_i]=0$.
+
+La condition $\Exp[ \tilde{\boldx}_{1, i} e_i]=0$ est une condition du premier ordre dans la projection de 
+$\tilde{y}_i$ sur $\tilde{\boldx}_{1, i}$. Autrement dit le paramètre $\boldgamma_1$ 
+peut être obtenu par projection de $\tilde{y}_i$ sur $\tilde{\boldx}_{1, i}$:
+
+\begin{align*}
+\boldgamma_1 &:= \arg\min_{\boldg}\Exp\left[(\tilde{y}_i - \tilde{\boldx}_{1, i}^\prime \boldg)^2\right] = 
+\Exp[\tilde{\boldx}_{1, i}\tilde{\boldx}_{1, i}^\prime]^{-1}\Exp[\tilde{\boldx}_{1, i}\tilde{y}_i]
+\end{align*}
+
+De manière similaire on peut définir l'opérateur de FVL dans l'échantillon par:
+
+\begin{align*}
+	\check{v}_i &= v_i -\boldw_i^\prime\hat{\boldgamma}_{\boldw_i}, \quad
+	\hat{\boldgamma}_{\boldw_i} = \arg\min_{\boldg}\Expbar\left[(v_i - \boldw_i^\prime \boldg)^2\right],
+	\end{align*}
+
+	et si nous l'appliquons à:
+
+	\begin{align*}
+y_i &= \boldx_{1, i}^\prime \hat{\boldgamma}_1 + \boldx_{1, i}^\prime \hat{\boldgamma}_2 + \hat{e}_i
+	\end{align*}
+
+	on obtient:
+	\begin{align}
+		\check{y}_i &= \check{\boldx}_{1, i}^\prime\hat{\boldgamma}_1 + \hat{e}_i, \quad \Exp[ \check{\boldx}_{1, i} \hat{e}_i]=0.
+		\label{eq3}
+	\end{align}
+ce qui implique,
+
+\begin{align*}
+	\hat{\boldgamma}_1 &:= \arg\min_{\boldg}\Expbar\left[(\check{y}_i - \check{\boldx}_{1, i}^\prime \boldg)^2\right] = 
+	\Expbar[\check{\boldx}_{1, i}\check{\boldx}_{1, i}^\prime]^{-1}\Expbar[\check{\boldx}_{1, i}\check{y}_i]
+\end{align*}
+
+\newpage
+
+\section{Questions}
+
+\begin{enumerate}
+	\item Montrez que l'estimateur $\hat{\boldgamma}_1$ obtenu par application du résultat de FVL est convergent pour
+	$\hat{\boldgamma}_1$. 
+	\item Montrer que sa distribution asymptotique est une loi normale. 
+\end{enumerate}
+
+\section{Application empirique}
+
+\bibliographystyle{jpe}
+\bibliography{../../Biblio.bib}
+ \end{document}

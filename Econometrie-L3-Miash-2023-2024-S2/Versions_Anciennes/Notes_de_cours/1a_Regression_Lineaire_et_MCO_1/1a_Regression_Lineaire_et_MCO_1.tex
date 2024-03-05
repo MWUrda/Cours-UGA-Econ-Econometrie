@@ -1,0 +1,2259 @@
+\documentclass[10pt, reqno]{amsart}
+\input{../../Preambule2}
+\newcommand{\bxi}{ \boldx_i }
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{txfonts}
+\usepackage{mathrsfs}
+\usepackage{fancyhdr}
+
+
+
+\usepackage{fancyhdr}
+\usetikzlibrary{calc,decorations.pathmorphing,patterns}
+\usepackage{listofitems}
+\tikzstyle{mynode}=[thick,draw=blue,fill=blue!20,circle,minimum size=22]
+\usepackage{amsaddr}
+\usepackage{mathrsfs}
+
+\makeatletter
+
+\pgfdeclaredecoration{penciline}{initial}{
+    \state{initial}[width=+\pgfdecoratedinputsegmentremainingdistance,auto corner on length=1mm,]{
+        \pgfpathcurveto%
+        {% From
+            \pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}
+                            {\pgfdecorationsegmentamplitude}
+        }
+        {%  Control 1
+        \pgfmathrand
+        \pgfpointadd{\pgfqpoint{\pgfdecoratedinputsegmentremainingdistance}{0pt}}
+                        {\pgfqpoint{-\pgfdecorationsegmentaspect\pgfdecoratedinputsegmentremainingdistance}%
+                                        {\pgfmathresult\pgfdecorationsegmentamplitude}
+                        }
+        }
+        {%TO 
+        \pgfpointadd{\pgfpointdecoratedinputsegmentlast}{\pgfpoint{1pt}{1pt}}
+        }
+    }
+    \state{final}{}
+}
+\makeatother
+
+\pagestyle{fancy}
+%\renewcommand{\subsection{mark}[1]{\markright{#1}{}}
+\fancyhead{}
+\fancyfoot{} 
+%\fancyhead[LE,LO]{\tiny{\thepage}}
+\fancyhead[C]{\small\textsc{Économètrie: L3 MIASH, S2}}
+%fancyhead[CE,CO]{\tiny{\rightmark}}
+\fancyhead[L]{\small\textsc{Université de Grenoble Alpes}}
+\fancyfoot[C]{\small{\thepage}}
+%\fancyfoot[R]{\small \textcopyright \ \  \small\textsc
+\fancyhead[R]{ \small\textsc{M. W. Urdanivia}}
+%\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+%\pagenumbering{roman}
+
+\begin{document} 
+\usetikzlibrary{positioning}
+\usetikzlibrary{snakes}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{shapes}
+%\tikzset{block/.style={draw, rectangle, fill=gray!20, 
+%\tikzset{empty/.style={draw, rectangle, fill=none, tex
+%\tikzset{line/.style={draw, -latex'}}
+%\onehalfspace
+
+%\includepdf{trame}
+
+\begin{titlepage}
+\centering
+	%\includegraphics[width=0.15\textwidth]{logoUGA2020}
+	{\scshape\Large \textsc{Université de Grenoble Alpes\\(L3 MIASH, S2)}\par}
+	\vspace{0.5cm}
+	{\Large\bfseries \scshape\Large \textsc{ÉCONOMÉTRIE}\par}
+	%{\scshape\large \textsc{Extremum Estimators(1)}\par}
+	%\vspace{1cm}
+	\vspace{0.5cm}
+	{\Large\bfseries \textsc{Régression Linéaire et Moindres Carrés (1):} \par}
+    \vspace{0.5cm}   
+   {\Large\bfseries \textsc{Introduction et résultats à distance finie} \par}
+	\vspace{1cm}
+	{(\textsc{Cette version: \today})\par}
+	\vspace{1cm}
+	{\large \textsc{Michal W. Urdanivia}
+	\footnote{Contact:  
+	\href{mailto:michal.wong-urdanivia@univ-grenoble-alpes.fr}{michal.wong-urdanivia@univ-grenoble-alpes.fr}, 
+	 Université de Grenoble Alpes,  Faculté d'\'Economie, GAEL.}\par}
+	 %\includegraphics[width=0.15\textwidth]{logoUGA}
+	%\vfill
+	%supervised by\par
+	%Dr.~Mark \textsc{Brown}
+%\vfill
+% Bottom of the page
+	
+\end{titlepage}
+
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+
+
+
+%\pagenumbering{arabic}
+%\section*{Objectifs du chapitre}
+
+\section{Estimateur des moindres carrés dans le modèle de régression linéaire}
+\subsection{Définitions}
+Une question courante en économétrie concerne l'étude de l'effet d'un groupe de variables $X \in \mathcal{X}\subseteq \R^K$, traditionnellement appelées \emph{régresseurs}, sur une autre variable $Y\in \mathcal{Y}\subseteq\R$ traditionnellement  appelée \emph{variable dépendante}.  
+On dispose de données  sur $(Y, X)$, à savoir un \emph{échantillon} de taille $n$,  $\{(Y_i, X_i)\}_{i=1}^n$, où $Y_i$ est une variable aléatoire et $X_i$ est un vecteur $K\times 1$(de variables aléatoires), i.e.,
+\begin{align*}
+X_i = 
+\begin{pmatrix}
+X_{i1}\\
+X_{i2}\\
+\vdots\\
+X_{iK}	
+\end{pmatrix}
+\end{align*}
+Une paire $(Y_i, X_i)$ est appelée observation(sous entendu de $(Y, X)$). Le vecteur $X_i$ contient les valeurs des $K$ variables pour l'observation $i$.
+Pour des \emph{données en coupe}\footnote{Rappelons que des données en coupe sont des données où chaque observation ne concerne qu'une seule unité d'observation. Par exemple s'il s'agit d'observations sur des individus l'observation $i$ concernera un individu différent de l'observation $j$.} il est souvent supposé que toutes les observations sont tirées indépendamment les unes des autres à partir d'une même distribution. On dit dans ce cas que l'échantillon d'observations $\{(Y_i, X_i)\}_{i=1}^n$ est un échantillon aléatoire ou de manière équivalente que les observations sont identiquement et indépendamment distribuées(i.i.d. en abrégé). Remarquons que l'hypothèse d'observations i.i.d. ne signifie pas que $Y_i$ et $X_i$ soient indépendants, mais plutôt que l'observation $(Y_i, X_i)$ est indépendante de toute autre observation $(Y_j, X_j)$ pour $i\neq j$, n'excluant donc pas que $Y_i$ et $X_i$ puissent être liés\\\
+L'outil auquel nous allons nous intéresser dans ce cours pour étudier la relation entre la variable dépendante et les régresseurs est l'espérance conditionnelle de $Y_i$ sachant $X_i$, $\Exp(Y_i| X_i)$, laquelle vue comme une fonction de $X_i$ est appelée \emph{fonction de régression}(ou plus succinctement régression) de $Y_i$ sur $X_i$\
+La différence entre $Y_i$ et son espérance conditionnelle est appelée \emph{terme d'erreur}(ou plus succinctement \emph{erreur}),
+\begin{align}
+U_i = Y_i - \Exp(Y_i| X_i)
+\label{eq1}
+\end{align} 
+ et l'on note que contrairement à $X_i$ et $Y_i$, l'erreur $U_i$ n'est pas une variable observable par l'analyste étant donné que l'espérance conditionnelle lui est inconnue\\\
+Dans un cadre \emph{paramétrique} ou \emph{semi-paramétrique}, il est souvent supposé que l'espérance conditionnelle est connue à un ensemble de \emph{paramètres} près. Ainsi dans le \emph{modèle de régression linéaire} on suppose que $\Exp(Y_i|X_i)$ est linéaire par rapport à un vecteur de paramètres inconnus,
+\begin{align}
+\Exp(Y_i|X_i) = X_{i1}\beta_1 +  X_{i2}\beta_2 + ...+ X_{iK}\beta_K = X_i^\tr\beta
+\label{eq2}
+\end{align}
+
+où,
+
+\begin{align*}
+ \beta = 
+ \begin{pmatrix}
+ \beta_1\\
+ \beta_2\\
+ \vdots\\
+ \beta_K
+ \end{pmatrix}
+\end{align*}
+est un vecteur de $K$ paramètres constants. La linéarité de $\Exp(Y_i|X_i)$ peut être justifiée, si par exemple, la distribution des observations $\{(Y_i, X_i)\}_{i=1}^n$ est une loi normale multivariée. Rappelons néanmoins que lorsque $\Exp(Y_i|X_i)$ n'est pas linéaire il est possible de caractériser $\beta$ de manière à ce que \eqref{eq2} constitue la \emph{meilleure prédiction linéaire} de la variable dépendante par les régresseurs. Notons aussi que comme
+\begin{align*}
+\beta_k = \frac{\partial \Exp(Y_i|X_i)}{\partial X_{ik}}, \ \ k=1,2,...,K.
+\end{align*}
+le vecteur $\beta$ est le vecteur des \emph{effets marginaux} des régresseurs, i.e., $\beta_k$ donne la variation dans l'espérance  conditionnelle de $Y_i$ lorsque le régresseur $X_{ik}$ varie, pour des valeurs fixes des autres régresseurs $X_{il}$, $l=1,2,...,K$, $l\neq k$. Ceci est une des raisons pour lesquelles un des principaux objectifs est l'estimation du vecteur inconnu $\beta$ à partir des données\\\
+Observons que les équations \eqref{eq1} et \eqref{eq2} permettent d'écrire,
+\begin{align}
+Y_i = X_i^\tr\beta +U_i
+\label{eq3}
+\end{align}
+où par définition de \eqref{eq1}
+\begin{align}
+\Exp(U_i|X_i) = 0
+\label{eq4}
+\end{align}
+Ceci implique que les régresseurs ne contiennent aucune information quant à l'écart entre $Y_i$ et sont espérance conditionnelle. En outre, la \emph{règle des espérances itérées} implique que les erreurs ont une espérance nulle: $\Exp(U_i) = 0$. Notons aussi qu'avec des observations i.i.d. les erreurs sont aussi i.i.d\\\
+Une hypothèse fréquente sur les erreurs consiste à supposer qu'ils sont \emph{homoscédastiques}(on parle d'hypothèse d'homoscédasticité), par quoi on entend que leur variance est indépendante des régresseurs, et la même pour toutes les observations,
+\begin{align*}
+\Var(U_i|X_i) = \sigma^2
+\end{align*}
+pour une constante $\sigma^2>0$.
+
+\subsection{Conditions}
+Avant de donner une définition formelle du modèle de régression linéaire, introduisons les notations vectorielles et matricielles suivantes,
+
+\begin{align*}
+\boldY=
+\begin{pmatrix}
+Y_1\\
+Y_2\\
+\vdots\\
+Y_n
+\end{pmatrix}
+\  , \
+\boldX=
+\begin{pmatrix}
+X_1^\tr\\
+X_2^\tr\\
+\vdots\\
+X_n^\tr
+\end{pmatrix}
+=
+\begin{pmatrix}
+X_{11} & X_{12}&\ldots&X_{1K}\\
+X_{21} & X_{22}&\ldots&X_{2K}\\
+\vdots&\vdots&\vdots&\vdots\\
+X_{n1} & X_{n2}&\ldots&X_{nK}
+\end{pmatrix}
+\  , \
+\boldU=
+\begin{pmatrix}
+U_1\\
+U_2\\
+\vdots\\
+U_n
+\end{pmatrix}
+\end{align*}
+
+Le modèle de régression linéaire consiste dans les hypothèses suivantes:
+\begin{condition}
+$\boldY = \boldX\beta +\boldU$
+\label{cond1}
+\end{condition}
+\begin{condition}
+$\Exp(\boldU | \boldX) = 0$ p.s.
+\label{cond2}
+\end{condition}
+\begin{condition}
+$\Var(\boldU|\boldX) = \sigma^2\Id_n$ p.s.
+\label{cond3}
+\end{condition}
+\begin{condition}
+$\Rang(\boldX) = K$ p.s.\footnote{Le rang colonne(ligne) d'une matrice est le nombre maximal de colonnes(lignes) lnéairement indépendantes). On peut montrer que pour toute matrice, le rang colonne et le rang ligne sont égaux. Si $\boldA$ est une matrice $n\times K$, alors $\Rang(\boldA) \leq \min (n, K)$. Si  $\Rang(\boldA) = n$(ou $\Rang(\boldA) = K$), on dit que $\boldA$ est de rang ligne(colonne) plein. Quelques propriétés:
+\begin{align*}
+\Rang(\boldA) =& \Rang(\boldA^\tr) =  \Rang(\boldA^\tr \boldA)  =   \Rang(\boldA\boldA^\tr ),\\
+\Rang(\boldA\mathbf{B}) \leq& \min \left(\Rang(\boldA), \Rang(\mathbf{B})\right),\\
+\Rang(\boldA\mathbf{B})=&\Rang(\boldA) \ \textrm{si $\mathbf{B}$ est carrée ou de rang plein}
+\end{align*}
+  }
+\label{cond4}
+\end{condition}
+Plutôt que de conditionner par rapport  aux valeurs observées des régresseurs, on peut supposer que $\boldX$ n'est pas aléatoire, i.e., supposer que la valeur de $\boldX$ est fixe dans des échantillons répétés. Dans ce cas là les hypothèses \eqref{cond2} et \eqref{cond3} peuvent être remplacés par, respectivement $\Exp(\boldU) = 0$ et $\Var(\boldU) = \sigma^2\Id_n$. Dans la mesure où conditionner par rapport à $\boldX$ est équivalent à traiter les valeurs des régresseurs comme fixes, les deux ensembles d'hypothèses conduisent aux mêmes résultats\
+Pour l'inférence on suppose parfois que,
+\begin{condition}
+$\boldU | \boldX \sim \mathcal{N}(\mathbf{0}, \Id_n)$
+\label{cond5}
+\end{condition}
+Dans le cas de régresseur fixes, plutôt que \eqref{cond5} il sera supposé que la distribution 
+inconditionnelle des erreurs est normale. Les hypothèses \eqref{cond1}-\eqref{cond5} définissent alors le \emph{modèle de régression linéaire normal} avec dans ce cas,
+\begin{align*}
+\boldY|\boldX \sim\mathcal{N}(\boldX\beta, \sigma^2\Id_n)
+\end{align*}
+Remarquons qu'étant donné que les covariances dans \eqref{cond5} sont toutes nulles, 
+ \eqref{cond5} implique l'indépendance des erreurs. Les hypothèses \eqref{cond1}-\eqref{cond4} seules, 
+ n'impliquent pas l'indépendance entre les observations. En fait, plusieurs résultats importants n'exigent pas 
+ d'observations indépendantes. Néanmoins, nous supposerons parfois l'indépendance  sans la normalité.
+\begin{condition}
+Les observations $\{(Y_i, X_i)\}_{i=1}^n$ sont i.i.d.
+\label{cond6}
+\end{condition}
+Dans le cas de régresseurs fixes cette hypothèse peut être remplacé par celle d'erreurs, $U_1, ..., U_n$, i.i.d\
+L'hypothèse \eqref{cond2} dit que $\boldU$ est indépendant de $\boldX$ en espérance, ce qui est une hypothèse forte. On appelle aussi
+qualifie aussi cette condition, \emph{condition d'exogénéité forte}. Cependant, plusieurs résultats importants peuvent être obtenus avec
+ une hypothèse plus faible  d'absence de corrélation. Celle-ci est qualifiée de \emph{condition d'exogénéité faible}:
+\begin{condition}
+Pour $i=1,2,...,n$, $\Exp(X_iU_i)=0$, et $\Exp(U_i)=0$.
+\label{cond7}
+\end{condition}
+Toutefois sous cette condition $X_i^\tr\beta$ ne peut pas s'interpréter comme une espérance conditionnelle, auquel cas \eqref{eq3} doit être vu comme un \emph{processus générateur des données}\
+L'hypothèse \eqref{cond3} implique que les erreurs $U_i$ ont la même variance pour tout $i$, et ne sont pas corrélés entre eux, i.e., $\Exp(U_iU_j| \boldX) = 0$ pour $i\neq j$. Notons que l'indépendance entre les erreurs peut aussi être obtenue avec la condition \eqref{cond5} ou sous les  conditions \eqref{cond1} et \eqref{cond6}\
+L'hypothèse \eqref{cond4} exige que le colonnes de $\boldX$ soient linéairement indépendantes. Que cette hypothèse ne soit pas vérifiée signifie qu'un ou plus de régresseurs duplique l'information contenue dans les autres, et ce faisant doit être écarté\
+Souvent, une des colonnes de $\boldX$(souvent la première) est le vecteur unitaire et le paramètre qui lui est associé est appelé \emph{constante}. La constante du modèle donne la valeur moyenne de la variable dépendante lorsque tous les régresseurs sont égaux à zéro.
+
+\subsection{Estimation par la méthode des moments}
+Nous allons à présent construire des estimateurs des paramètres $\beta$ et $\sigma^2$. Rappelons qu'un estimateur est toute fonction des observations $\{(Y_i, X_i)\}_{i=1}^n$. Un estimateur peut dépendre des erreurs inconnues ou des paramètres inconnus $\beta$ mais uniquement par le biais des variables observables $\boldY$ et $\boldX$. Un estimateur n'est pas forcément unique en ce sens que pour un même paramètre plusieurs estimateur peuvent exister\\
+Une des méthodes les plus anciennes pour construire des estimateurs est la \emph{méthode des moments}(MM). La MM consiste à construire des estimateurs pour des paramètres définis par des moments théoriques en considérant les contreparties empiriques de ces moments appelées alors moments empiriques. Par exemple si un paramètre est défini au travers d'une espérance(moment théorique), son  estimateur sera construit à partir d'une moyenne(moment empirique) calculée sur les observations\
+Dans le cas présent, les hypothèses \eqref{cond1}, et \eqref{cond2} ou \eqref{cond7} impliquent que la vraie valeur de $\beta$ doit satisfaire,
+\begin{align}
+\Exp(X_iU_i) = \Exp\left(X_i(Y_i-X_i^\tr\beta)\right) = 0
+\label{eq5}
+\end{align}
+ Un \emph{estimateur des moments}(i.e., obtenu selon la MM) de $\beta$, $\hat{\beta}$,  est obtenu en remplaçant l'espérance dans \eqref{eq5} par la moyenne empirique,
+\begin{align}
+n^{-1}\sumi X_i(Y_i - X_i^\tr\hat{\beta}) = n^{-1}\sumi X_iY_i - n^{-1}\sumi X_iX_i^\tr\hat{\beta} = 0
+\label{eq6}
+\end{align}
+En résolvant par rapport à $\hat{\beta}$ on obtient,
+\begin{align}
+\hat{\beta} = \left(n^{-1}\sumi X_iX_i^\tr\right)^{-1}n^{-1}\sumi X_iY_i
+\label{eq7}
+\end{align}
+qui peut s'écrire alternativement,
+\begin{align}
+\hat{\beta} = \left(\sumi X_iX_i^\tr\right)^{-1}\sumi X_iY_i
+\label{eq8}
+\end{align}
+ou,
+\begin{align}
+\hat{\beta} = \left(\boldX^\tr\boldX\right)^{-1}\boldX^\tr\boldY
+\label{eq9}
+\end{align}
+où l'on note que la matrice $\sumi X_iX_i^\tr = \boldX^\tr\boldX$ est inversible sous l'hypothèse \eqref{cond4}\footnote{Pour montrer que 
+$\boldX^\tr\boldX = \sumobs X_iX_i^\tr$ notons que,
+\begin{align*}
+\boldX^\tr\boldX=&
+\begin{pmatrix}
+X_1^\tr\\
+X_2^\tr\\
+\vdots\\
+X_n^\tr
+\end{pmatrix}^\tr
+\begin{pmatrix}
+X_1^\tr\\
+X_2^\tr\\
+\vdots\\
+X_n^\tr
+\end{pmatrix}
+= 
+\begin{pmatrix}
+X_1&X_2&\ldots&X_n
+\end{pmatrix}
+\begin{pmatrix}
+X_1^\tr\\
+X_2^\tr\\
+\vdots\\
+X_n^\tr
+\end{pmatrix}
+= X_1X_1^\tr + X_2X_2^\tr+\ldots+X_nX_n^\tr
+=\sumi X_iX_i^\tr
+\end{align*}
+
+}\\\
+Une fois $\hat{\beta}$ calculé, on définit les \emph{valeurs ajustées} ou \emph{prédictions} , ainsi qu'un vecteur $n\times 1$ des valeurs ajustées ou des prédictions, par respectivement,
+\begin{align*}
+\hat{Y}_i = X_i^\tr\hat{\beta}, \ \ \hat{\boldY} = (\hat{Y}_1,  \hat{Y}_2,..., \hat{Y}_n)^\tr
+\end{align*}
+De la même manière, on définit  les \emph{résidus}  , et le vecteur  $n\times 1$ des résidus, par respectivement,
+\begin{align*}
+\hat{U}_i = Y_i - X_i^\tr\hat{\beta}, \ \ \hat{\boldU} = (\hat{U}_1, \hat{U}_2,...,\hat{U}_n)^\tr
+\end{align*}
+Notons que du fait de \eqref{eq6} le vecteur des résidus vérifie les $K$  \emph{équations normales},
+\begin{align}
+ \sumi\hat{U}_iX_i=
+\left(
+\begin{array}{c}
+\sumi\hat{U}_iX_{i1}\\
+\sumi\hat{U}_iX_{i2}\\
+\vdots\\
+\sumi\hat{U}_iX_{iK}
+\end{array}
+\right)
+=0
+\label{eq10}
+\end{align}
+ou en notation matricielle,
+\begin{align}
+\boldX^\tr\hat{\boldU} = 0
+\label{eq11}
+\end{align}
+Remarquons aussi que si le modèle contient une constante alors il résulte des équations normales que $\sumi\hat{U}_i = 0$(il suffit en effet de considérer que, par exemple, le premier régresseur est constant et égal à 1)\\\
+Afin d'estimer $\sigma^2$ considérons,
+\begin{align*}
+\sigma^2 = \Exp(U_i^2)=\Exp\left((Y_i - X_i^\tr\beta)^2\right)
+\end{align*}
+Dans la mesure où $\beta$, est inconnu un estimateur  sera obtenu en remplaçant $\beta$ par sont estimateur des moments,
+\begin{align}
+\hat{\sigma}^2 = n^{-1}\sumi(Y_i-X_i^\tr\hat{\beta})^2
+\label{eq12}
+\end{align}
+
+\subsection{Moindres carrés}
+Pour motiver l'estimation par la méthode des moindres carrés prenons comme point de départ 
+le problème consistant à minimiser l'erreur de prédiction quand on cherche 
+à prédire $Y_i$ par son espérance conditionnelle, $\Exp(Y_i|X_i)$, supposée être une fonction linéaire telle que \eqref{eq2}. Plus précisément, $Y_i - \Exp(Y_i|X_i)$ étant l'erreur de prédiction  on cherche $\beta$ qui minimise un critère de perte quadratique,
+\begin{align*}
+\beta \in \argmin_{b\in \R^K}S(b)
+\end{align*}
+où $S(b) =\Exp\left((Y_i - X_i^\tr b)^2\right)$.
+La contrepartie empirique de ce problème permet de définir un estimateur de $\beta$ par,
+\begin{align*}
+\hat{\beta} \in \argmin_{b\in \R^K}S_n(b)
+\end{align*}
+où $S_n(b)=n^{-1}\sumi\left((Y_i - X_i^\tr\beta)^2\right)$, est la contrepartie empirique de la fonction objectif $S(b)$\
+Nous pouvons montrer que l'estimateur des moments de la section précédente est aussi l'estimateur des moindres carrés. Pour cela réécrivons la fonction objectif précédente,
+\begin{align*}
+S_n(b) = & (\boldY - \boldX b)^\tr (\boldY - \boldX b)\\
+=&(\boldY - \boldX \hat{\beta}+ \boldX \hat{\beta}  - \boldX b)^\tr (\boldY - \boldX \hat{\beta}+ \boldX \hat{\beta} - \boldX b)\\
+=&(\boldY - \boldX \hat{\beta})^\tr(\boldY - \boldX \hat{\beta}) +(\boldX \hat{\beta} - \boldX b)^\tr (\boldX \hat{\beta} - \boldX b)+ 2(\boldY-\boldX \hat{\beta})^\tr(\boldX \hat{\beta}-\boldX b)\\
+=&(\boldY - \boldX \hat{\beta})^\tr(\boldY - \boldX \hat{\beta}) + (\hat{\beta}-b)^\tr \boldX ^\tr\boldX  (\hat{\beta}-b) 
++ 2\hat{\boldU}^\tr \boldX (\hat{\beta}-b)\\
+=&(\boldY - \boldX \hat{\beta})^\tr(\boldY - \boldX \hat{\beta}) + (\hat{\beta}-b)^\tr \boldX ^\tr\boldX  (\hat{\beta}-b) 
+\end{align*}
+On note que la minimisation de $S_n(b)$ équivaut à minimiser $(\hat{\beta}-b)^\tr \boldX ^\tr\boldX  (\hat{\beta}-b)$ car $(\boldY - \boldX \hat{\beta})^\tr(\boldY - \boldX \hat{\beta})$ ne fait pas intervenir $b$.  Sous l'hypothèse \eqref{cond4} la matrice $\boldX $ est de plein rang, et dans ce cas $\boldX ^\tr\boldX $ est définie positive,
+\begin{align*}
+(\hat{\beta}-b)^\tr \boldX ^\tr\boldX  (\hat{\beta}-b) \geq 0
+\end{align*}
+et $(\hat{\beta}-b)^\tr \boldX ^\tr\boldX  (\hat{\beta}-b) = 0$ ssi $\hat{\beta} = b$\
+Alternativement, nous pouvons montrer que $\hat{\beta}=(\boldX ^\tr\boldX )^{-1}\boldX ^\tr\boldY$ est l'estimateur des moindres carrés de $\beta$(i.e., il minimise $S_n(b)$). Pour cela, écrivons,
+\begin{align*}
+S_n(b) = \boldY^\tr\boldY - 2b^\tr\boldX ^\tr\boldY+b^\tr\boldX ^\tr\boldX b
+\end{align*}
+En utilisant le fait que pour une matrice symétrique $\boldA$,
+\begin{align*}
+\frac{\partial (x^\tr\boldA x)}{\partial x} = 2\boldA x
+\end{align*}
+la condition du premier ordre est,
+\begin{align*}
+\frac{\partial S_n(\hat{\beta})}{\partial b} = -2\boldX ^\tr\boldY + 2\boldX ^\tr\boldX \hat{\beta} = 0
+\end{align*}
+ce qui permet d'obtenir,
+\begin{align*}
+\hat{\beta} = (\boldX ^\tr\boldX )^{-1}\boldX ^\tr\boldY
+\end{align*}
+Remarquons aussi que les conditions du premier ordre peuvent s'écrire $\boldX ^\tr(\boldY - \boldX \hat{\beta}) = 0$, ce qui correspond aux équations normales vue précédemment.
+
+\subsection{Propriétés de l'estimateur des moindres carrés}
+
+Nous allons présenter un certain nombre de propriétés de l'estimateur des moindres carrés.
+\begin{propriete}$\hat{\beta}$ est un estimateur linéaire.
+\end{propriete}
+\begin{proof}
+Un estimateur $b$ est linéaire s'il peut s'écrire comme $b=\boldA\boldY$, où $\boldA$ est une matrice quelconque qui dépend de $\boldX $ uniquement, et ne dépend pas de $\boldY$. Pour l'estimateur des moindres carrés nous avons, $\boldA = (\boldX ^\tr\boldX )^{-1}\boldX ^\tr$.
+\end{proof}
+\begin{propriete}
+Sous les hypothèses \eqref{cond1}, \eqref{cond2}, et \eqref{cond4}, $\hat{\beta}$ est sans biais, i.e.,
+\begin{align*}
+\Exp(\hat{\beta}) = \beta
+\end{align*}
+\end{propriete}
+\begin{proof}
+Pour montrer cette propriété écrivons, en utilisant l'hypothèse \eqref{cond1},
+\begin{align*}
+\hat{\beta} = (\boldX ^\tr\boldX )^{-1}\boldX ^\tr\boldY =  (\boldX ^\tr\boldX )^{-1}\boldX ^\tr (\boldX \beta + \boldU) = 
+\beta + (\boldX ^\tr\boldX )^{-1}\boldX ^\tr\boldU
+\end{align*}
+Calculons l'espérance conditionnelle de $\hat{\beta}$,
+\begin{align*}
+\Exp\left(\hat{\beta} | \boldX \right) = \Exp\left(\beta + (\boldX ^\tr\boldX )^{-1}\boldX ^\tr\boldU | \boldX \right) = \beta +\ \Exp\left((\boldX ^\tr\boldX )^{-1}\boldX ^\tr\boldU | \boldX \right)
+\end{align*}
+Notons que,
+\begin{align*}
+\Exp\left((\boldX ^\tr\boldX )^{-1}\boldX ^\tr\boldU | \boldX \right) = 
+\left(\boldX \boldX \right)^{-1}\boldX ^\tr\Exp(\boldU|\boldX ) = 0
+\end{align*} 
+car sous l'hypothèse \eqref{cond2}, $\Exp(\boldU|\boldX ) = 0$. Nous avons donc,
+\begin{align}
+\Exp\left(\hat{\beta} | \boldX \right) = \beta
+\label{eq13}
+\end{align}
+et par la règle des espérances itérées,
+\begin{align*}
+\Exp\left(\hat{\beta}\right) = \Exp\left(\Exp\left(\hat{\beta} | \boldX \right)\right)=\beta
+\end{align*}
+\end{proof}
+L'équation \eqref{eq13} montre que $\hat{\beta}$ est conditionnellement sans biais sachant $\boldX $. On remarque aussi que pour que $\hat{\beta}$ soit sans biais l'hypothèse \eqref{cond7} n'est pas suffisante.
+\begin{propriete}
+Sous les hypothèses \eqref{cond1}, \eqref{cond2}, et \eqref{cond4},
+\begin{align*}
+\Var\left(\hat{\beta} | \boldX \right) = (\boldX ^\tr\boldX )^{-1}\boldX ^\tr\Exp\left(\boldU\boldU^\tr | \boldX \right)\boldX (\boldX ^\tr\boldX )^{-1}
+\end{align*}
+et avec des erreurs homoscédastiques(i.e., sous l'hypothèse \eqref{cond3}),
+\begin{align*}
+\Var\left(\hat{\beta} | \boldX \right) = \sigma^2(\boldX ^\tr\boldX )^{-1}
+\end{align*}
+\end{propriete}
+\begin{proof}
+Pour montrer ces résultats, partons de la définition de la variance conditionnelle de $\hat{\beta}$,
+\begin{align*}
+\Var\left(\hat{\beta} | \boldX \right) =& \Exp\left(\left(\hat{\beta} - \Exp(\hat{\beta} | \boldX )\right) \left(\hat{\beta} - \Exp(\hat{\beta} | \boldX )\right)^\tr | \boldX \right)\\
+=&\Exp\left(\left(\hat{\beta} - \beta\right) \left(\hat{\beta} - \beta\right) ^\tr | \boldX \right)\\
+=&\Exp\left((\boldX ^\tr\boldX )^{-1}\boldX ^\tr\boldU\boldU^\tr\boldX (\boldX ^\tr\boldX )^{-1}|\boldX \right)\\
+=&(\boldX ^\tr\boldX )^{-1}\boldX ^\tr\Exp\left(\boldU\boldU^\tr | \boldX \right)\boldX (\boldX ^\tr\boldX )^{-1}
+\end{align*}
+Et avec des erreurs homoscédastiques, $\Exp(\boldU\boldU^\tr| \boldX ) = \sigma^2\Id_n$, de sorte que,
+\begin{align*}
+(\boldX ^\tr\boldX )^{-1}\boldX ^\tr\Exp\left(\boldU\boldU^\tr | \boldX \right)\boldX (\boldX ^\tr\boldX )^{-1} =& (\boldX ^\tr\boldX )^{-1}\boldX ^\tr \sigma^2\Id_n \boldX (\boldX ^\tr\boldX )^{-1}\\
+=& \sigma^2(\boldX ^\tr\boldX )^{-1}\boldX ^\tr\boldX (\boldX ^\tr\boldX )^{-1}\\
+=&\sigma^2(\boldX ^\tr\boldX )^{-1}
+\end{align*}
+Notons qu'avec des régresseurs fixes $\Var\left(\hat{\beta}\right) =  \sigma^2(\boldX ^\tr\boldX )^{-1}$.
+\end{proof}
+\begin{propriete}
+Sous les hypothèses \eqref{cond1} - \eqref{cond5},
+\begin{align*}
+\hat{\beta} | \boldX  \sim \mathcal{N}\left(\beta, \sigma^2(\boldX ^\tr\boldX )^{-1}\right)
+\end{align*}
+\end{propriete}
+\begin{proof}
+Il est suffit ici de montrer ici que conditionnellement à $\boldX $ la distribution de $\hat{\beta}$ est normale. On aura alors que, $\hat{\beta} | \boldX \sim \mathcal{N}\left(\Exp(\hat{\beta}| \boldX ), \Var(\hat{\beta} | \boldX )\right)$. Néanmoins la normalité de $\hat{\beta} | \boldX $ résulte ici de ce que $\hat{\beta}$ est une fonction de linéaire de $\boldY$, et que sous l'hypothèse \eqref{cond5} $\boldY|\boldX $ est normale.
+\end{proof}
+Notons que dans le cas de régresseur fixes, il suffit d'omettre le conditionnement par rapport à $\boldX $ et,
+\begin{align*}
+\hat{\beta}\sim\mathcal{N}\left(\beta, \sigma^2(\boldX ^\tr\boldX )^{-1}\right)
+\end{align*}
+\begin{propriete}(\textbf{\'Efficacité\footnote{Ce résultat est aussi connu sous le nom de \emph{théorème de Gauss-Markov.}}}) Sous les hypothèses \eqref{cond1}-\eqref{cond4}, l'estimateur des moindres carrés est le meilleur estimateur linéaire sans biais de $\beta$, dans le sens où il s'agit de l'estimateur, dans la classe des estimateurs linéaires et sans biais, qui présente la plus petite variance. i.e., pour tout estimateur linéaire sans biais, $b$, la matrice $\Var\left(b|\boldX \right)-\Var\left(\hat{\beta}|\boldX \right)$ doit être semi-définie positive:
+\begin{align*}
+\Var\left(b|\boldX \right)-\Var\left(\hat{\beta}|\boldX \right) \geq 0
+\end{align*}
+En outre, si $\tilde{\beta}$ est un estimateur linéaire et sans biais et 
+$\Var\left(\tilde{\beta}|\boldX \right) = \Var\left(\hat{\beta}|\boldX \right)$, alors $\tilde{\beta} = \hat{\beta}$ p.s.
+\end{propriete}
+Avant de démontrer ce résultat notons qu'il discute la variance conditionnelle de l'estimateur des moindres carrés, et ce faisant il se réfère à des estimateurs conditionnellement sans biais.
+\begin{proof}
+Soit $b$ un estimateur linéaire sans biais de $\beta$. Il doit ainsi vérifier,
+\begin{align*}
+b=\boldA\boldY, \ \ \ \Exp(b|\boldX ) = \beta
+\end{align*} 
+Ces deux conditions impliquent que $\boldA\boldX  =\Id_K$ p.s. En effet,
+\begin{align*}
+\Exp(b | \boldX ) = &\Exp\left(\boldA\left(\boldX \beta + \boldU\right)\right)\\
+=&\boldA\boldX \beta + \boldA\Exp(\boldU| \boldX )
+\end{align*}
+Par l'hypothèse \eqref{cond2}, $\Exp(\boldU | \boldX ) = 0$, et par conséquent, pour que $b$ soit sans biais nous avons besoin de $\boldA\boldX  = \Id_K$\
+Montrons maintenant que $\Cov\left(\hat{\beta}, b | \boldX \right) = \Var\left(\hat{\beta} | \boldX \right)$,
+\begin{align*}
+\Cov\left(\hat{\beta}, b | \boldX \right) =& \Exp\left((\hat{\beta} - \beta)(b-\beta)^\tr\right)\\
+=&\Exp\left((\boldX ^\tr\boldX )^{-1}\boldX^\tr\boldU\boldU^\tr\boldA^\tr | \boldX \right)\\
+=&(\boldX ^\tr\boldX )^{-1}\boldX^\tr\Exp(\boldU\boldU^\tr|\boldX )\boldA^\tr)\\
+=&\sigma^2(\boldX ^\tr\boldX )^{-1}\boldX ^\tr\boldA^\tr(\textrm{car sous \eqref{cond3}, \  } \Exp(\boldU\boldU^\tr| \boldX ) = \sigma^2\Id_n)\\
+=&\sigma^2(\boldX ^\tr\boldX )^{-1}(\textrm{car, \ } \boldX ^\tr\boldA^\tr = \Id_K)\\
+=&\Var\left(\hat{\beta}| \boldX \right)
+\end{align*}
+Finalement, 
+\begin{align}
+\Var\left(\hat{\beta} - b | \boldX \right) =&\Var\left(\hat{\beta}| \boldX \right) - \Cov\left(\hat{\beta}, b | \boldX \right) - \Cov\left(b, \hat{\beta} | \boldX \right) + \Var\left(b\boldX \right)\nonumber\\
+=&   \Var\left(b | \boldX \right) - \Var\left(\hat{\beta}| \boldX \right)
+\label{eq14}
+\end{align}
+et notons que dans la mesure où toute matrice de variance-covariances est semi-définie positive, nous avons,
+\begin{align*}
+ \Var\left(b | \boldX \right) - \Var\left(\hat{\beta}| \boldX \right) \geq 0
+\end{align*}
+Pour démontrer l'unicité, considérons un estimateur linéaire sans biais $\tilde{\beta}$ tel que $\Var\left(\tilde{\beta}|\boldX \right)=\Var\left(\hat{\beta}|\boldX \right)$. Alors, par \eqref{eq14}, $\Var\left(\hat{\beta} - b | \boldX \right) = 0$, et par conséquent, $\tilde{\beta} = \hat{\beta}+c(\boldX )$ pour une fonction $c(\boldX )$ à valeurs dans $\R^K$ qui dépend uniquement de $\boldX $. Cependant, comme $\hat{\beta}$ et $\tilde{\beta}$ sont conditionnellement sans biais sachant $\boldX $, il s'en suit que $c(\boldX ) = 0$  p.s.
+\end{proof}
+Notons que l'hypothèse \eqref{cond3}, $\Exp(\boldU\boldU^\tr|\boldX )=\sigma^2\Id_n$, joue un rôle crucial dans la démonstration du résultat précédent. Sans elle, il ne serait pas possible de tirer des conclusions quant à  l'efficacité de l'estimateur des moindres carrés.
+
+
+\newpage
+
+\section{Géométrie de Moindres Carrés}
+
+\subsection{Matrices de projection}
+Nous pouvons penser à $\boldY$ et aux colonnes $\boldX$ comme des éléments de l'espace euclidien à $n$ dimensions, $\R^n$. On peut définir un sous-espace de $\R^n$ appelé l'\emph{espace des colonnes} d'une matrice $n\times K$, $\boldX$. Il s'agit de la collection de tous les vecteurs dans $\R^n$ qui peuvent s'écrire comme des combinaisons linéaires des colonnes de $\boldX$,
+\begin{align*}
+\mathcal{S}(\boldX) = \left\{z \in \R^n: z = \boldX b, b = (b_1, b_2,...,b_K) \in \R^K  \right\}
+\end{align*}
+\'Etant donné deux vecteurs $a$, $b$, dans $\R^n$, la distance entre $a$ et $b$ est donné par la norme euclidienne\footnote{Pour un vecteur $x=(x_1, x_2,...,x_n)$ sa norme euclidienne est définie comme $||x|| = \sqrt{x^\tr x} = \sqrt{\sumobs x_i^2}$.} de leur différence $||a-b|| = \sqrt{(a-b)^\tr(a-b)}$. En conséquence, le problème des moindres carrés, à savoir la minimisation de la somme des carrés des erreurs, $(\boldY-\boldX b)^\tr(\boldY-\boldX b)$, est celui de trouver, parmi tous les éléments de $\mathcal{S}(\boldX)$, celui dont la distance par rapport à $\boldY$ est la plus petite,
+\begin{align*}
+\underset{\tilde{\boldY}\in \mathcal{S}(\boldX)}{\min} ||\boldY - \tilde{\boldY}||^2
+\end{align*}
+Le point le plus proche est obtenu en "traçant une perpendiculaire". Autrement dit, une solution au problème des moindres carrés, $\hat{Y} = \boldX\hat{\beta}$ doit être choisie de sorte que le vecteur des résidus, $\hat{\boldU} = \boldY-\hat{\boldY}$ soit orthogonal(perpendiculaire) à chaque colonne de $\boldX$,
+\begin{align*}
+\hat{\boldU}^\tr\boldX = 0
+\end{align*}
+Un  résultat de cela est que $\hat{\boldU}$ est orthogonal à chaque élément de $\mathcal{S}(\boldX)$. En effet, si $z\in \mathcal{S}(\boldX)$, alors il existe $b\in\R^K$ tel que $z=\boldX b$, et,
+\begin{align*}
+\hat{\boldU}^\tr z &= \hat{\boldU}^\tr\boldX b\\
+& = 0
+\end{align*}
+La collection des éléments de $\R^n$ orthogonaux à $\mathcal{S}(\boldX)$ est appelée \emph{complément orthogonal} de $\mathcal{S}(\boldX)$,
+\begin{align*}
+\mathcal{S}^\perp(\boldX) = \left\{z \in \R^n: z^\tr\boldX=0\right\}
+\end{align*}
+Soulignons que tout élément de $\mathcal{S}^\perp(\boldX)$ est orthogonal à chaque élément de $\mathcal{S}(\boldX)$.\\
+Comme nous l'avions vu dans le cours précédent, la solution au problème des moindres carrés est donnée par,
+\begin{align*}
+\hat{\boldY} &= \boldX\hat{\beta}\\
+&=\boldX(\boldX^\tr\boldX)^{-1}\boldX^\tr\boldY\\
+&=\boldP_{\boldX}\boldY
+\end{align*}
+où 
+\begin{align*} \boldP_{\boldX} = \boldX(\boldX^\tr\boldX)^{-1}\boldX^\tr
+\end{align*}
+est appelée \emph{matrice de projection orthogonale}. Pour tout vecteur $\boldY\in\R^n$,
+\begin{align*}
+\boldP_{\boldX}\boldY \in \mathcal{S}(\boldX)
+\end{align*}
+En outre, le vecteur des résidus est dans  $\mathcal{S}^\perp(\boldX)$,
+\begin{align}
+\boldY - \boldP_{\boldX}\boldY \in \mathcal{S}^\perp(\boldX)
+\label{eq15}
+\end{align}
+Pour montrer \eqref{eq15}, notons d'abord, qu'étant donné que les colonnes de $\boldX$ sont dans $\mathcal{S}(\boldX)$,
+\begin{align*}
+\boldP_\boldX\boldX &= \boldX(\boldX\boldX)^{-1}\boldX^\tr\boldX\\
+&=\boldX
+\end{align*}
+et comme $\boldP_\boldX$ est une matrice symétrique,
+\begin{align*}
+\boldX^\tr\boldP_\boldX = \boldX^\tr
+\end{align*}
+Maintenant,
+\begin{align*}
+\boldX^\tr(\boldY - \boldP_\boldX\boldY) &= \boldX^\tr\boldY-\boldX^\tr\boldP_\boldX\boldY\\
+& = \boldX^\tr\boldY-\boldX^\tr\boldY\\
+&=0 
+\end{align*}
+Ainsi, par définition, les résidus $\boldY - \boldP_\boldX\boldY\in\mathcal{S}^\perp(\boldX)$. Les résidus peuvent s'écrire,
+\begin{align*}
+\hat{\boldU} &= \boldY-\boldP_\boldX\boldY \\
+&= (\Id_n - \boldP_\boldX)\boldY\\
+& = \boldM_\boldX\boldY
+\end{align*}
+où,
+\begin{align*}
+\boldM_\boldX &= \Id_n - \boldP_\boldX\\
+& = \Id_n - \boldX(\boldX^\tr\boldX)^{-1}\boldX^\tr
+\end{align*}
+est une matrice de projection dans $\mathcal{S}^\perp(\boldX)$.\\
+Les matrices $\boldP_\boldX$ et $\boldM_\boldX$ présentent les propriétés suivantes.
+\begin{enumerate}
+\item $\boldP_\boldX+\boldM_\boldX = \Id_n$. Ceci implique, que pour tout $\boldY\in \R^n$,
+\begin{align*}
+\boldY = \boldP_\boldX\boldY+\boldM_\boldX\boldY
+\end{align*}
+\item $\boldP_\boldX$ et $\boldM_\boldX$ sont symétriques,
+\begin{align*}
+\boldP_\boldX^\tr = \boldP_\boldX, \ \ \ \boldM_\boldX^\tr= \boldM_\boldX
+\end{align*}
+\item $\boldP_\boldX$ et $\boldM_\boldX$ sont idempotentes,
+\begin{align*}
+\boldP_\boldX\boldP_\boldX = \boldP_\boldX, \ \ \ \boldM_\boldX \boldM_\boldX= \boldM_\boldX
+\end{align*}
+En effet,
+\begin{align*}
+\boldP_\boldX\boldP_\boldX &= \left(\boldX(\boldX^\tr\boldX)^{-1}\boldX^\tr\right)\left(\boldX(\boldX^\tr\boldX)^{-1}\boldX^\tr\right)\\ 
+&= \boldX(\boldX^\tr\boldX)^{-1}\boldX^\tr \\
+&= \boldP_\boldX
+\end{align*}
+de même,
+\begin{align*}
+\boldM_\boldX\boldM_\boldX &= (\Id_n - \boldP_\boldX)(\Id_n - \boldP_\boldX)\\
+& = \Id_n - 2\boldP_\boldX + \boldP_\boldX\boldP_\boldX\\
+&=\Id_n - \boldP_\boldX\\
+&=\boldM_\boldX
+\end{align*}
+\item $\boldP_\boldX$ et $\boldM_\boldX$ sont orthogonales,
+\begin{align*}
+\boldP_\boldX\boldM_\boldX &= \boldP_\boldX(\Id_n -  \boldP_\boldX)\\
+& =  \boldP_\boldX -  \boldP_\boldX \boldP_\boldX\\
+&= \boldP_\boldX- \boldP_\boldX\\
+&=0
+\end{align*}
+Cette propriété implique que $\boldM_\boldX\boldX = 0$. En effet,
+\begin{align*}
+\boldM_\boldX\boldX &= (\Id_n - \boldP_\boldX)\boldX\\ 
+&= \boldX-\boldP_\boldX\boldX\\
+& = \boldX - \boldX\\
+& = 0
+\end{align*}
+\end{enumerate}
+Observons que, dans la discussion ci-dessus, aucune des hypothèses quant au modèle de régression n'ont été utilisées. \'Etant donné des données, $\boldY$ et $\boldX$, nous pouvons toujours calculer l'estimateur des moindres carrés, indépendamment du processus générateur des données derrière les données. Néanmoins, nous avons besoin d'un modèle(i.e., d'hypothèses) pour pouvoir discuter des propriétés d'un estimateur(e.g., le fait qu'il soit ou non sans biais, etc).
+
+\subsection{Propriétés de $\hat{\sigma}^2$}
+Nous avions suggéré précédemment d'estimer $\sigma^2$ par,
+\begin{align*}
+\hat{\sigma}^2 &= n^{-1}\sumobs (Y_i-X_i^\tr\hat{\beta})^2\\
+&= n^{-1}\sumobs (Y_i-\hat{Y}_i)^2\\
+&= n^{-1}\sumobs \hat{U}_i^2\\
+& =  n^{-1}\hat{\boldU}^\tr\hat{\boldU}
+\end{align*}
+Il s'avère cependant que sous les hypothèses usuelles, \eqref{cond1} - \eqref{cond4}, $\hat{\sigma}^2$ est un estimateur biaisé. Pour le voir, écrivons d'abord,
+\begin{align*}
+\hat{\boldU} &= \boldM_\boldX\boldY\\
+& = \boldM_\boldX(\boldX\beta + \boldU)\\
+& = \boldM_\boldX\boldU
+\end{align*}
+où la dernière égalité résulte de ce que $\boldM_\boldX\boldX = 0$. A présent,
+\begin{align*}
+n\hat{\sigma}^2 &= \hat{\boldU}^\tr\hat{\boldU}\\
+& = \boldU^\tr\boldM_\boldX\boldM_\boldX\boldU \\
+&= \boldU^\tr\boldM_\boldX\boldU
+\end{align*}
+\'Etant donné que $\boldU^\tr\boldM_\boldX\boldU$ est un scalaire,
+\begin{align*}
+\boldU^\tr\boldM_\boldX\boldU = \Tr\left(\boldU^\tr\boldM_\boldX\boldU\right)
+\end{align*}
+où $\Tr(A)$ désigne la trace de la matrice A. Nous avons,
+\begin{align*}
+\Exp\left(\boldU^\tr\boldM_\boldX\boldU|\boldX\right) =&  \Exp\left(\Tr(\boldU^\tr\boldM_\boldX\boldU)|\boldX\right)\\
+=&\Exp\left(\Tr(\boldM_\boldX\boldU\boldU^\tr)|\boldX\right)(\textrm{car \ } \Tr(ABC) = \Tr(BCA))\\
+=&\Tr\left(\boldM_\boldX\Exp\left(\boldU\boldU^\tr)|\boldX\right)\right)(\textrm{car l'opérateur trace et l'espérance sont linéaires })\\
+=&\sigma^2\Tr(\boldM_\boldX)
+\end{align*}
+La dernière égalité résulte de ce que par l'hypothèse \eqref{cond3}, $\Exp(\boldU^\tr\boldU) = \sigma^2\Id_n$. Maintenant,
+\begin{align*}
+\Tr(\boldM_\boldX) = &\Tr\left(\Id_n - \boldX(\boldX^\tr\boldX)^{-1}\boldX^\tr\right)\\
+=&\Tr(\Id_n) - \Tr\left(
+\boldX(\boldX^\tr\boldX)^{-1}\boldX^\tr\right)\\
+=&\Tr(\Id_n) - \Tr\left((\boldX^\tr\boldX)^{-1}\boldX^\tr\boldX\right)\\
+=&\Tr(\Id_n) - \Tr(\Id_K)\\
+=&n-K
+\end{align*}
+Il s'en suit que,
+\begin{align}
+\Exp(\hat{\sigma}^2) = \frac{n-K}{n}\sigma^2
+\label{eq16}
+\end{align}
+L'estimateur $\hat{\sigma}^2$ est biaisé, mais le résultat précédent suggère qu'il est aisé de le modifier afin d'obtenir un estimateur sans biais. Pour cela, définissons,
+\begin{align*}
+s^2 &= \hat{\sigma}^2\frac{n}{n-K}\\
+&=(n-K)^{-1}\sumobs \hat{U}_i^2
+\end{align*}
+il résulte de \eqref{eq16} que, 
+\begin{align*}
+\Exp(s^2) = \sigma^2
+\end{align*}
+
+\subsection{Régression partitionnée}
+Considérons la partition de la matrice des régresseurs, $\boldX$,
+\begin{align*}
+\boldX = \left(\boldX_1 \  \boldX_2\right)
+\end{align*}
+et écrivons le modèle comme suit,
+\begin{align*}
+\boldY = \boldX_1\beta_1 + \boldX_2\beta_2 + \boldU
+\end{align*}
+où $\boldX_1$ est une matrice $(n\times K_1)$, $\boldX_2$ est une matrice $(n\times K_2)$, $K_1+K_2 = K$, et,
+\begin{align*}
+\beta = \left(
+\begin{array}{c}
+\beta_1\\
+\beta_2
+\end{array}
+\right)
+\end{align*}
+$\beta_1$ et $\beta_2$ étant des vecteurs de paramètres, respectivement, $(K_1\times 1)$ et $(K_2\times 1)$. Partant de cette décomposition du modèle de régression concentrons nous sur un groupe de variables et leurs paramètres correspondants, par exemple $\boldX_1$ et $\beta_1$.\\\\
+ Soit l'estimateur des moindres carrés de $\beta$,
+\begin{align*}
+\hat{\beta} = \left(
+\begin{array}{c}
+\hat{\beta}_1\\
+\hat{\beta}_2
+\end{array}
+\right)
+\end{align*}
+Nous pouvons écrire la version suivante des équations normales,
+\begin{align*}
+\left(\boldX^\tr\boldX\right)\hat{\beta}=\boldX^\tr\boldY
+\end{align*}
+comme suit,
+\begin{align*}
+\left(
+\begin{array}{cc}
+\boldX_1^\tr\boldX_1&\boldX_1^\tr\boldX_2\\
+\boldX_2^\tr\boldX_1&\boldX_2^\tr\boldX_2
+\end{array}
+\right)
+\left(
+\begin{array}{c}
+\hat{\beta}_1\\
+\hat{\beta}_2
+\end{array}
+\right)
+=
+\left(
+\begin{array}{c}
+\boldX_1^\tr\boldY\\
+\boldX_2^\tr\boldY
+\end{array}
+\right)
+\end{align*}
+On peut  obtenir des expressions pour $\hat{\beta}_1$ et $\hat{\beta}_2$ par inversion de la matrice partitionnée à gauche de l'équation ci-dessus. Alternativement, définissons $\boldM_2$ comme la matrice de projection sur l'espace orthogonal à l'espace $\mathcal{S}(\boldX_2)$,
+\begin{align*}
+\boldM_2 = \Id_n - \boldX_2(\boldX_2^\tr\boldX_2)^{-1}\boldX_2^\tr
+\end{align*}
+alors,
+\begin{align}
+\hat{\beta}_1 = (\boldX_1^\tr\boldM_2 \boldX_1)^{-1}\boldX_1^\tr\boldM_2\boldY
+\label{eq17}
+\end{align}
+Pour montrer cela, commençons par écrire,
+\begin{align}
+\boldY = \boldX_1\hat{\beta}_1+\boldX_2\hat{\beta}_2 + \hat{\boldU}
+\label{eq18}
+\end{align} 
+Notons que par construction,
+\begin{align*}
+\boldM_2\hat{\boldU} &= \hat{\boldU}(\hat{\boldU} \ \textrm{est orthogonal à} \ \boldX_2)\\
+\boldM_2\boldX_2 &= 0\\
+\boldX_1^\tr\hat{\boldU} &=0\\
+\boldX_2^\tr\hat{\boldU} &=0
+\end{align*}
+Substituons l'équation \eqref{eq18} dans la partie droite de l'équation \eqref{eq17},
+\begin{align*}
+\left(\boldX_1^\tr\boldM_2\boldX_1\right)^{-1}
+\boldX_1^\tr\boldM_2\boldY&=\left(\boldX_1^\tr\boldM_2\boldX_1\right)^{-1}
+\boldX_1^\tr\boldM_2\left(\boldX_1\hat{\beta}_1+\boldX_2\hat{\beta}_2 + \hat{\boldU}\right)\\
+&=\left(\boldX_1^\tr\boldM_2\boldX_1\right)^{-1}
+\boldX_1^\tr\boldM_2\boldX_1\hat{\beta}_1\\
+ &\ \ \ +
+\left(\boldX_1^\tr\boldM_2\boldX_1\right)^{-1}
+\boldX_1^\tr\hat{\boldU} \ \ (\textrm{car \ }\boldM_2\boldX_2 = 0 \textrm{ \ et \ } 
+ \boldM_2\hat{\boldU} = \hat{\boldU})\\
+&=\hat{\beta}_1
+\end{align*}
+\'Etant donné que $\boldM_2$ est symétrique et idempotente, on peut écrire,
+\begin{align*}
+\hat{\beta}_1 &= \left((\boldM_2\boldX_1)^\tr(\boldM_2\boldX_1)\right)^{-1}
+(\boldM_2\boldX_1)^\tr(\boldM_2\boldY)\\
+&=\left(\tilde{\boldX}_1^\tr\tilde{\boldX}_1\right)^{-1}\tilde{\boldX}_1\tilde{\boldY}
+\end{align*}
+où,
+\begin{align*}
+\tilde{\boldX}_1&=\boldM_2\boldX_1\\
+&= \boldX_1 - \boldX_2(\boldX_2^\tr\boldX_2)^{-1}\boldX_2^\tr\boldX_1
+\end{align*}
+à savoir les résidus de la régression de $\boldX_1$ sur $\boldX_2$. Et où,
+\begin{align*}
+\tilde{\boldY}&=\boldM_2\boldY\\
+&= \boldY - \boldX_2(\boldX_2^\tr\boldX_2)^{-1}\boldX_2^\tr\boldY
+\end{align*}
+à savoir les résidus de la régression de $\boldY$ sur $\boldX_2$.\\\\
+Ainsi, pour obtenir les coefficients de $K_1$ premiers régresseurs, plutôt que de réaliser la régression avec les $K_1+K_2 =K$ régresseurs, on peut régresser $\boldY$ sur $\boldX_2$ pour obtenir les résidus $\tilde{\boldY}$, régresser $\boldX_1$ sur $\boldX_2$ pour obtenir les résidus $\tilde{\boldX}_1$, et alors régresser $\tilde{\boldY}$ sur $\tilde{\boldX}_1$ pour obtenir $\hat{\beta}_1$. Autrement dit, $\hat{\beta}_1$ décrit l'effet de $\boldX_1$ une fois que ceux de $\boldX_2$ ont été contrôlés.\\\\
+De manière similaire que pour $\hat{\beta}_1$, nous avons pour $\hat{\beta}_2$,
+\begin{align*}
+\hat{\beta}_2 = (\boldX_2^\tr\boldM_1\boldX_2)^{-1} \boldX_2^\tr\boldM_1\boldY
+\end{align*}
+où,
+\begin{align*}
+\boldM_1 = \Id_n - \boldX_1(\boldX_1^\tr\boldX_1)^{-1}\boldX_1^\tr
+\end{align*}
+Prenons comme exemple le modèle suivant,
+\begin{align*}
+Y_i = \beta_1 + \beta_2 X_i + U_i, \ \ \ i = 1,2,...,n
+\end{align*}
+Soit $\vecOnes_n$  le vecteur $(n\times 1)$ dont tous les éléments sont le nombre 1, i.e.,
+\begin{align*}
+\vecOnes_n =
+\left(
+\begin{array}{c}
+1\\
+1\\
+.\\
+.\\
+.\\
+1
+\end{array}
+\right)
+\end{align*}
+La matrice des régresseurs est alors,
+\begin{align*}
+ \left(\vecOnes_n \ \ X\right) = 
+\left(
+\begin{array}{cc}
+1&X_1\\
+1&X_2\\
+.&.\\
+.&.\\
+.&.\\
+1&X_n
+\end{array}
+\right)
+\end{align*}
+Considérons,
+\begin{align*}
+\boldM_1 = \Id_n - \vecOnes_n(\vecOnes_n^\tr\vecOnes_n)^{-1}\vecOnes_n^\tr
+\end{align*}
+et,
+\begin{align*}
+\hat{\beta}_2 = \frac{X^\tr\boldM_1\boldY}{X^\tr\boldM_1X}
+\end{align*}
+Nous avons, $\vecOnes_n^\tr\vecOnes_n = n$, par conséquent,
+\begin{align*}
+\boldM_1 = \Id_n - \frac{\vecOnes_n\vecOnes_n^\tr}{n}
+\end{align*}
+et,
+\begin{align*}
+\boldM_1X &= X - \vecOnes_n\frac{\vecOnes_n^\tr X}{n}\\
+& = X - \bar{X}\vecOnes_n\\
+& = 
+\left(
+\begin{array}{c}
+X_1 - \bar{X}\\
+X_2 - \bar{X}\\
+.\\
+.\\
+.\\
+X_n - \bar{X}
+\end{array}
+\right)
+\end{align*}
+où,
+\begin{align*}
+\bar{X} &= \frac{\vecOnes_n^\tr X}{n}\\
+&=n^{-1}\sumobs X_i
+\end{align*}
+Ainsi la matrice $\boldM_1$ transforme le vecteur $X$ en un vecteur dont les éléments sont les écarts des observations $X_i$ à leur moyenne. Et nous pouvons écrire,
+\begin{align*}
+\hat{\beta}_2 &= \frac{\sumobs(X_i - \bar{X})Y_i}{\sumobs(X_i - \bar{X}) ^2}\\
+&= \frac{\sumobs(X_i - \bar{X})(Y_i - \bar{Y})}{\sumobs(X_i - \bar{X}) ^2}
+\end{align*}
+
+\subsection{Qualité de l'ajustement et coefficient de détermination ou $R^2$}
+\'Ecrivons,
+\begin{align*}
+\boldY &= \boldP_\boldX\boldY+ \boldM_\boldX\boldY\\
+&=\hat{\boldY}+\hat{\boldU}
+\end{align*}
+où par construction,
+\begin{align*}
+\hat{\boldY}^\tr\hat{\boldU} &= (\boldP_\boldX\boldY)^\tr (\boldM_\boldX\boldY)\\ 
+&= \boldY^\tr  \boldP_\boldX \boldM_\boldX\boldY\\
+& = 0
+\end{align*}
+Supposons que le modèle contienne une constante, par exemple la première colonne de la matrice des régresseurs $\boldX$ est le vecteur unitaire $\vecOnes_n$. La \emph{variation totale} dans $\boldY$ est,
+\begin{align*}
+\sumobs(Y_i - \bar{Y})^2 &= \boldY^\tr\boldM_1\boldY\\
+&=(\hat{\boldY}  + \hat{\boldU} )^\tr\boldM_1(\hat{\boldY}  + \hat{\boldU} )\\
+&=\hat{\boldY}^\tr\boldM_1\hat{\boldY} + \hat{\boldU}^\tr\boldM_1\hat{\boldU} + 2\hat{\boldY}^\tr\boldM_1\hat{\boldU}
+\end{align*}
+où $\bar{Y} = n^{-1}\sumobs Y_i$. Comme le modèle contient une constante,
+\begin{align*}
+\vecOnes_n^\tr\hat{\boldU} = 0
+\end{align*}
+et,
+\begin{align*}
+\boldM_1\hat{\boldU} =\hat{\boldU}  
+\end{align*}
+Cependant, $\hat{\boldY}^\tr \hat{\boldU} =0$, et par conséquent,
+\begin{align*}
+\boldY^\tr\boldM_1\boldY = \hat{\boldY}^\tr\boldM_1\hat{\boldY} +
+\hat{\boldU}^\tr\hat{\boldU} 
+\end{align*}
+ou,
+\begin{align*}
+\sumobs(Y_i-\bar{Y})^2 = \sumobs(\hat{Y}_i - \bar{\hat{Y}})^2 + \sumobs \hat{U}_i^2
+\end{align*}
+où $\bar{\hat{Y}} = n^{-1}\sumobs \hat{Y}_i$. Notons que,
+\begin{align*}
+\bar{Y} &= \frac{\vecOnes_n^\tr\boldY}{n} \\
+&= \frac{\vecOnes_n^\tr\hat{\boldY}}{n}
++ \frac{\vecOnes_n^\tr\hat{\boldU}}{n}\\
+& = \frac{\vecOnes_n^\tr\hat{\boldY}}{n} \\
+&= \bar{\hat{Y}}
+\end{align*}
+Ainsi, la moyenne des $Y_i$ et celle de leurs valeurs ajustées $\hat{Y}_i$ étant égales, nous pouvons écrire,
+\begin{align*}
+\sumobs(Y_i-\bar{Y})^2 = \sumobs(\hat{Y}_i - \bar{Y})^2 + \sumobs \hat{U}_i^2
+\end{align*}
+ou,
+\begin{align*}
+SCT = SCE + SCR
+\end{align*}
+où,
+$SCT := \sumobs(Y_i-\bar{Y})^2$ est la \emph{somme des carrés totale},  $SCE :=  \sumobs(\hat{Y}_i - \bar{Y})^2$  est la \emph{somme des carrés expliqués}, et $SCR:= \sumobs \hat{U}_i^2$ est la \emph{somme des carrés des résidus}.\\
+Le rapport de la $SCE$ à la $SCT$ est appelé coefficient de détermination\footnote{On l'appelle/prononce généralement "R deux".} ou $R^2$,
+\begin{align*}
+R^2 &= \frac{SCE}{SCT}\\
+& = \frac{ \sumobs(\hat{Y}_i - \bar{Y})^2}{\sumobs(Y_i-\bar{Y})^2}\\
+&=1 - \frac{\sumobs \hat{U}_i^2}{\sumobs(Y_i-\bar{Y})^2}\\
+& = 1 - \frac{\hat{\boldU}^\tr\hat{\boldU}}{\boldY^\tr\boldM_1\boldY}
+\end{align*}
+\subsection{Propriétés du $R^2$}
+\begin{enumerate}
+\item Le $R^2$ est borné entre 0 et 1 ainsi que cela est indiqué par sa décomposition. Remarquez néanmoins que ceci n'est plus vrai dans un modèle sans constante, et dans ce cas il est indiqué de ne pas utiliser la définition précédente du $R^2$. Remarquez aussi que si $R^2 =  1$ alors $\hat{\boldU}^\tr\hat{\boldU} = 0$, ce qui sera vrai seulement si $\boldY\in \mathcal{S}(X)$, i.e., $\boldY$ est \emph{exactement} une combinaison linéaire des colonnes de $\boldX$.
+\item Le $R^2$ augmente avec le nombre de régresseurs. Pour montrer cette propriété considérons une partition de la matrice des régresseurs $\boldX = (\boldZ \ \ \boldW)$. \'Etudions l'effet d'ajouter $\boldW$ sur le $R^2$. Notons,
+\begin{align*}
+\boldP_\boldX = &\boldX(\boldX^\tr\boldX)^{-1}\boldX^\tr\\
+\boldP_\boldZ = &\boldZ(\boldZ^\tr\boldZ)^{-1}\boldZ^\tr
+\end{align*}
+respectivement, la matrice de projection du modèle "complet"(i.e., avec $\boldZ$ et $\boldW$), et la matrice de projection du modèle avec uniquement $\boldZ$ comme matrice des régresseurs. Définissons aussi,
+\begin{align*}
+\boldM_\boldX  &= \Id_n - \boldP_\boldX\\
+\boldM_\boldZ &= \Id_n - \boldP_\boldZ
+\end{align*}
+Observons que comme $\boldZ$ est une partie de $\boldX$,
+\begin{align*}
+\boldP_\boldX  \boldZ = \boldZ
+\end{align*}
+et,
+\begin{align*}
+\boldP_\boldX\boldP_\boldZ &= \boldP_\boldX \boldZ(\boldZ^\tr\boldZ)^{-1}\boldZ^\tr\\
+& = \boldZ(\boldZ^\tr\boldZ)^{-1}\boldZ^\tr \\
+&= \boldP_\boldZ
+\end{align*}
+Par conséquent,
+\begin{align*}
+\boldM_\boldX\boldM_\boldZ& = (\Id_n - \boldP_\boldX)(\Id_n - \boldP_\boldZ)\\
+&=\Id_n - \boldP_\boldX - \boldP_\boldZ + \boldP_\boldX\boldP_\boldZ\\
+&=\Id_n - \boldP_\boldX - \boldP_\boldZ +  \boldP_\boldZ\\
+& = \boldM_\boldX
+\end{align*}
+Supposons que $\boldZ$ contienne un vecteur constant de sorte que les deux régressions(la complète et celle sans $\boldW$) contiennent chacune une constante. Définissons,
+\begin{align*}
+\hat{\boldU}_\boldX = \boldM_\boldX\boldY \ , \ \  
+\hat{\boldU}_\boldZ = \boldM_\boldZ\boldY
+\end{align*}
+\'Ecrivons,
+\begin{align*}
+(\hat{\boldU}_\boldX - \hat{\boldU}_\boldZ)^\tr(\hat{\boldU}_\boldX - \hat{\boldU}_\boldZ) = \hat{\boldU}_\boldX^\tr \hat{\boldU}_\boldX + \hat{\boldU}_\boldZ^\tr\hat{\boldU}_\boldZ -2\hat{\boldU}_\boldX ^\tr\hat{\boldU}_\boldZ\geq 0
+\end{align*}
+Notons que,
+\begin{align*}
+\hat{\boldU}_\boldX ^\tr\hat{\boldU}_\boldZ  &= \boldY^\tr\boldM_\boldX\boldM_\boldZ\boldY\\
+& = 
+\boldY^\tr\boldM_\boldX\boldY\\
+& = \hat{\boldU}_\boldX^\tr\hat{\boldU}_\boldX
+\end{align*}
+d'où,
+\begin{align*}
+\hat{\boldU}_\boldZ^\tr\hat{\boldU}_\boldZ\geq \hat{\boldU}_\boldX^\tr\hat{\boldU}_\boldX
+\end{align*}
+\item Le $R^2$ indique la part de la variation de $\boldY$ dans l'échantillon qui est expliquée par $\boldX$. Cependant notre objectif n'est pas d'expliquer des variations dans l'échantillon mais celle de la population (dont est tiré l'échantillon). Il en résulte qu'un $R^2$ élevé n'est pas nécessairement un indicateur d'un bon modèle de régression et un $R^2$ faible n'est pas non plus un argument en défaveur du modèle considéré.
+\item Il est toujours possible de trouver une matrice de régresseurs $\boldX$ pour laquelle $R^2 = 1$, il suffit de prendre $n$ vecteurs linéairement indépendants. En effet, un tel ensemble de vecteurs génère tout l'espace $\R^n$ de sorte que tout vecteur $\boldY\in\R^n$ peut s'écrire comme une combinaison linéaire exacte des colonnes de $\boldX$.
+\end{enumerate}
+
+\subsection{$R^2$ ajusté}
+\'Etant donné que le $R^2$ augmente avec le nombre de régresseurs, une mesure alternative pour juger de la qualité de la régression est le $R^2$ \emph{ajusté},
+\begin{align*}
+\bar{R}^2 &= 1 - \frac{n-1}{n-K}(1 - R^2)\\
+& = 1 - \frac{\hat{\boldU}^\tr\hat{\boldU}/(n-K)}{\boldY^\tr\boldM_1\boldY/(n-1)}
+\end{align*}
+Le $R^2$ ajusté diminue la qualité de ajustement lorsque le nombre de régresseurs augmente relativement au nombre d'observations de sorte que $\bar{R}^2 $ peut diminuer avec le nombre de régresseurs. Cependant il n'y a pas vraiment d'argument fort pour utiliser une telle mesure de l'ajustement.
+
+\newpage
+
+\section{Intervalles de confiance dans le modèle de régression normal}
+
+Dans cette section nous allons considérer le modèle de régression normal défini par les hypothèse \ref{cond1}-\ref{cond5}.\\\\
+L'\emph{estimateur ponctuel} de $\beta$, $\hat{\beta}$, n'est pas très informatif dans la mesure où $\Prob(\hat{\beta}=\beta)=0$. Pour cette raisons nous allons nous intéresser ici à des intervalles(régions) aléatoires qui présentent la propriété d'inclure la vraie valeur du paramètre avec une certaine probabilité spécifiée $(1-\alpha)$, où $\alpha$ est un nombre "petit" appelé \emph{niveau de confiance}. Traditionnellement, les valeurs suivantes de $\alpha$ sont retenues, $0.01$, $0.05$, $0.10$. Un intervalle de confiance avec une probabilité  $(1-\alpha)$ de couvrir $\beta$ est noté $\CI_{1-\alpha}$.
+
+\subsection{Cas scalaire}
+On cherche à construire un intervalle de confiance pour le paramètre $\beta_1$ dans la régression partitionnée,
+\begin{align*}
+\boldY = \beta_1\boldX_1+\boldX_2\beta_2 + \boldU
+\end{align*}
+où à présent $\boldX_1$ est un vecteur $(n\times 1)$ contenant les valeurs observées du premier régresseur. L'estimateur des moindres carrés de $\beta_1$ est,
+\begin{align*}
+\hat{\beta}_1 = \frac{\boldX_1^\tr\boldM_2\boldY}{\boldX_1^\tr\boldM_2\boldX_1}
+\end{align*}
+où $\boldM_2 = \Id_n - \boldX_2(\boldX_2^\tr\boldX_2)^{-1}\boldX_2$. Une méthode pour construire un intervalle de confiance consiste à considérer des intervalles symétriques autour de l'estimateur ponctuel,
+\begin{align}
+\CI_{1-\alpha} = \left[\hat{\beta}_1- c,  \hat{\beta}_1+c\right]
+\label{eq19}
+\end{align}
+Comme $\hat{\beta}_1$ est une fonction de l'échantillon aléatoire, l'intervalle de confiance donné dans \eqref{eq19} l'est aussi. Le problème maintenant est de choisir $c$ tel que,
+\begin{align*}
+\Prob(\beta_1 \in \CI_{1-\alpha}| \boldX) = 1-\alpha
+\end{align*}
+où $\boldX = (\boldX_1 \ \ \boldX_2)$. Pour choisir $c$, nous avons besoin de connaître la distribution de $\hat{\beta}_1|\boldX$. Sous les hypothèses \ref{cond1}-\ref{cond5},
+\begin{align*}
+\hat{\beta}_1|\boldX \sim \mathcal{N}\left(\beta_1, \sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)\right)
+\end{align*}
+et par conséquent,
+\begin{align}
+\frac{\hat{\beta}_1-\beta_1 }{\sqrt{\sigma^2
+(\boldX_1^\tr\boldM_2\boldX_1)}} | \boldX \sim \mathcal{N}(0, 1)
+\label{eq20}
+\end{align}
+Pour montrer ce résultat, notons que $\hat{\beta}_1$ est un estimateur linéaire, et écrivons $\hat{\beta}_1 = \beta_1 + (\boldX_1^\tr\boldM_2\boldU) / (\boldX_1^\tr\boldM_2\boldX_1)$.\\
+Soit $z_\tau$ le quantile $\tau$ de la distribution normale standard; autrement dit, si $Z\sim \mathcal{N}(0,1)$,
+\begin{align*}
+\Prob(Z \leq z_\tau) = \tau
+\end{align*}
+Par exemple, pour $\tau = 0.5$ nous avons la médiane,
+\begin{align*}
+\Prob(Z \leq z_{0.5}) = 0.5
+\end{align*}
+Notons qu'étant donné que la distribution normale standard est symétrique autour de zéro, nous avons,
+\begin{align*}
+z_\alpha = -z_{(1-\alpha)}
+\end{align*}
+et par conséquent,
+\begin{align*}
+\Prob(-z_{1 - \alpha/2}\leq Z\leq z_{1-\alpha/2}) = 1-\alpha
+\end{align*}
+Par exemple, pour $\alpha=0.05$, $z_{1 - 0.05/2} = z_{0.975} = 1.96$, et $z_{0.025} = -1.96$.
+
+\subsection{$\sigma^2$ est connu}
+Supposons pour le moment que $\sigma^2$ soit connu et que ce faisant nous puissions calculer la variance de $\hat{\beta}_1$(et non pas un estimateur). Posons,
+\begin{align*}
+c = z_{1-\alpha/2}\sqrt{\Var\left(\hat{\beta} _1| \boldX \right)}=z_{1-\alpha/2}\sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}
+\end{align*}
+Montrons maintenant que,
+\begin{align*}
+\Prob\left(
+\beta_1 \in \left[\hat{\beta}_1 -z_{1-\alpha/2}\sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)} , \hat{\beta}_1+
+z_{1-\alpha/2}\sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)} \right] | \boldX\right) = 1-\alpha
+\end{align*}
+En effet,
+\begin{align}
+\Prob\left(
+\hat{\beta}_1 -z_{1-\alpha/2}\sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}
+\leq \beta_1 \leq
+\hat{\beta}_1+
+z_{1-\alpha/2}\sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}  | \boldX
+\right) \nonumber\\
+=\Prob\left(
+-z_{1-\alpha/2}\sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}
+\leq \beta_1 - \hat{\beta}_1 \leq
+z_{1-\alpha/2}\sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}  | \boldX
+\right)\nonumber\\
+=\Prob\left(
+-z_{1-\alpha/2}\sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}
+\leq  \hat{\beta}_1-\beta_1 \leq
+z_{1-\alpha/2}\sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}  | \boldX
+\right)\nonumber\\
+=
+\Prob\left(
+-z_{1-\alpha/2}
+\leq  \frac{\hat{\beta}_1-\beta_1}{\sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}} \leq
+z_{1-\alpha/2}  | \boldX
+\right)
+\label{eq21}
+\end{align}
+Le résultat découle de \eqref{eq20}, \eqref{eq21}, et de la définition de $z_{1-\alpha/2}$.
+
+\subsection{$\sigma^2$ est inconnu}
+La construction précédente de $\CI_{1-\alpha}$ reposait sur l'hypothèse que $\sigma^2$ était connu. Lorsque ce n'est pas le cas, on peut néanmoins suivre une approche similaire à la précédente mais en remplaçant dans un premier temps $\sigma^2$ par son estimateur,
+\begin{align*}
+s^2 = \hat{\boldU}^\tr \hat{\boldU}/(n-K)
+\end{align*}
+Cependant $(\hat{\beta}_1-\beta_1)/
+\sqrt{s^2/(\boldX_1^\tr\boldM_2\boldX_1)}$ n'est pas normalement distribué car c'est une fonction non-linéaire des termes aléatoires $\hat{\beta}_1$ et $s^2$. Il s'en suit que nous ne pouvons pas utiliser les quantiles de la distribution normale pour la construction des intervalles de confiance.\\
+En fait, il s'avère que,
+\begin{align}
+\frac{(\hat{\beta} _1-\beta_1)}{\sqrt{s^2/(\boldX_1^\tr\boldM_2\boldX_1)}}
+| \boldX
+\sim t_{n-K}
+\label{eq22}
+\end{align}
+Rappelons que la	 distribution $t_{n-K}$ est définie comme suit,
+\begin{align*}
+Z/\sqrt{V/(n-K)}
+\end{align*}
+où $Z\sim \mathcal{N}(0,1)$, $V\sim \chi^2_{n-K}$, et $Z$ et $V$ sont indépendantes.\\ \'Ecrivons,
+\begin{align}
+\frac{(\hat{\beta}_1-\beta_1)}{\sqrt{s^2/(\boldX_1^\tr\boldM_2\boldX_1)}}
+&= \left(
+\frac{\hat{\beta}_1-\beta_1}{\sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}}
+\right)/
+\frac{s^2}{\sigma^2}\nonumber \\
+&= 
+ \left(
+\frac{\hat{\beta}_1-\beta_1}{\sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}}
+\right)/
+\sqrt{\frac{\hat{\boldU}^\tr\hat{\boldU}}{\sigma^2}/(n-K)}
+\label{eq32}
+\end{align}
+Nous savons déjà que, dans l'expression précédente, $\hat{\beta} _1-\beta_1)/\sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)} |\boldX \sim \mathcal{N}(0,1)$. Nous allons montrer maintenant que conditionnellement à $\boldX$,
+\begin{align}
+\frac{\hat{\boldU}^\tr\hat{\boldU}}{\sigma^2} | \boldX\sim\chi^2_{n-K}
+\label{eq23}
+\end{align}
+Pour cela nous avons besoin du résultat suivant,
+\begin{lemme}
+Supposons que le vecteur $(n\times 1)$ $U\sim\mathcal{N}(0, \Id_n)$. Soit $A$ une matrice $(n\times n)$ symétrique et idempotente avec $\Rang(A) = r \leq n$. Alors $U^\tr A U \sim \chi^2_r$.
+\label{le1}
+\end{lemme}
+\begin{proof}
+Il suffit de montrer que $U^\tr A U = \underset{i}{\overset{r}{\sum}} Z_i^2$, où $Z_i$ sont des variables aléatoires iid $\mathcal{N}(0,1)$.\\
+\'Etant donné que $A$ est symétrique, nous pouvons écrire,
+\begin{align*}
+A = C\Lambda C^\tr
+\end{align*}
+où $\Lambda $ est une matrice diagonale $(n\times n)$ des valeurs propres de $A$, et $C^\tr C=\Id_n$. \'Etant donné que $A$ est idempotente,
+\begin{align*}
+A = AA
+\end{align*}
+et,
+\begin{align*}
+ C\Lambda C^\tr &= ( C\Lambda C^\tr)( C\Lambda C^\tr)\\
+ &=C\Lambda^2C^\tr
+\end{align*}
+par conséquent,
+\begin{align*}
+\Lambda=\Lambda^2
+\end{align*}
+ce qui implique que toutes les valeurs propres de $\Lambda$ sont soit zéro, soit un. Comme le rang d'une matrice est égal au nombre de ses valeurs propres non-nulles, il doit y avoir $r$ valeurs propres non-nulles, $\lambda_i$, dans $\Lambda$,
+\begin{align*}
+\Lambda=
+\left(
+\begin{array}{cccccc}
+\lambda_1&0&.&.&.&0\\
+0&\lambda_2&0&.&.&0\\
+.&0&.&.&.&.\\
+.&.&.&.&.&.\\
+.&.&.&.&.&.\\
+0&0&.&.&.&\lambda_n\\
+\end{array}
+\right)
+\end{align*}
+Définissons,
+\begin{align*}
+Z = C^\tr U
+\end{align*}
+Comme $U\sim\mathcal{N}(0, \Id_n)$, nous avons,
+\begin{align*}
+Z &\sim  \mathcal{N}(0, C^\tr C)\\
+&\sim  \mathcal{N}(0, \Id_n)
+\end{align*}
+Finalement, nous avons,
+\begin{align*}
+U^\tr AU &= Z^\tr\Lambda Z\\
+&=\underset{i=1}{\overset{n}{\sum}} \lambda_iZ_i^2
+\end{align*}
+Le résultat découle de ce que les $Z_i$ sont iid distribuées $\mathcal{N}(0,1)$, et qu'il y a $r$ valeurs propres égales à un, et $n-r$ valeurs propres égales à zéro.
+\end{proof}
+A présent pour montrer \eqref{eq23}, écrivons,
+\begin{align}
+\frac{\hat{\boldU}^\tr\hat{\boldU}}{\sigma^2} = \left(\frac{\boldU}{\sigma^2}\right)^\tr\boldM_\boldX\left(\frac{\boldU}{\sigma^2}\right)
+\label{eq24}
+\end{align}
+où,
+\begin{align*}
+\boldM_\boldX=\Id_n - \boldX(\boldX^\tr\boldX)^{-1}\boldX^\tr
+\end{align*}
+Par l'hypothèse \ref{cond5},
+\begin{align}
+\frac{\boldU}{\sigma} | \boldX\sim\mathcal{N}(0, \Id_n)
+\label{eq25}
+\end{align}
+\'Etant donné que $\boldM_\boldX$ est symétrique et idempotente, ses valeurs propres sont soit zéro ou un. Par conséquent,
+\begin{align}
+\Rang(\boldM_\boldX) &= \Tr(\boldM_\boldX) \nonumber\\
+&=n-K
+\label{eq26}
+\end{align}
+Le résultat dans \eqref{eq23} découle de \eqref{eq24},  \eqref{eq25},  \eqref{eq26}, et du lemme \ref{le1}.\\
+Finalement, montrons que $\hat{\beta}_1 - \beta_1$ et $\hat{\boldU}^\tr\hat{\boldU}$ dans \eqref{eq32} sont indépendants conditionnellement à $\boldX$. \'Ecrivons,
+\begin{align*}
+\hat{\beta}_1-\beta_1 &= (\boldX_1^\tr\boldM_2\boldU)/(\boldX_1^\tr\boldM_2\boldX_1)\\
+\hat{\boldU}^\tr\hat{\boldU}&=\boldU^\tr\boldM_\boldX\boldU
+\end{align*}
+Il suffit de montrer l'indépendance de $\boldX_1^\tr\boldM_2\boldU$ et  $\boldM_\boldX\boldU$. Comme $\hat{\beta}_1$ est une fonction de $\boldX_1^\tr\boldM_2\boldU$, et $\hat{\boldU}^\tr\hat{\boldU}$ est une fonction de $\boldM_\boldX\boldU$, l'indépendance de $\boldX_1^\tr\boldM_2\boldU$ et  $\boldM_\boldX\boldU$ implique l'indépendance de $\hat{\beta}_1$ et $\hat{\boldU}^\tr\hat{\boldU}$. Premièrement, montrons que les termes ne sont pas corrélés,
+\begin{align*}
+\Cov(\boldX_1^\tr\boldM_2\boldU, \boldM_\boldX\boldU | \boldX) &=\Exp(\boldX_1^\tr\boldM_2\boldU\boldU^\tr \boldM_\boldX|\boldX)\\
+&=\boldX_1^\tr\boldM_2\Exp(\boldU\boldU^\tr|\boldX)\boldM_\boldX\\
+&=\boldX_1^\tr\boldM_2(\sigma^2\Id_n)\boldM_\boldX\\
+&=\sigma^2\boldX_1^\tr\boldM_2\boldM_\boldX\\
+&=\sigma^2\boldX_1^\tr\boldM_\boldX( \ \textrm{voir séction précédente})\\
+&=0
+\end{align*}
+Dans la mesure où $\boldX_1^\tr\boldM_2\boldU$ et $\boldM_\boldX\boldU$ sont des fonctions linéaires de $\boldU$, elles sont normalement distribuées conditionnellement à $\boldX$. \'Etand donné qu'elles ne sont pas corrélées, la normalité implique qu'elles sont indépendantes. En conséquence, $\hat{\beta}_1 - \beta_1$, fonction de  $\boldX_1^\tr\boldM_2\boldU$, et $\hat{\boldU}^\tr\hat{\boldU}$ sont aussi indépendants.\\
+Nous avons montré \eqref{eq22}. En conséquence, en construisant des intervalles de confiance, si l'on remplace l'inconnue $\sigma^2$ par $s^2$, on doit remplacer $z_{1-\alpha/2}$ par les quantiles de la $t$ distribution, $t_{n-K, 1-\alpha/2}$,
+\begin{align*}
+\CI_{1-\alpha} = \left[\hat{\beta}_1 - t_{n-K, 1-\alpha/2}\sqrt{s^2/(\boldX_1^\tr\boldM_2\boldX_1)}, 
+\hat{\beta}_1 + t_{n-K, 1-\alpha/2}\sqrt{s^2/(\boldX_1^\tr\boldM_2\boldX_1)}\right]
+\end{align*}
+L'expression $s^2/(\boldX_1^\tr\boldM_2\boldX_1)$ qui apparaît dans l'équation ci-dessus est la variance estimé de $\hat{\beta}_1$,
+\begin{align*}
+\hat{\Var}(\hat{\beta} _1| \boldX) = s^2/(\boldX_1^\tr\boldM_2\boldX_1)
+\end{align*}
+Ainsi, on construit un intervalle de confiance de niveau $\alpha$ pour $\beta_k$, $k=1, 2,...,K$, comme suit,
+\begin{align}
+\CI_{1-\alpha} = \left[\hat{\beta}_1 - t_{n-K, 1-\alpha/2}\sqrt{\hat{\Var}(\hat{\beta} _1| \boldX)}, 
+\hat{\beta}_1 + t_{n-K, 1-\alpha/2}\sqrt{\hat{\Var}(\hat{\beta} _1| \boldX)}\right]
+\label{eq27}
+\end{align}
+
+\subsection{Cas vectoriel}
+Supposons que l'on s'intéresse aux vecteur des paramètres $\beta =(\beta_1,\beta_2,...,\beta_K)^\tr$. L'équation \eqref{eq27} décrit comment construire des intervalles de confiance "individuels" pour les éléments de $\beta$. Ces intervalles concernent les distributions marginales des éléments de $\beta$, et leur simple combinaison ne produit pas un ensemble qui inclue tout le vecteur $\beta$ avec une probabilité souhaitée. Dans cette partie, nous considérons la construction de régions aléatoires qui incluent $\beta$ avec une certaine probabilité pré-spécifiée $1-\alpha$. Nous conservons la notation $\CI_{1-\alpha}$, malgré le fait que  $\CI_{1-\alpha}$ est maintenant un sous-ensemble de $\mathbb{R}^K$.\\
+Ce qui suit est une approche simple et conventionnelle pour construire des régions de confiance. Nous cherchons une région de confiance $\CI_{1-\alpha} = \{b \in \mathbb{R}^K\}$ tel que $\Prob(\beta \in \CI_{1-\alpha} | \boldX)=1-\alpha$. Considérons une forme quadratique par rapport à $(\hat{\beta}-\beta)$,
+\begin{align}
+(\hat{\beta}-\beta)^\tr\left(\hat{\Var}(\hat{\beta}|\boldX)\right)^{-1}(\hat{\beta}-\beta)/K &=
+(\hat{\beta}-\beta)^\tr\left(s^2(\boldX^\tr\boldX)^{-1}
+\right)^{-1}
+(\hat{\beta}-\beta)/K \nonumber\\
+&=\frac{
+(\hat{\beta}-\beta)^\tr\left(\sigma^2(\boldX^\tr\boldX)^{-1}
+\right)^{-1}
+(\hat{\beta}-\beta)/K}
+{s^2/\sigma^2}\nonumber\\
+&=\frac{
+(\hat{\beta}-\beta)^\tr\left(\sigma^2(\boldX^\tr\boldX)^{-1}
+\right)^{-1}
+(\hat{\beta}-\beta)/K}
+{\left(\frac{\hat{\boldU}^\tr\hat{\boldU}}{\sigma^2}\right)/(n-K)}
+\label{eq29}
+\end{align}
+Montrons maintenant que l'expression dans \eqref{eq29} possède une distribution $F_{K,n-K}$ conditionnellement à $\boldX$.\\
+La distribution $F_{K,n-K}$ est définie comme la distribution de,
+\begin{align*}
+\frac{V/K}{W/(n-K)}
+\end{align*}
+où $V \sim \chi^2_K$, et $W\sim\chi^2_{n-K}$ sont indépendantes. De la discussion dans la partie précédente nous savons que, $\hat{\boldU}^\tr\hat{\boldU}/\sigma^2|\boldX\sim\chi^2_{n-K}$ qui est indépendant du numérateur dans \eqref{eq29}. Il résulte de cela, que nous devons montrer que 
+\begin{align}
+(\hat{\beta}-\beta)^\tr\left(\sigma^2(\boldX^\tr\boldX)^{-1}
+\right)^{-1}
+(\hat{\beta}-\beta) | \boldX\sim \chi^2_K
+\label{eq30}
+\end{align}
+Pour cela nous avons besoin du lemme suivant,
+\begin{lemme}
+Supposons que le vecteur $(K\times 1)$, $U\sim\mathcal{N}(0, \Sigma)$, où $\Sigma$ est une matrice définie positive de variances-covariances. Alors, $U^\tr\Sigma^{-1}U\sim\chi^2_K$.
+\label{le2}
+\end{lemme}
+\begin{proof}
+Comme $\Sigma$ est symétrique, $\Sigma = C\Lambda C^\tr$, où $\Lambda$ est une matrice diagonale des valeurs propres de $\Sigma$ sur sa diagonale, et $C^\tr C=CC^\tr=\Id_K$. Comme $\Sigma$ est définie positive, ses valeurs propres sont positives, et par conséquent, $\Lambda^{1/2}$ peut être définie comme,
+\begin{align*}
+\Lambda^{1/2}=
+\left(
+\begin{array}{cccccc}
+\lambda_1^{1/2}&0&.&.&.&0\\
+0&\lambda_2^{1/2}&0&.&.&0\\
+.&0&.&.&.&.\\
+.&.&.&.&.&.\\
+.&.&.&.&.&.\\
+0&0&.&.&.&\lambda_K^{1/2}\\
+\end{array}
+\right)
+\end{align*}
+et $\Lambda^{-1/2}$ peut être définie comme,
+\begin{align*}
+\Lambda^{-1/2}=
+\left(
+\begin{array}{cccccc}
+\lambda_1^{-1/2}&0&.&.&.&0\\
+0&\lambda_2^{-1/2}&0&.&.&0\\
+.&0&.&.&.&.\\
+.&.&.&.&.&.\\
+.&.&.&.&.&.\\
+0&0&.&.&.&\lambda_K^{-1/2}\\
+\end{array}
+\right)
+\end{align*}
+A présent, \'etant donné que $C\Lambda^{-1}C^\tr C\Lambda C^\tr = \Id_K$, nous avons,
+\begin{align*}
+\Sigma^{-1} = C\Lambda^{-1}C^\tr
+\end{align*}
+Définissons maintenant,
+\begin{align*}
+\Sigma^{1/2} = C\Lambda^{1/2}C^\tr, \textrm{ \ et \ } \Sigma^{-1/2} = C\Lambda^{-1/2}C^\tr
+\end{align*}
+Nous avons que $(\Sigma^{1/2})^\tr = \Sigma^{1/2}$ et $(\Sigma^{-1/2})^\tr = \Sigma^{-1/2}$(symétrie). En outre,
+\begin{align*}
+\Sigma^{1/2}\Sigma^{1/2} = C\Lambda^{1/2}C^\tr C\Lambda^{1/2}C^\tr = C\Lambda^{1/2}\Lambda^{1/2}C^\tr = C\Lambda C^\tr = \Sigma
+\end{align*}
+\begin{align*}
+\Sigma^{-1/2}\Sigma\Sigma^{-1/2} = C\Lambda^{-1/2}C^\tr C\Lambda C^\tr C\Lambda^{1/2} C^\tr= C\Lambda^{-1/2}\Lambda\Lambda^{-1/2}C^\tr =  CC^\tr = \Id_K
+\end{align*}
+La matrice $\Sigma^{1/2}$ est appelée racine carrée symétrique d'une matrice, et $\Sigma^{-1/2}$ est racine carrée symétrique négative. Définissons le vecteur$(K\times 1)$,
+\begin{align*}
+V = \Sigma^{-1/2}U
+\end{align*}
+de sorte que
+\begin{align}
+U^\tr\Sigma^{-1}U = V^\tr V
+\label{eq31}
+\end{align}
+\'Etant donné que $U\sim \mathcal{N}(0, \Sigma)$, et que $V$ est une transformation linéaire de $U$, nous avons,
+\begin{align*}
+V &\sim\mathcal{N}\left(0, \sigma^{-1/2}\Var(U)\Sigma^{-1/2}\right)\\
+&=\mathcal{N}\left(0, \Sigma^{-1/2}\Sigma\Sigma^{-1/2}\right)\\
+&=\mathcal{N}(0, \Id_K)
+\end{align*} 
+Ainsi, en raison de \eqref{eq31} et de la définition du $\chi^2_K$,
+\begin{align*}
+U^\tr\Sigma^{-1}U = V^\tr V=\underset{k=1}{\overset{K}{\sum}}V_k^2 \sim\chi^2_K
+\end{align*}
+\end{proof}
+Le résultat dans $\eqref{eq30}$ découle du lemme \ref{le2}. En conséquence,
+\begin{align*}
+\frac{
+(\hat{\beta}-\beta)^\tr\left(s^2(\boldX^\tr\boldX)^{-1}\right)^{-1}(\hat{\beta}-\beta)
+}{K}|\boldX\sim F_{K, n-K}
+\end{align*}
+Soit, $ F_{K, n-K, \tau}$ le quantile $\tau$ de la distribution $F$. La région de confiance de niveau $\alpha$ se construit comme suit,
+\begin{align*}
+\CI_{1-\alpha} = \left\{b \in \mathbb{R}^K: (\hat{\beta}-b)^\tr\left(s^2(\boldX^\tr\boldX)^{-1}\right)^{-1}(\hat{\beta}-b)/K \leq F_{K, n-K, 1-\alpha}\right\}
+\end{align*}
+La discussion précédente implique que,
+\begin{align*}
+\Prob(\beta \in \CI_{1-\alpha}|\boldX) &=\Prob\left( (\hat{\beta}-\beta)^\tr\left(s^2(\boldX^\tr\boldX)^{-1}\right)^{-1}(\hat{\beta}-\beta)/K \leq F_{K, n-K, 1-\alpha} | \boldX\right)\\
+&=1-\alpha 
+\end{align*}
+\begin{remarque}
+La région/intervalle de confiance $\CI_{1-\alpha}$ est une fonction de l'échantillon $\{(Y_i, X_i)\}_{i=1}^n$, et il est ce faisant aléatoire, ce qui nous permet de parler de la probabilité que $\CI_{1-\alpha}$ contienne la vraie valeur de $\beta$. D'un autre côté, la réalisation de $\CI_{1-\alpha}$ n'est pas aléatoire. Une fois que l'intervalle de confiance est calculé pour des observations données, il n'y a plus de sens à parler de la probabilité qu'il inclue $\beta$. C'est soit zéro, soit un.
+\end{remarque}
+
+\newpage
+
+\section{Tests d'hypothèses dans le modèle de régression linéaire normal}
+
+\subsection{Concepts de base}
+Nous poursuivons notre discussion sur le modèle de régression linéaire normal, i.e., le modèle défini par  les hypothèses \ref{cond1}-\ref{cond5}. Soit $\theta\in\Theta\subset \mathbb{R}^d$ un paramètre d'intérêt. Par exemple,
+\begin{itemize}[label = - ]
+\item Le paramètre $\beta_k$ associé à un régresseur $X_k$, $k=1,2,...,K$. Dans ce cas,
+$\theta = \beta_k$, $d=1$, $\Theta = \mathbb{R}$.
+\item  Un vecteur de $L$ coefficients avec dans ce cas $\theta = (\beta_1, \beta_2,...,\beta_L)^\tr$, $d=L$, $\Theta = \mathbb{R}^L$.
+\item La variance des erreurs avec dans ce cas, $\theta = \sigma^2$, $d=1$, $\Theta = \mathbb{R}_{++}$.
+\end{itemize}
+Une hypothèse statistique est une proposition concernant $\theta$. Usuellement, on considère deux hypothèses concurrentes et nous voulons tirer une conclusion, sur la base des données observées, quant à savoir laquelle est vraie. Soit $\Theta_0\subset\Theta$ et  $\Theta_1\subset\Theta$, tels que $\Theta_0 \cap \Theta_1 = \emptyset$, et $\Theta_0 \cup \Theta_1=\Theta$. Les deux hypothèses concurrentes sont,
+\begin{itemize}[label = - ]
+\item L'\emph{hypothèse nulle} $H_0: \theta\in \Theta_0$. Il s'agit de l'hypothèse tenue comme vraie à moins que les données fournissent suffisamment d'information pour la rejeter.
+\item L'\emph{hypothèse alternative} $H_1: \theta\in \Theta_1$. Il s'agit de l'hypothèse contre laquelle l'hypothèse nulle est testée. Elle sera tenue comme vraie si l'on arrive à la conclusion que l'hypothèse nulle est fausse.
+\end{itemize}
+Notons que les sous-ensembles $\Theta_0$ et $\Theta_1$ sont choisis par l'analyste et sont donc connus. Notons aussi que les deux hypothèses $H_0$ et $H_1$ doivent être
+\emph{disjointes}. Leur union correspond à une hypothèse implicite qui concerne l'espace des valeurs que $\theta$ peut prendre. Par exemple, quand $\Theta = \mathbb{R}$ on peut considérer $\Theta_0 = \{0\}$, et $\Theta_1 = \mathbb{R}  \backslash \{0\}$. Un autre exemple est $\Theta_0 = (-\infty, 0]$, et $\Theta_1 = (0, \infty)$.\\
+Lorsque $\Theta_0$ contient un seul élément, on dit que $H_0:\theta\in \Theta_0$ est une \emph{hypothèse simple}. Autrement, on dit que $H_0$ est une \emph{hypothèse composée}. De manière similaire $H_1$ peut être simple ou composée selon que $\Theta_1$ contient ou non un seul élément.\\
+L'analyste doit choisir entre $H_0$ et $H_1$.  La \emph{règle de décision} qui va conduire à accepter ou rejeter $H_0$ s'appuie sur une \emph{statistique de test} qui est une fonction des données(de $\boldX$ et $\boldY$ dans le cas d'un modèle de régression). Soit $S\in \mathcal{S}$ une statistique de test et l'ensemble des valeurs qu'elle peut prendre. Une règle de décision est définie comme une partition de $\mathcal{S}$ en une \emph{région d'acceptation} $\mathcal{A}$ et une \emph{région de rejet}(ou région critique) $\mathcal{R}$. Ces deux régions doivent être disjointes(i.e., $\mathcal{A}\cap\mathcal{R} = \emptyset$) et leur union doit être égale à l'ensemble des valeurs possible pour la statistique $S$(i.e.,  $\mathcal{A}\cup\mathcal{R} = \mathcal{S}$). On rejette $H_0$ lorsque la statistique de test prend des valeurs dans la région de rejet: $S\in\mathcal{R}$. Ainsi les tests peuvent être décrits par leurs règles de décision: rejeter $H_0$ quand $S\in\mathcal{R}$.\\
+Deux types d'erreurs peuvent être faits,
+\begin{itemize}[label = - ]
+\item L'\emph{erreur de type 1} est de rejeter $H_0$ alors que $H_0$ est vraie.
+\item L'\emph{erreur de type 2} est d'accepter $H_0$ alors que $H_1$ est vraie.
+\end{itemize}
+Les probabilités d'erreur de type 1 et de type 2 peuvent être décrites en utilisant la \emph{fonction puissance}. Soit un test qui s'appuie sur $S$ et rejette $H_0$ quand $S\in\mathcal{R}$. La fonction de puissance de ce test est définie comme,
+\begin{align*}
+\pi(\theta) = \Prob_\theta(S\in \mathcal{R})
+\end{align*}
+où $\Prob_\theta(.)$ est la probabilité qui doit être calculée sous l'hypothèse que la vraie valeur du paramètre est $\theta$. En conséquence, la fonction de puissance d'un test donne la probabilité de rejeter $H_0$ pour chaque valeur possible de $\theta$. La plus grande probabilité d'erreur de type 1(i.e., rejeter $H_0$ quand elle est vraie) est,
+\begin{align}
+\underset{\theta \in \Theta_0}{\sup} \pi(\theta)=\underset{\theta \in \Theta_0}{\sup}\Prob_\theta(S\in \mathcal{R})
+\label{eq47}
+\end{align}
+L'expression ci-dessus est aussi appelée \emph{taille du test}. Lorsque $H_0$ est simple, i.e. $\Theta = \{\theta_0\}$, la taille peut être simplement calculée comme $\pi(\theta_0) = \Prob_{\theta_0}(S\in\mathcal{S})$.\\
+La probabilité d'erreur de type 2(i.e., accepter $H_0$ quand elle est fausse) est,
+\begin{align}
+1 -\pi(\theta) = 1 - \Prob_\theta(S\in\mathcal{R}) \ \textrm{for} \ \theta\in \Theta_1
+\label{eq33}
+\end{align}
+Typiquement, $\Theta_1$ possède plusieurs éléments, et par conséquent la probabilité d'erreur de type 2 dépend de la vraie valeur de $\theta$. Nous souhaiterions avoir des probabilités d'erreur de type 1 et de type 2 aussi petites que possible, mais malheureusement, comme cela apparaît dans \eqref{eq47} et \eqref{eq33}, elles sont inversement reliées. Pour réduire la probabilité d'erreur de type 1 on doit faire en sorte de réduire $\mathcal{R}$. Cela va cependant augmenter la probabilité d'erreur de type 2.
+\begin{definition}
+Un test avec une fonction de puissance $\pi(\theta)$ est dit de niveau $\alpha$ si $\underset{\theta\in\Theta_0}{\sup} \pi(\theta) \leq \alpha$. On dit que le test est de taille $\alpha$ si $\underset{\theta\in\Theta_0}{\sup} \pi(\theta) = \alpha$.
+\label{de1}
+\end{definition} 
+Remarquons que des tests de taille $\alpha$ sont des tests de niveau $\alpha$. On considère qu'un test est valide si c'est un test de niveau $\alpha$ pour un $\alpha\in (0,1)$ pré-sélectionné, où $\alpha$ est appelé \emph{niveau de significativité} du test. Typiquement, le niveau de significativité est choisi comme un nombre petit et proche de zéro, par exemple, $\alpha = 0.01, 0.05, 0.10$ sont de niveaux fréquemment  retenus.\\
+Ce qui suit sont les étapes d'un test d'hypothèse,
+\begin{enumerate}
+\item Spécifier $H_0$ et $H_1$.
+\item Choisir le niveau de significativité $\alpha$.
+\item Définir une règle de décision(une statistique de test, et une région de rejet) de sorte que le test correspondant soit un test de niveau $\alpha$.
+\item Exécuter le test.
+\end{enumerate}
+La décision dépend des niveau de significativité. Il est facile de rejeter l'hypothèse nulle pour des valeurs grandes de $\alpha$, étant donné qu'elles correspondent à de grandes régions de rejet. \'Etant donné les données, le plus petit niveau de significativité pour lequel l'hypothèse nulle peut être rejetée par un test est appelé p-value. Plutôt que de reporter les résultats des tests(acceptation ou rejet) pour un $\alpha$ spécifique, il est courant de reporter les p-values. Les étapes du test sont alors,
+\begin{enumerate}
+\item Spécifier $H_0$ et $H_1$.
+\item Définir un test.
+\item Calculer la p-value.
+\item $H_0$ est rejetée pour toutes les valeurs de $\alpha$ plus grandes que la p-value.
+\end{enumerate}
+La \emph{puissance d'un test} de fonction de puissance $\pi(\theta)$ est définie comme,
+\begin{align*}
+\pi(\theta) \ \textrm{pour} \ \theta \in \Theta_1
+\end{align*}
+\'Etant donné deux tests de niveaux $\alpha$, nous devrions préférer le test le plus puissant. On dit qu'un test de niveau $\alpha$ et de fonction de puissance $\pi_1(\theta)$ est \emph{uniformément plus puissant} qu'un test de niveau $\alpha$ et de fonction de puissance $\pi_2(\theta)$ si $\pi(\theta_1) \geq \pi_2(\theta)$ pour tout $\theta\in \Theta_1$. Comme cela apparaîtra dans ce qui suit, des tests qui s'appuient sur des estimateurs avec des petites variances sont typiquement des tests uniformément plus puissants.
+
+\subsection{Test d'une hypothèse par rapport à un seul coefficient}
+Considérons le modèle partitionné vu dans les sections précédentes,
+\begin{align*}
+\boldY = \beta_1\boldX_1 + \boldX_2\beta_2 + \boldU
+\end{align*}
+où $\boldX_1$ est le vecteur $(n\times 1)$ d'observations du premier régresseur. Supposons que la variance des erreurs $\sigma^2$ soit connue. Soit $\hat{\beta}_1$ l'estimateur des moindres carrés de $\beta_1$.  Cherchons à tester,
+\begin{align}
+H_0 \ : \  \beta_1 = \beta_{1, 0}\nonumber\\
+H_1 \ : \  \beta_1 \neq \beta_{1, 0}
+\label{eq34}
+\end{align}
+Les intervalles de confiance et les tests d'hypothèses sont étroitement liés. En effet, une règle de décision pour un test de niveau $\alpha$ peut reposer  sur l'intervalle de confiance $\CI_{1-\alpha}$. L'intervalle de confiance de niveau $1-\alpha$ pour $\beta_1$ est,
+\begin{align*}
+\CI_{1-\alpha} = \left[ \hat{\beta}_1 - z_{1 - \alpha/2}\sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)},  \hat{\beta}_1 + z_{1 - \alpha/2}\sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}\right]
+\end{align*}
+Considérons le test suivant,
+\begin{align*}
+\textrm{Rejeter} \ H_0 \  \textrm{si} \ \beta_{1,0} \notin \CI_{1-\alpha}
+\end{align*}
+Dans ce cas la région critique est donnée par le complément de $ \CI_{1-\alpha}$. On rejette ainsi $H_0$ si,
+\begin{align*}
+\beta_{1,0}&\leq  \hat{\beta}_1 - z_{1 - \alpha/2}\sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}\\
+\textrm{ou}&\\
+\beta_{1,0}&\geq  \hat{\beta}_1 + z_{1 - \alpha/2}\sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}
+\end{align*}
+De manière équivalente, on rejette si,
+\begin{align}
+\abs{\frac{\hat{\beta}_1 - \beta_{1,0}}{ \sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}}} > z_{1-\alpha/2}
+\label{eq35}
+\end{align}
+Un tel test est appelé \emph{bilatéral}, car sous l'hypothèse alternative, la vraie valeur $\beta_1$ peut être plus petite ou plus grande que $\beta_{1,0}$.\\
+L'expression à gauche de l'inégalité est une statistique de test. Pour calculer la probabilité de rejet de l'hypothèse nulle supposons que la vraie valeur soit donnée par $\beta_1$. \'Ecrivons, 
+\begin{align}
+\frac{\hat{\beta}_1 - \beta_1}{ \sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}} + 
+\frac{\beta_1 - \beta_{1,0}}{ \sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}} 
+\label{eq36}
+\end{align}
+Nous avons que,
+\begin{align*}
+\frac{\hat{\beta}_1 - \beta_{1,0}}{ \sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}} | \boldX
+ \sim
+ \mathcal{N}\left( \frac{\beta_1 - \beta_{1,0}}{ \sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}}, 1 \right) 
+\end{align*}
+Si l'hypothèse nulle est vraie alors $\beta_1-\beta_{1,0} = 0$ et la statistique de test présente une distribution normale standard. Dans ce cas par définition de $z_{1-\alpha/2}$.
+\begin{align*}
+\Prob\left(\textrm{rejeter} \ H_0 | \boldX, H_0 \ \textrm{est vraie}\right) &= 
+\Prob\left(\abs{\frac{\hat{\beta}_1 - \beta_{1,0}}{ \sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}}} > z_{1-\alpha/2}\right)\\
+&= \alpha
+\end{align*}
+Ainsi, le test suggéré a la taille correcte $\alpha$. Si l'hypothèse nulle est fausse, la distribution de la statistique de test n'est pas centrée autour de zéro, et l'on verra des taux de rejet supérieurs à $\alpha$.\\
+La probabilité de rejet est une fonction de la vraie valeur $\beta_1$ et dépend de la magnitude du deuxième terme dans \eqref{eq36}, $\abs{\beta_1 - \beta_{1,0}}/ \sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}$. Supposons par exemple que,
+\begin{align*}
+\beta_{1,0} &= 0\\
+ \sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)} &=1\\
+ \alpha &=0.05(\textrm{et} \ z_{1-\alpha/2} = 1.96) 
+\end{align*}
+Soit $Z \sim \mathcal{N}(0,1)$. Dans ce cas, la \emph{fonction puissance} du test est,
+\begin{align*}
+\pi(\beta_1) &= \Prob\left( \abs{\frac{\hat{\beta}_1 - \beta_{1,0}}{ \sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}}} > z_{1-\alpha/2} \right)\\
+&= \Prob\left( \abs{\frac{\hat{\beta}_1 - \beta_1+\beta_1 -\beta_{1,0}}{ \sqrt{\sigma^2/(\boldX_1^\tr\boldM_2\boldX_1)}}} > 1.96 | \boldX \right)\\
+&=\Prob\left(\abs{Z + \beta_1} > 1.96\right)\\
+&= \Prob\left( Z < -1.96 - \beta_1\right)+ \Prob\left( Z > 1.96 - \beta_1\right)
+\end{align*}
+Par exemple,
+\begin{align*}
+\pi(\beta_1) =
+\left\{
+\begin{array}{c}
+0.52 \ \textrm{pour} \ \beta_1 = -2\\
+0.17 \ \textrm{pour} \ \beta_1 = -1\\
+0.05 \ \textrm{pour} \ \beta_1 = 0\\
+0.17 \ \textrm{pour} \ \beta_1 = 1\\
+0.52 \ \textrm{pour} \ \beta_1 = 2
+\end{array}
+\right.
+\end{align*}
+Dans ce cas la fonction puissance est minimisée en $\beta_1 = \beta_{1,0}$ où $\pi(\beta_1) = \alpha$.\\
+Pour le calcul des $p-values$ considérons l'exemple suivant. Supposons, qu'étant donné des données la statistique de test  dans \eqref{eq35} soit égale à $1.88$. Pour la distribution normale standard $\Prob(Z > 1.88) = 0.03$. Par conséquent la $p-value$ du test est $0.06$. On rejeterait l'hypothèse nulle pour tous les tests avec un niveau de significativité supérieur à $0.06$.\\
+Dans le cas où $\sigma_2$ est inconnu, on peut tester \eqref{eq34} en considérant la 
+$\mathrm{t}$-statistique,
+\begin{align}
+T&= \frac{\hat{\beta}_1 - \beta_{1,0}}{\sqrt{s^2/(\boldX_1^\tr\boldM_2\boldX_1)}}\nonumber\\
+&=\frac{\hat{\beta}_1 - \beta_{1,0}}{\sqrt{\hat{\Var}(\hat{\beta}_1 | \boldX)}}
+\label{eq37}
+\end{align}
+Le test est donné par la règle de décision suivante,
+\begin{align*}
+\textrm{Rejeter} \ H_0 \ \textrm{si} \ \abs{T} > t_{n-K, 1-\alpha/2}
+\end{align*}
+Dans ce cas(voir section précédente) sous $H_0$, $\Prob( \abs{T} > t_{n-K, 1-\alpha/2} | \boldX, H_0 \ \textrm{est vraie}) = \alpha$.\\
+On peut aussi considérer des tests \emph{unilatéraux}. Dans le cas de ces tests l'hypothèse nulle et l'hypothèse alternative peuvent être spécifiées comme suit,
+\begin{align*}
+H_0 &:  \beta_1 \leq \beta_{1,0}\\
+H_1 &:  \beta_1 > \beta_{1,0}
+\end{align*}
+Notons que dans ce cas, et $H_0$ et $H_1$ sont composées, et la probabilité de rejet varie non seulement selon les valeurs de $\beta_1$ spécifiées sous $H_1$ mais aussi selon $H_0$. Dans ce cas cas un test valide devra satisfaire la condition,
+\begin{align}
+\underset{\beta_1\leq\beta_{1,0}}{\sup}\Prob(\textrm{rejeter} \ H_0 | \boldX, \beta_1) \leq \alpha
+\label{eq38}
+\end{align}
+i.e., la probabilité maximale de rejeter $H_0$ quand elle est vraie ne doit pas dépasser $\alpha$. Soit $T$ telle que définie dans \eqref{eq37} et considérons le test suivant(règle de décision):
+\begin{align*}
+\textrm{Rejeter}  \ H_0 \ \textrm{quand}  \ T > t_{n-K, 1-\alpha}
+\end{align*}
+Sous $H_0$, nous avons,
+\begin{align*}
+\Prob\left(\textrm{rejeter} \ H_0 | \beta_1 \leq \beta_{1,0}  \right)&=\Prob\left(T >  t_{n-K, 1-\alpha} | \boldX, \beta_1 \leq \beta_{1,0}\right)\\
+&=\Prob\left( 
+\frac{\hat{\beta}_1 - \beta_{1,0}}{\sqrt{s^2/(\boldX_1^\tr\boldM_2\boldX_1)}} >  t_{n-K, 1-\alpha} | \boldX, \beta_1 \leq \beta_{1,0}\right)\\
+&\leq
+\Prob\left( 
+\frac{\hat{\beta}_1 - \beta_1}{\sqrt{s^2/(\boldX_1^\tr\boldM_2\boldX_1)}} >  t_{n-K, 1-\alpha} | \boldX, \beta_1 \leq \beta_{1,0}\right)(\textrm{car}  \  \beta_1 \leq \beta_{1,0})\\
+&=\alpha( \textrm{étant donné que} \  \frac{\hat{\beta}_1 - \beta_1}{\sqrt{s^2/(\boldX_1^\tr\boldM_2\boldX_1)}} | \boldX \sim t_{n-K}  )
+\end{align*}
+Ainsi, la condition sur la taille \eqref{eq38} est satisfaite. Notons qu'étant donné qu'il s'agit d'un test unilatéral, la probabilité d'erreur de type 1 est portée uniquement par la queue droite de la distribution.
+\subsection{Test d'une contrainte linéaire simple}
+Considérons le modèle de régression linéaire normal défini par les hypothèse \ref{cond1}-\ref{cond5},
+\begin{align*}
+\boldY = \boldX\beta + \boldU
+\end{align*}
+Supposons que l'on souhaite tester,
+\begin{align*}
+H_0&: c^\tr\beta=r\\
+H_1&: c^\tr\beta \neq r
+\end{align*}
+Dans ce cas $c$ est un vecteur $(K\times 1)$, $r$ est un scalaire, et sous l'hypothèse nulle,
+\begin{align*}
+c_1\beta_1 + x_2\beta_2+...+c_K\beta_K-r=0
+\end{align*}
+Par exemple, en posant $c_1 = 1$, $c_2=-1$, $c_3 = ...=c_K = 0$, et $r = 0$, nous pouvons tester l'hypothèse que $\beta_1=\beta_2$.\\
+Pour l'estimateur des moindres carrés nous avons,
+\begin{align}
+\hat{\beta}|\boldX \sim \mathcal{N}\left(\beta, \sigma^2(\boldX^\tr\boldX)^{-1}\right)
+\label{eq39}
+\end{align} 
+Alors,
+\begin{align}
+\frac{c^\tr\hat{\beta} - c^\tr\beta}{\sqrt{\sigma^2c^\tr(\boldX^\tr\boldX)^{-1}c}}
+| \boldX \sim \mathcal{N}(0, 1)
+\label{eq40}
+\end{align} 
+Par conséquent, sous $H_0$,
+\begin{align}
+\frac{c^\tr\hat{\beta} - r}
+{\sqrt{\sigma^2c^\tr(\boldX^\tr\boldX)^{-1}c}}
+| \boldX \sim \mathcal{N}(0, 1)
+\label{eq41}
+\end{align} 
+Considérons la $T$ statistique,
+\begin{align*}
+T &= \frac{c^\tr\hat{\beta} - r}
+{\sqrt{s^2c^\tr(\boldX^\tr\boldX)^{-1}c}}\\
+&=\left(
+\frac{c^\tr\hat{\beta} - r}
+{\sqrt{\sigma^2c^\tr(\boldX^\tr\boldX)^{-1}c}}
+\right)
+/
+\sqrt{\frac{\boldU^\tr\boldM_\boldX\boldU}{\sigma^2}/(n-K)}
+\end{align*}
+Sous $H_0$, le résultat dans \eqref{eq41} est vérifié. En outre, conditionnellement à $\boldX$,
+\begin{align}
+\boldU^\tr\boldM_\boldX\boldU/\sigma^2 | \boldX\sim \chi^2_{n-K} \ \textrm{indépendant de}  \ \hat{\beta} 
+\label{eq42}
+\end{align}
+Par conséquent sous $H_0$,
+\begin{align*}
+T | \boldX\sim t_{n-K}
+\end{align*}
+Ainsi, le niveau de significativité $\alpha$ du test bilatéral de $H_0: c^\tr\beta = r$ est donné par,
+\begin{align*}
+\textrm{Rejeter} \ H_0 \ \textrm{si} \ \abs{T} > t_{n-K, 1-\alpha/2}
+\end{align*}
+En posant l'élément $j$ de $c$, $c_j=1$ et le restant des éléments de $c$ égaux à zéro on obtient le test discuté dans la sous-section précédente,
+\begin{align*}
+H_0&: \beta_j = r\\
+H_1&:\beta_j \neq r
+\end{align*}
+On rejette $H_0$ si,
+\begin{align*}
+\abs{T} &= \abs{ \frac{\hat{\beta}_j - r}{\sqrt{s^2\left[(\boldX^\tr\boldX)^{-1}\right]_{jj}}}}\\
+&> t_{n-K, 1-\alpha/2}
+\end{align*}
+où $\left[(\boldX^\tr\boldX)^{-1}\right]_{jj}$ est l'élément $(j,j)$ de la matrice $(\boldX^\tr\boldX)^{-1}$.
+
+\subsection{Tests de contraintes linéaires multiples}
+Supposons que l'on souhaite tester,
+\begin{align*}
+H_0: \mathbf{R}\beta = r\\
+H_1: \mathbf{R}\beta \neq r
+\end{align*}
+où $\mathbf{R}$ est une matrice $(q \times K)$ est $r$ est un vecteur $(r\times 1)$. Par exemple, 
+\begin{itemize}[label = - ]
+\item $\mathbf{R} = \Id_K$, $r=0$. Dans ce cas on teste que $\beta_1=...=\beta_K=0$.
+\item $\mathbf{R} = \left(
+\begin{array}{cccccccc}
+1&1&0&0&.&.&.&0\\
+0&0&1&0&.&.&.&0
+\end{array}
+\right)$, $r = \left(\begin{array}{c}
+1\\
+0
+\end{array}
+\right)
+$. Dans ce cas, $H_0: \beta_1 + \beta_2 = 1$, $\beta_3=0$.
+\end{itemize}
+Considérons la $F$ statistique,
+\begin{align*}
+F = \left(\mathbf{R}\hat{\beta} - r\right)^\tr\left(s^2\mathbf{R}(\boldX^\tr\boldX)^{-1}\mathbf{R}^\tr\right)^{-1}\left(\mathbf{R}\hat{\beta} - r\right)/q
+\end{align*}
+Nous montrons dans ce qui suit que sous $H_0$,
+\begin{align}
+F | \boldX \sim F_{q, n-K}
+\label{eq43}
+\end{align}
+Premièrement, il résulte de \eqref{eq40} que,
+\begin{align*}
+\mathbf{R}\hat{\beta} | \boldX \sim\mathcal{N}\left(\mathbf{R}\beta, \sigma^2\mathbf{R}(\boldX^\tr\boldX)^{-1}\mathbf{R}^\tr\right)
+\end{align*}
+Alors, sous $H_0$,
+\begin{align*}
+\mathbf{R}\hat{\beta} - r | \boldX \sim\mathcal{N}\left(0, \sigma^2\mathbf{R}(\boldX^\tr\boldX)^{-1}\mathbf{R}^\tr\right)
+\end{align*}
+En outre par le lemme \eqref{le2} de la section précédente,
+\begin{align*}
+\left(\mathbf{R}\hat{\beta} - r\right)^\tr\left(\sigma^2\mathbf{R}(\boldX^\tr\boldX)^{-1}\mathbf{R}^\tr\right)^{-1}\left(\mathbf{R}\hat{\beta} - r\right)\sim\chi^2_q
+\end{align*}
+Le résultat dans \eqref{eq43} est alors obtenu car en raison de \eqref{eq42} et de la définition de la $F$ distribution. Par conséquent, le test est donné par,
+\begin{align*}
+\textrm{Rejeter} \ H_0 \ \textrm{si} \ F &= \left(\mathbf{R}\hat{\beta} - r\right)^\tr\left(s^2\mathbf{R}(\boldX^\tr\boldX)^{-1}\mathbf{R}^\tr\right)^{-1}\left(\mathbf{R}\hat{\beta} - r\right)/q\\
+&> F_{q, n-K, 1-\alpha} 
+\end{align*}
+
+\subsection{Moindres carrés contraints}
+Une approche alternative pour le test d'hypothèses s'appuie sur l'estimation contrainte. On peut considérer la perte d'ajustement qui résulte du choix d'un autre valeurs que celles de $\hat{\beta}$ pour coefficients de la régression. Considérons, le problème des \emph{moindres carrés contraints} suivants,
+\begin{align*}
+\min_b(\boldY-\boldX b)^\tr (\boldY-\boldX b) \ s.c. \ \mathbf{R}b=r
+\end{align*}
+Le lagrangien pour ce problème est,
+\begin{align*}
+L(b, \lambda) = (\boldY-\boldX b)^\tr (\boldY-\boldX b) + 2\lambda^\tr(\mathbf{R}b-r)
+\end{align*}
+où $\lambda$ est un vecteur $(q\times 1)$. Soit, $\tilde{\beta}$, $\tilde{\lambda}$, la solution, où $\tilde{\beta}$ est l'estimateur des moindres carrés contraint. Elle doit satisfaire les conditions du premier ordre,
+\begin{align}
+\frac{\partial L(\tilde{\beta}, \tilde{\lambda})}{\partial b} &= 2\boldX^\tr\boldX\tilde{\beta} - 2\boldX^\tr\boldY + \mathbf{R}^\tr\tilde{\lambda} = 0
+\label{eq44}\\
+\frac{\partial L(\tilde{\beta}, \tilde{\lambda})}{\partial \lambda} &=\mathbf{R}\tilde{\beta} -r = 0
+\label{eq45}
+\end{align}
+A partir de \eqref{eq44},
+\begin{align*}
+\tilde{\beta} & = (\boldX^\tr\boldX)^{-1}(\boldX^\tr\boldY - \mathbf{R}^\tr\tilde{\lambda})\\
+&=\hat{\beta} - (\boldX^\tr\boldX)^{-1}\mathbf{R}^\tr\tilde{\lambda}
+\end{align*}
+En combinant la dernière équation avec \eqref{eq45},
+\begin{align*}
+r &=\mathbf{R}\tilde{\beta}\\
+&=\mathbf{R}\hat{\beta} - \mathbf{R}(\boldX^\tr\boldX)^{-1}\mathbf{R}^\tr\tilde{\lambda} 
+\end{align*}
+et,
+\begin{align*}
+\tilde{\lambda} = \left(\mathbf{R}(\boldX^\tr\boldX)^{-1}\mathbf{R}^\tr\right)^{-1}(\mathbf{R}\hat{\beta}-r)
+\end{align*}
+Par conséquent, l'estimateur des moindres carrés contraint est donné par,
+\begin{align*}
+\tilde{\beta} = \hat{\beta} - (\boldX^\tr\boldX)^{-1}\mathbf{R}^\tr\left(\mathbf{R}(\boldX^\tr\boldX)^{-1}\mathbf{R}^\tr\right)^{-1}(\mathbf{R}\hat{\beta}-r)
+\end{align*}
+Définissons les résidus contraints,
+\begin{align*}
+\tilde{\boldU}&=\boldY-\boldX\tilde{\beta}\\
+&=(\boldY-\boldX\hat{\beta}) + \boldX(\boldX^\tr\boldX)^{-1}\mathbf{R}^\tr\left(\mathbf{R}(\boldX^\tr\boldX)^{-1}\mathbf{R}^\tr\right)^{-1}(\mathbf{R}\hat{\beta}-r)\\
+&=\hat{\boldU} + \boldX(\boldX^\tr\boldX)^{-1}\mathbf{R}^\tr\left(\mathbf{R}(\boldX^\tr\boldX)^{-1}\mathbf{R}^\tr\right)^{-1}(\mathbf{R}\hat{\beta}-r)
+\end{align*}
+où $\hat{\boldU}$ est le vecteur des résidus non contraints. Considérons la somme \emph{contrainte} des carrés des résidus,
+\begin{align*}
+SCR_r &= \tilde{\boldU}^\tr\tilde{\boldU}\\
+&= \hat{\boldU}^\tr\hat{\boldU} + (\mathbf{R}\hat{\beta} - r)^\tr
+\left(\mathbf{R}(\boldX^\tr \boldX)^{-1}\mathbf{R}^\tr\right)^{-1}(\mathbf{R}\hat{\beta} - r)\\
+&+ 2\hat{\boldU}^\tr\boldX(\boldX^\tr\boldX)^{-1}\mathbf{R}^\tr\left(\mathbf{R}(\boldX^\tr\boldX)^{-1}\mathbf{R}^\tr\right)^{-1}(\mathbf{R}\hat{\beta}-r)\\
+&=SCR + (\mathbf{R}\hat{\beta}-r)^\tr\left(\mathbf{R}(\boldX^\tr\boldX)^{-1}\mathbf{R}^\tr\right)^{-1}  (\mathbf{R}\hat{\beta}-r)
+\end{align*}
+où $SCR = \hat{\boldU}^\tr\hat{\boldU}$ désigne la somme des carrés des résidus non contraints. \'Etant donné que $s^2 = \hat{\boldU}^\tr\hat{\boldU}/(n-K)$, la $F$ statistique discutée dans la sous-section précédente peut s'écrire,
+\begin{align}
+F = \frac{(SCR_r -SCR)/q}{SCR/(n-K)}
+\label{eq46}
+\end{align}
+\begin{exemple}
+(\textbf{Significativité du modèle}) Considérons le modèle avec la constante,
+\begin{align*}
+Y_i = \beta_1 + \beta_2X_{i2} + ...+\beta_KX_{iK} + U_i
+\end{align*}
+Soit, l'hypothèse nuelle $H_0: \beta_2 = ...=\beta_K =0$. Le modèle contraint est donné par,
+\begin{align*}
+Y_i = \beta_1 + U_i
+\end{align*}
+Dans ce cas l'estimateur des moindres carrés contraint est $\tilde{\beta}_1 =n^{-1}\sumobs Y_i = \bar{Y}$, et $SCR_r =SCT =\sumobs (Y_i-\bar{Y})^2$. Dans ce cas,
+\begin{align*}
+F &=\frac{(SCT -SCR)/(K-1)}{SCR/(n-K)}\\
+&=\frac{SCE/(K-1)}{SCR/(n-K)}\\
+&= \frac{R^2/(K-1)}{(1-R^2)/(n-K)}\\
+&\sim F_{K-1, n-K}
+\end{align*}
+\label{ex1}
+\end{exemple}
+\begin{exemple} Considérons le modèle,
+\begin{align*}
+Y_i = \beta_1 + \beta_2X_{i2} + \beta_3X_{i3}+U_i
+\end{align*}
+et l'hypothèse nulle $H_0: \beta_2 = \beta_3$. Le modèle contraint est donné par,
+\begin{align*}
+Y_i=\beta_1+\beta_2(X_{i2}+X_{i3})+U_i
+\end{align*}
+Ainsi, pour tester si $\beta_2=\beta_3$, on doit construire la nouvelle variable $W_i = (X_{i2}+X_{i3})$, calculer la $SCR_r$ en prenant la $SCR$ de la régression de $Y_i$ sur une constante et $W_i$, calculer la $SCR$ de la régression non contrainte, et construire la $F$ statistique d'après \eqref{eq46}.
+\label{ex2}
+\end{exemple}
+
+\newpage
+
+\section{Propriétés du $\bar{R}^2$, mauvaises spécifications, test de changement structurel, variables indicatrices, prévisions}
+
+\subsection{Propriétés du $\bar{R}^2$}
+Nous allons montrer que quand on  ajoute de nouveaux régresseurs, le $\bar{R}^2$ augmentera ou diminuera selon que la $F$-statistique associée aux nouveaux régresseurs est supérieure ou inférieure à 1, indépendamment du nombre de régresseurs ajoutés. Considérons le modèle non contraint avec $(K+q)$ régresseurs, et le modèle contraint avec $K$ régresseurs,
+\begin{align*}
+\textrm{Modèle non contraint}: & \beta_1X_{i1} + ...+\beta_KX_{iK} + \beta_{K+1}X_{i,K+1} +  ...+\beta_{K+q}X_{i,K+q} + U_i\\
+\textrm{Modèle contraint}: &  \beta_1X_{i1} +...+\beta_KX_{iK} + U_I
+\end{align*}
+où $q\geq 1$. Soit $SCR$ et $SCR_r$, respectivement, la somme des carrés des résidus non contrainte, et la somme des carrés des résidus contrainte. Les coefficients de déterminaition ajustés qui leur sont associés sont donnés par,
+\begin{align*}
+\bar{R}^2 &= 1 - \frac{n-1}{n-K-q}\frac{SCR}{SCT}\\
+\bar{R}^2_r &= 1 - \frac{n-1}{n-K}\frac{SCR_r}{SCT}
+\end{align*}
+A présent,
+\begin{align*}
+\bar{R}^2 - \bar{R}^2_r &= \frac{n-1}{n-K}\frac{SCR_r}{SCT} - \frac{n-1}{n-K-q}\frac{SCR}{SCT}\\
+&= \frac{n-1}{SCT}\left(\frac{SCR_r}{n-K}- \frac{SCR}{n-K-q} \right)\\
+&=\frac{n-1}{SCT}\frac{SCR}{n-K}\left(\frac{SCR_r}{SCR} - \frac{n-K}{n-K-q}\right)\\
+&=\frac{n-1}{SCT}\frac{SCR}{n-K}\left(\frac{SCR_r}{SCR} -1+1- \frac{n-K}{n-K-q}\right)\\
+&=\frac{n-1}{SCT}\frac{SCR}{n-K}\left(\frac{SCR_r - SCR}{SCR} - \frac{q}{n-K-q}\right)\\
+&=\frac{n-1}{SCT}\frac{SCR}{n-K} \frac{q}{n-K-q}\left(\frac{(SCR_r - SCR)/q}{SCR/(n-K-q)} - 1\right)
+\end{align*}
+Le résultat cherché est obtenu car 
+\begin{align*} 
+\frac{(SCR_r - SCR)/q}{SCR/(n-K-q)}
+\end{align*}
+est la $F$-statistique associée à l'hypothèse nulle,
+\begin{align*}
+H_0&:\beta_{K+1}=...=\beta_{K+q}=0.
+\end{align*}
+Pour comparaison, les valeurs critiques de la $F$-distribution dépassent 1. En conséquence, le choix d'un  modèle en utilisant le coefficient de détermination ajusté peut conduire à ajouter des régresseur non pertinents.
+
+\subsection{Mauvaise spécification du modèle}
+\subsubsection*{Exclusion de régresseurs pertinents}
+Supposons que le vrai modèle soit donné par,
+\begin{align}
+\boldY = \boldX_1\beta_1 + \boldX_2\beta_2 + \boldU
+\label{eq49}
+\end{align}
+où $\boldX_1$ est une matrice $(n\times K_1)$, $\boldX_2$ est une matrice $(n\times K_2)$, $\beta_2\neq 0$, et les hypothèses \ref{cond1}-\ref{cond5} sont satisfaites avec $\boldX = (\boldX_1 \ \boldX_2)$. Supposons que l'on régresse $\boldY$ sur $\boldX_1$ uniquement, soit parce que $\boldX_2$ n'est pas disponible, ou parce que nous ne savons pas qu'il faut inclure ces régresseurs.\\
+Dans un premier temps, étudions les propriétés de l'estimateurs des moindres carrés de $\beta_1$,
+\begin{align*}
+\tilde{\beta}_1 &= (\boldX_1^\tr\boldX_1)^{-1}\boldX_1^\tr\boldY\\
+&= (\boldX_1^\tr\boldX_1)^{-1}\boldX_1^\tr(\boldX_1\beta_1 + \boldX_2\beta_2+\boldU)\\
+&=\beta_1(\boldX_1^\tr\boldX_1)^{-1}\boldX_1^\tr\boldX_2\beta_2 + 
+(\boldX_1^\tr\boldX_1)^{-1}\boldX_1^\tr\boldU
+\end{align*}
+Par l'hypothèse \ref{cond2},
+\begin{align}
+\Exp(\tilde{\beta}_1 | \boldX_1) = \beta_1 + (\boldX_1^\tr\boldX_1)^{-1}\boldX_1\boldX_2\beta_2
+\label{eq48}
+\end{align}
+Dans ce cas, l'estimateur des moindres carrés de $\beta_1$ est biaisé, le biais étant donné par $(\boldX_1^\tr\boldX_1)^{-1}\boldX_1\boldX_2\beta_2$, et l'on remarque que ce biais disparaît dans le cas où $\boldX_1$ et $\boldX_2$ sont orthogonaux avec une probabilité égale à 1, i.e.,
+\begin{align*}
+\Prob(\boldX_1^\tr\boldX_2 = 0) = 1
+\end{align*}
+Considérons maintenant la variance conditionnelle de $\tilde{\beta}_1$. En raison de \eqref{eq48} et de l'hypothèse \ref{cond3},
+\begin{align*}
+\Var(\tilde{\beta}_1 | \boldX) & = (\boldX_1^\tr\boldX_1)^{-1}\boldX_1^\tr\Exp(\boldU\boldU^\tr|\boldX)\boldX_1(\boldX_1^\tr\boldX_1)^{-1}\\
+&=\sigma^2(\boldX_1^\tr\boldX_1)^{-1}
+\end{align*}
+En comparant avec la variance de $\hat{\beta}_1$, l'estimateur des moindres carrés de la régression qui inclut $\boldX_1$ et $\boldX_2$, soit,
+\begin{align*}
+\Var(\hat{\beta}_1|\boldX) = \sigma^2(\boldX_1^\tr\boldM_2\boldX_1)^{-1}
+\end{align*}
+où $\boldM_2 = \Id_n - \boldP_2$, et $ \boldP_2 = \boldX_2(\boldX_2^\tr\boldX_2)^{-1}\boldX_2^\tr$. Considérons d'abord la différence,
+\begin{align*}
+\boldX_1^\tr\boldX_1-\boldX_1^\tr\boldM_2\boldX_1 &= \boldX_1^\tr\boldP_2\boldX_1\\
+&\geq 0
+\end{align*}
+L'inégalité résulte car $\boldP_2$ est symétrique et idempotente et par conséquent semi-définie positive. En conséquence,
+\begin{align*}
+(\boldX_1^\tr\boldX_1)^{-1} - (\boldX_1^\tr\boldM_2\boldX_1)^{-1} \leq 0
+\end{align*}
+et
+\begin{align*}
+\Var(\tilde{\beta}_1|\boldX) - \Var(\hat{\beta}_1|\boldX) \leq 0
+\end{align*}
+Ainsi, la variance augmente avec le nombre de régresseurs.\\
+Sous l'hypothèse \ref{cond5}, nous obtenons que,
+\begin{align*}
+\tilde{\beta}_1 | \boldX \sim \mathcal{N}\left(\beta_1 + (\boldX_1^\tr\boldX_1)^{-1}\boldX_1^\tr\boldX_2\beta_2, \sigma^2(\boldX_1^\tr\boldX_1)^{-1}\right)
+\end{align*}
+Nous étudions maintenant l'effet d'une mauvaise spécification sur $s^2$, l'estimateur(sans biais) de $\sigma^2$. Nous avons,
+\begin{align*}
+s^2 = \frac{\boldY^\tr\boldM_1\boldY}{n-K_1}
+\end{align*}
+où $K_1$ est le nombre de colonnes dans $\boldX_1$, et $\boldM_1 = \Id_n - \boldX_1(\boldX_1^\tr\boldX_1)^{-1}\boldX_1^\tr$. Comme le vrai modèle est \eqref{eq49},
+\begin{align*}
+s^2 = \frac{(\boldX_1\beta_1 + \boldX_2\beta_2 + \boldU)^\tr\boldM_1(\boldX_1\beta_1 + \boldX_2\beta_2 + \boldU)}{n-K_1}
+\end{align*}
+et,
+\begin{align*}
+\Exp(s^2|\boldX) &=\Exp\left(\frac{\boldU^\tr\boldM_1\boldU}{n-K_1}|\boldX\right) + 2\Exp\left(\frac{\boldU^\tr\boldM_1\boldX_2\beta_2}{n-K_1}| \boldX\right) +
+\frac{\beta_2^\tr\boldX_2^\tr\boldM_1\boldX_2\beta_2}{n-K_1}\\
+&=\sigma^2 + \frac{\beta_2^\tr\boldX_2^\tr\boldM_1\boldX_2\beta_2}{n-K_1}\\
+&\geq \sigma^2
+\end{align*}
+Le biais demeure, même si $\boldX_1$ et $\boldX_2$ sont orthogonaux car dans ce cas $\boldM_1\boldX_2 = \boldX_2$. \\
+Une des conséquences de l'exclusion de variables pertinentes est que les test est les intervalles de confiance ne sont pas valides.
+
+\subsubsection*{Inclusion de régresseurs non pertinents}
+Supposons que le vrai modèle soit,
+\begin{align*}
+\boldY = \boldX_1\beta_1 + \boldU
+\end{align*}
+Cependant, nous incluons $\boldX_2$ et estimons $\beta_1$ par,
+\begin{align*}
+\tilde{\beta}_1 = (\boldX_1^\tr\boldM_2\boldX_1)^{-1}\boldX_1\boldM_2\boldY
+\end{align*}
+Dans ce cas, l'estimateur des moindres carrés est sans biais sous l'hypothèse \ref{cond2},
+\begin{align*}
+\Exp(\tilde{\beta}_1|\boldX) &=\Exp\left((\boldX_1^\tr\boldM_2\boldX_1)^{-1}\boldX_1\boldM_2(\boldX_1\beta_1
++\boldU)|\boldX\right)\\
+&=\beta_1 + (\boldX_1^\tr\boldM_2\boldX_1)^{-1}\boldX_1\boldM_2\Exp(\boldU|\boldX)\\
+&=\beta_1
+\end{align*}
+Sous l'hypothèse \ref{cond3}, la variance de $\tilde{\beta}_1$ est donnée par la formule habituelle,
+\begin{align*}
+\Var(\tilde{\beta}_1|\boldX) = \sigma^2(\boldX_1^\tr\boldM_2\boldX_1)^{-1}
+\end{align*}
+Cependant, $\tilde{\beta}_1$ est inefficace, en raison du théorème de Gauss-Markov. Comme, nous l'avons vu dans la section précédente, la variance augmente avec le nombre de régresseurs. Sous l'hypothèse \ref{cond5}, nous avons,
+\begin{align*}
+\tilde{\beta}_1|\boldX \sim\mathcal{N}\left(\beta_1, (\boldX_1^\tr\boldM_2\boldX_1)^{-1}\right)
+\end{align*} 
+Maintenant, considérons $s^2$ avec ici,
+\begin{align*}
+s^2 = \frac{\boldY^\tr\boldM_\boldX\boldY}{n-K_1-K_2}
+\end{align*}
+où $\boldM_\boldX = \Id_n - \boldX(\boldX^\tr\boldX)^{-1}\boldX$. \'Etant donné que $\boldM_\boldX\boldX_1=0$, il s'en suit que,
+\begin{align*}
+s^2 = \frac{\boldU^\tr\boldM_\boldX\boldU}{n-K_1-K_2}
+\end{align*}
+et,
+\begin{align*}
+\Exp(s^2|\boldX) = \sigma^2
+\end{align*}
+Naturellement, les tests et intervalles de confiance habituels demeurent valides en cas d'inclusion de variables non pertinentes. Toutefois, les régions de confiance pour $\beta_1$ seront plus grandes et les tests moins puissants par comparaison au modèle correctement spécifié. La discussion dans les sous-sections suivantes indique que pour choisir le modèle, on doit commencer par le modèle le plus général, et éliminer les régresseurs non pertinent en appliquant des F-tests.
+\subsection{Test de changement structurel}
+Supposons deux modèles de régression qui représentent, par exemple, des observations pour deux pays ou pour  deux périodes différentes,
+\begin{align*}
+\boldY_1 &= \boldX_1\beta_1 + \boldU_1\\
+\boldY_2 &= \boldX_2\beta_2 + \boldU_2
+\end{align*}
+où $\boldY_1$ est un vecteur $(n_1\times 1)$ d'observations pour la variable dépendante dans la première population, $\boldX_1$ est un vecteur $(n_1\times K)$ d'observations pour les régresseurs dans la première sous-population,  $\boldY_2$ est un vecteur $(n_2\times 1)$ d'observations pour la variable dépendante dans la deuxième sous-population, et $\boldX_2$ est un vecteur $(n_2\times K)$ d'observations pour les régresseurs dans la deuxième population.\\
+On peut se demander si la réaction de la variable dépendante aux variations des régresseurs diffère entre les deux sous -populations en testant,
+\begin{align}
+H_0 &: \beta_1=\beta_2
+\label{eq50}
+\end{align}
+Pour combiner deux équations dans une seule, il convient de définir,
+\begin{align*}
+\boldY = 
+\left(
+\begin{array}{c}
+\boldY_1\\
+\boldY_2
+\end{array}
+\right)
+, \ 
+\boldU = 
+\left(
+\begin{array}{c}
+\boldU_1\\
+\boldU_2
+\end{array}
+\right)
+, \
+\boldX = 
+\left(
+\begin{array}{cc}
+\boldX_1&0\\
+0&\boldX_2
+\end{array}
+\right)
+, \
+\beta = 
+\left(
+\begin{array}{c}
+\beta_1\\
+\beta_2
+\end{array}
+\right)
+\end{align*}
+En utilisant ces définitions, le modèle non contraint peut s'écrire,
+\begin{align}
+\boldY = \boldX\beta + \boldU
+\label{eq51}
+\end{align}
+qui le modèle de régression linéaire habituel. Nous supposons que ce modèle vérifie les hypothèse \ref{cond1}-\ref{cond5}. Dans ce cadre, les contraintes données par \eqref{eq50} peuvent s'écrire,
+\begin{align*}
+\mathbf{R}\beta =
+\left(\begin{array}{cc}
+\Id_K&-\Id_K
+\end{array}
+\right)
+\left(
+\begin{array}{c}
+\beta_1\\
+\beta_2
+\end{array}
+\right)
+=0
+\end{align*}
+Notons que dans ce cas,
+\begin{align*}
+(\boldX^\tr\boldX)^{-1} &=
+\left(
+\begin{array}{cc}
+\boldX_1^\tr\boldX_1 &0\\
+0&\boldX_2^\tr\boldX_2
+\end{array}
+\right) ^{-1}\\
+&=
+\left(
+\begin{array}{cc}
+(\boldX_1^\tr\boldX_1)^{-1} &0\\
+0&(\boldX_2^\tr\boldX_2)^{-1}
+\end{array}
+\right) 
+\end{align*}
+En conséquence,
+\begin{align*}
+\boldM_\boldX&=\Id_n 
+- 
+\left(
+\begin{array}{cc}
+\boldX_1&0\\
+0&\boldX_2
+\end{array}
+\right)
+\left(
+\begin{array}{cc}
+(\boldX_1^\tr\boldX_1)^{-1} &0\\
+0&(\boldX_2^\tr\boldX_2)^{-1}
+\end{array}
+\right) 
+\left(
+\begin{array}{cc}
+\boldX_1^\tr&0\\
+0&\boldX_2^\tr
+\end{array}
+\right)
+\\
+&=\Id_n - \left(
+\begin{array}{cc}
+\boldX_1(\boldX_1^\tr\boldX_1)^{-1}\boldX_1^\tr &0\\
+0&\boldX_2(\boldX_2^\tr\boldX_2)^{-1}\boldX_2^\tr
+\end{array}
+\right) 
+\\
+&= 
+\left(
+\begin{array}{cc}
+\Id_{n_1} - \boldX_1(\boldX_1^\tr\boldX_1)^{-1}\boldX_1^\tr &0\\
+0&\Id_{n_2} - \boldX_2(\boldX_2^\tr\boldX_2)^{-1}\boldX_2^\tr
+\end{array}
+\right) \\
+&= \left(
+\begin{array}{cc}
+\boldM_1&0\\
+0&\boldM_2
+\end{array}
+\right)
+\end{align*}
+Maintenant, la $SCR$ non contrainte est donnée par les $SCR$ dans les deux régression séparées,
+\begin{align*}
+\hat{\boldU}^\tr\hat{\boldU} &= \boldY^\tr\boldM_\boldX\boldY\\
+&=
+\left(
+\begin{array}{c}
+\boldY_1\\
+\boldY_2
+\end{array}
+\right)^\tr
+\left(
+\begin{array}{cc}
+\boldM_1&0\\
+0&\boldM_2
+\end{array}
+\right)
+\left(
+\begin{array}{c}
+\boldY_1\\
+\boldY_2
+\end{array}
+\right)
+\\
+&= \boldY_1^\tr\boldM_1\boldY_1 + \boldY_2^\tr\boldM_2\boldY_2\\
+&=SCR_1 +SCR_2
+\end{align*}
+Notons qu'il y a, dans le modèle non contraint, $2K$ coefficients.\\
+Maintenant, le modèle contraint peut s'écrire,
+\begin{align}
+\left(
+\begin{array}{c}
+\boldY_1\\
+\boldY_2
+\end{array}
+\right)
+=
+\left(
+\begin{array}{c}
+\boldX_1\\
+\boldX_2
+\end{array}
+\right)\beta_1
++
+\left(
+\begin{array}{c}
+\boldU_1\\
+\boldU_2
+\end{array}
+\right)
+\label{eq52}
+\end{align}
+Par conséquent, la $SCR$ contrainte doit être obtenue en empilant les deux sous populations. Définissons,
+\begin{align*}
+\boldX_r = \left(\begin{array}{c}
+\boldX_1\\
+\boldX_2
+\end{array}\right)
+\end{align*}
+et,
+\begin{align*}
+\boldM_r = \Id_n - \boldX_r(\boldX_r^\tr\boldX_r)^{-1}\boldX_r^\tr
+\end{align*}
+La $SCR$ contrainte est donnée par,
+\begin{align*}
+SCR_r = \boldY^\tr\boldM_r\boldY
+\end{align*}
+Par conséquent, le test d'absence de changement structurel repose sur la statistique suivante,
+\begin{align*}
+F = \frac{(SCR_r - SCR_1 - SCR_2)/K}{(SCR_1 + SCR_2)/(n-2K)}
+\end{align*}
+et on rejette, l'hypothèse nulle d'absence de changement structurel quand,
+\begin{align*}
+F > F_{K, n-2K, 1-\alpha}
+\end{align*}
+
+\subsection{Variables indicatrices}
+Il est fréquent que l'on s'intéresse aux effets de variables qualitatives et qui ne sont pas quantifiées de la manière habituelle. Par exemple, on peut s'intéresser aux effets du sexe, du statut marital, de l'origine ethnique, de la religion sur d'autres variables telles que le revenu, ou le niveau d'études. Une approche courante pour quantifier ce type de variables consiste à introduire des variables artificielles qui indiquent si une modalité particulière est présente. Par exemple, supposons qu'une variable qualitative présente $M$ modalités(e.g., pour le sexe il en a 2). Pour les observation $i=1,...,n$, définissons la variable indicatrice $D_{i,m}$, $m=1,...,M$ telle que,
+\begin{align*}
+D_{i, m} = \left\{
+\begin{array}{c}
+1, \  \textrm{si l'observation} \  i  \ \textrm{appartient à la  modalité} \ m\\
+0 \  \textrm{autrement}
+\end{array}
+\right.
+\end{align*}
+Ainsi, par exemple, si $Y_i$ est le salaire de l'individu $i$, et que l'on veut étudier les effets du sexe sur $Y_i$, nous aurons deux indicatrices, à savoir,
+\begin{align*}
+D_{i, 1} = \left\{
+\begin{array}{c}
+1, \  \textrm{si} \  i  \ \textrm{est un homme}\\
+0, \  \textrm{si} \  i  \ \textrm{est une femme}
+\end{array}
+\right.
+\end{align*}
+
+\begin{align*}
+D_{i, 2} = \left\{
+\begin{array}{c}
+1, \  \textrm{si} \  i  \ \textrm{est une femme}\\
+0, \  \textrm{si} \  i  \ \textrm{est un homme}
+\end{array}
+\right.
+\end{align*}
+Considérons le modèle de régression,
+\begin{align*}
+Y_i  = \alpha_1D_{i,1}+\alpha_2D_{i, 2} + X_i^\tr\beta + U_i
+\end{align*}
+où $X_i$ est un vecteur d'autres régresseurs comme le nombre d'années d'étude, l'expérience, etc. Dans ce cas, $\alpha_1$ et $\alpha_2$ donnent le "salaire de départ"(i.e., en "fixant" $X_i=0$, et $U_i = 0$) pour un homme et une femme respectivement. Alternativement, la spécification suivante peut être envisagée,
+\begin{align*}
+Y_i = \alpha_0 + \alpha_1D_{i, 1} + X_i^\tr\beta + U_i
+\end{align*}
+Dans ce cas, le salaire de départ pour une femme est $\alpha_0$, et pour un homme c'est $\alpha_0+\alpha_1$. Le coefficient $\alpha_1$ donne la différence entre le salaire de départ d'homme et celui d'une femme. Nous pouvons alors tester l'existence d'une telle différence en testant l'hypothèse que $\alpha_1 = 0$.\\
+Notons que dans cet exemple nous ne pouvons pas inclure à la fois la constante et les deux indicatrices car pour tout $i$,
+\begin{align*}
+D_{i, 1}+D_{i, 2} = 1
+\end{align*}
+et l'hypothèse \ref{cond4} ne sera pas vérifiée. La "règle générale" pour une variable qualitative à $M$ modalités est: soit inclure les $M$ indicatrices sans la constante, soit inclure la constante et $M-1$ indicatrices.\\
+On peut aussi considérer que les effets des régresseurs $X_i$ différent selon les modalités. Ainsi, dans l'exemple précédent, ceci peut être modélisé en introduisant des effets d'interaction entre $X_i$ et $D_{i, 1}$,
+\begin{align*}
+Y_i = \alpha_0 + \alpha_1D_{i, 1} + X_i^\tr\beta + (D_{i, 1}X_i)^\tr\delta + U_i
+\end{align*} 
+Et à présent, l'effet marginal de $X_i$ est $\beta$ pour les femmes, et $\beta+\delta$ pour les hommes. Nous pouvons alors tester si le modèle est différent pour les hommes et pour les femmes en testant $H_0: \alpha_1 = 0, \ \delta = 0$.\\
+Considérons le test de changement structurel discuté dans la sous section précédente. Définissons,
+
+\begin{align*}
+D_i = 
+\left\{
+\begin{array}{cl}
+0& \textrm{pour} \ i = 1,...,n_1\\
+1& \textrm{pour} \ i = n_1 + 1,...,n
+\end{array}
+\right.
+\end{align*}
+
+On peut écrire le modèle pour $i=1,...,n$ comme suit,
+\begin{align*}
+Y_i = X_i^\tr\beta_1 + (D_iX_i)^\tr\delta + U_i
+\end{align*}
+où de manière équivalente,
+
+\begin{align}
+\left(
+\begin{array}{c}
+\boldY_1\\
+\boldY_2
+\end{array}
+\right)
+=
+\left(
+\begin{array}{c}
+\boldX_1\\
+\boldX_2
+\end{array}
+\right)
+\beta_1
++
+\left(
+\begin{array}{c}
+0\\
+\boldX_2
+\end{array}
+\right)
+\delta
++
+\left(
+\begin{array}{c}
+\boldU_1\\
+\boldU_2
+\end{array}
+\right)
+\label{eq53}
+\end{align}
+Dans ce cas, $\beta_2 = \beta_1+\delta$, et le test d'absence de changement structurel revient à tester $H_0:\delta = 0$. Afin de montrer que les deux approches, avec et sans variables indicatrices, sont équivalentes, il suffit de montrer que la matrice des régresseurs dans \eqref{eq51},
+\begin{align*}
+\left(
+\begin{array}{cc}
+\boldX_1&0\\
+0&\boldX_2
+\end{array}
+\right)
+\end{align*}
+engendre le même sous espace linéaire que celle dans \eqref{eq53},
+\begin{align*}
+\left(
+\begin{array}{cc}
+\boldX_1&0\\
+\boldX_2&\boldX_2
+\end{array}
+\right)
+\end{align*}
+
+\subsection{Prévision}
+Considérons de nouveau le modèle de régression linéaire normal défini par les hypothèses \ref{cond1}-\ref{cond5},
+\begin{align*}
+Y_i = X_i^\tr\beta+U_i
+\end{align*}
+Nous discutons à présent la question de la \emph{prévision} de la variable dépendante $Y_i$, sachant des valeurs fixes $x_f$ pour le vecteur $(K\times 1)$ des régresseurs, $X_i$. Soit $\hat{\beta}$ l'estimateur des moindres carrés de $\beta$ à partir des données $\{(Y_i, X_i)\}_{i=1}^n$. Notons que $x_f$ peut ou ne peut pas être une des valeurs réalisées des régresseurs dans l'échantillon observé. \'Etant donné que,
+\begin{align*}
+\Exp(Y_i| X_i=x_f) = x_f^\tr\beta
+\end{align*} 
+il est naturel d'estimer l'espérance conditionnelle $\Exp(Y_i|X_i =x_f)$ par,
+\begin{align}
+\hat{Y}_f = x_f^\tr\hat{\beta}
+\label{eq54}
+\end{align}
+Notons que $\hat{Y}_f$ est la valeur prédite d'un point sur la \emph{droite de régression}. Comme $x_f$ est fixe, $\hat{Y}_f $ est aléatoire par le biais de $\hat{\beta}$ seulement. En utilisant les résultats pour $\hat{\beta}$, nous obtenons,
+\begin{align*}
+\hat{Y}_f|\boldX \sim \mathcal{N}(x_f^\tr\beta, \sigma^2x_f^\tr(\boldX^\tr\boldX)^{-1}x_f)
+\end{align*}
+L'intervalle de confiance de niveau $\alpha$ pour le point de la droite de régression qui correspond à $x_f$ est donné par,
+\begin{align*}
+x_f^\tr\hat{\beta} \pm t_{n-K, 1-\alpha/2}\sqrt{s^2x_f^\tr (\boldX^\tr\boldX)^{-1}x_f}
+\end{align*}
+Maintenant, considérons la prédiction d'un point en dehors de la droite de régression. Définissons,
+\begin{align*}
+Y_f = x_f^\tr\beta + U_f
+\end{align*}
+où le vecteur $((n+1) \times 1)$, $(\boldU^\tr, U_f)^\tr$, vérifie,
+\begin{align}
+\left(
+\begin{array}{c}
+\boldU\\
+U_f
+\end{array}
+\right)|\boldX
+\sim
+\mathcal{N}(0, \sigma^2\Id_{n+1})
+\label{eq55}
+\end{align}
+\'Etant donné que $U_f$ ne peut pas être prédit à partir de $\boldX$, la valeur prédite de $Y_f$ est donnée par \eqref{eq54}. Soit maintenant, \emph{l'erreur de prévision} donné par,
+\begin{align*}
+\hat{U}_f &=Y_f -x_f^\tr\hat{\beta}\\
+&=U_f - x_f^\tr(\hat{\beta}-\beta) 
+\end{align*}
+Le résultat dans \eqref{eq55} implique que,
+\begin{align*}
+\hat{U}_f | \boldX \sim \mathcal{N}(0, \sigma^2 + \sigma^2x_f^\tr(\boldX^\tr\boldX)^{-1}x_f)
+\end{align*}
+Par conséquent, l'intervalle de confiance de niveau $\alpha$ pour la valeur prédite de $Y_f$ est donné par,
+\begin{align*}
+x_f^\tr\hat{\beta} \pm t_{n-K, 1-\alpha/2}\sqrt{s^2(1+x_f^\tr (\boldX^\tr\boldX)^{-1}x_f)}
+\end{align*}
+
+%\bibliographystyle{jpe}
+%\bibliography{Biblio.bib}
+ \end{document}

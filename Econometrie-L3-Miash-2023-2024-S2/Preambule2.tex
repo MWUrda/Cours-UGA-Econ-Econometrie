@@ -572,3 +572,16 @@ linkbordercolor=linkequation,
 \ref{#1}%
  \endgroup
 }
+
+%%Nouvelle commande pour symbole de transposition: 11022024.
+\makeatletter
+\newcommand*{\tr}{%
+  {\mathpalette\@tr{}}%
+}
+\newcommand*{\@tr}[2]{%
+  % #1: math style
+  % #2: unused
+  \raisebox{\depth}{$\m@th#1\intercal$}%
+}
+\makeatother
+%%

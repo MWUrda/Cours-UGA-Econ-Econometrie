@@ -1,0 +1,4 @@
+\babel@toc {french}{}
+\contentsline {section}{\tocsection {}{1}{Estimateur des moindres carr\IeC {\'e}s g\IeC {\'e}n\IeC {\'e}ralis\IeC {\'e}s}}{2}{section.1}
+\contentsline {section}{\tocsection {}{2}{Propri\IeC {\'e}t\IeC {\'e}s asymptotiques}}{4}{section.2}
+\contentsline {section}{\tocsection {}{3}{Moindres carr\IeC {\'e}s quasi-g\IeC {\'e}n\IeC {\'e}ralis\IeC {\'e}s}}{5}{section.3}
